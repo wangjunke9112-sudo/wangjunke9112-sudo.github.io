@@ -1,20 +1,20 @@
 ---
 # Display name
-title: Nelson Bighetti
+title: Prof. Dr. ir. Junke Wang
 
 # Full Name (for SEO)
-first_name: Nelson
-last_name: Bighetti
+first_name: Junke
+last_name: Wang
 
 # Is this the primary user of the site?
 superuser: true
 
 # Role/position
-role: Professor of Artificial Intelligence
+role: Professor
 
 # Organizations/Affiliations
 organizations:
-  - name: Stanford University
+  - name: South China University of Technology
     url: ''
 
 # Short bio (displayed in user profile at end of posts)
@@ -44,13 +44,13 @@ education:
 social:
   - icon: envelope
     icon_pack: fas
-    link: 'mailto:test@example.org'
+    link: 'mailto:junke.wang@physics.ox.ac.uk'
   - icon: twitter
     icon_pack: fab
-    link: https://twitter.com/GeorgeCushen
+    link: https://x.com/jwangpv
   - icon: google-scholar
     icon_pack: ai
-    link: https://scholar.google.co.uk/citations?user=sIwtMXoAAAAJ
+    link: https://scholar.google.com/citations?user=2hYAer8AAAAJ&hl=en
   - icon: github
     icon_pack: fab
     link: https://github.com/gcushen
