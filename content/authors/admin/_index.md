@@ -45,6 +45,9 @@ social:
   - icon: envelope
     icon_pack: fas
     link: 'mailto:junke.wang@physics.ox.ac.uk'
+  - icon: linkedin
+    icon_pack: fab
+    link: www.linkedin.com/in/jwangscut
   - icon: x-twitter
     icon_pack: fab
     link: https://x.com/jwangpv
