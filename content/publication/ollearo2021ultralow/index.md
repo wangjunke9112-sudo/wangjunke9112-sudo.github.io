@@ -9,7 +9,8 @@ authors:
   - 'Van Gorkom, Bas T'
   - 'Van Breemen, Albert JJM'
   - 'Meskers, Stefan CJ'
-  - 'Janssen, Ren{\'e'
+  - 'Janssen, Ren{'e} AJ'
+  - 'Gelinck, Gerwin H'
 date: "2021-01-01T00:00:00Z"
 publication_types: ["article-journal"]
 publication: "*Nature communications*"

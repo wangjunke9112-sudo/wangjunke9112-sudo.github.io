@@ -8,7 +8,8 @@ authors:
   - admin
   - 'Zhang, Jidong'
   - 'Hou, Jianhui'
-  - 'Janssen, Ren{\'e'
+  - 'Janssen, Ren{'e} AJ'
+  - 'Geng, Yanhou'
 date: "2019-01-01T00:00:00Z"
 publication_types: ["article-journal"]
 publication: "*Macromolecules*"

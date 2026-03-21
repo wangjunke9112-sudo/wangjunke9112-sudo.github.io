@@ -8,7 +8,7 @@ authors:
   - 'Kessels, Lana M'
   - admin
   - 'Wienk, Martijn M'
-  - 'Janssen, Ren{\'e'
+  - 'Janssen, Ren{'e} AJ'
 date: "2025-01-01T00:00:00Z"
 publication_types: ["article-journal"]
 publication: "*ACS Applied Energy Materials*"

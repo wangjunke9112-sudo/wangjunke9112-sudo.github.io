@@ -7,7 +7,7 @@ authors:
   - 'Verheijen, Marcel A'
   - 'Zhang, Dong'
   - 'Wienk, Martijn M'
-  - 'Janssen, Ren{\'e'
+  - 'Janssen, Ren{'e} AJ'
 date: "2020-01-01T00:00:00Z"
 publication_types: ["article-journal"]
 publication: "*Advanced Energy Materials*"
