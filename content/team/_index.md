@@ -1,5 +1,5 @@
 ---
-title: team
+title: Our team
 type: landing
 
 sections:
