@@ -45,15 +45,15 @@ social:
   - icon: envelope
     icon_pack: fas
     link: 'mailto:junke.wang@physics.ox.ac.uk'
-  - icon: twitter
+  - icon: x-twitter
     icon_pack: fab
     link: https://x.com/jwangpv
   - icon: google-scholar
     icon_pack: ai
     link: https://scholar.google.com/citations?user=2hYAer8AAAAJ&hl=en
-  - icon: github
+  - icon: orcid
     icon_pack: fab
-    link: https://github.com/gcushen
+    link: https://orcid.org/0000-0002-5849-7297
 # Link to a PDF of your resume/CV from the About widget.
 # To enable, copy your resume/CV to `static/files/cv.pdf` and uncomment the lines below.
 # - icon: cv
