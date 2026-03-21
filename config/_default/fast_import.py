@@ -1,7 +1,15 @@
 import os
-import re
 
-# Your raw BibTeX data from Google Scholar
+print("--------------------------------------------------")
+print(f"🚀 Running script in: {os.getcwd()}")
+print("--------------------------------------------------")
+
+if not os.path.exists("content"):
+    print("⚠️ WARNING: I don't see a 'content' folder here!")
+    print("Make sure you are running this from your website's root folder (where hugo.yaml is).")
+    print("Creating the folders anyway...\n")
+
+# Your raw BibTeX data
 bibtex_data = """
 @article{wang2016abnormal,
   title={Abnormal resistivity-temperature characteristic in fluorite type Bi/K-substituted ceria ceramics},
@@ -358,23 +366,33 @@ bibtex_data = """
 }
 """
 
-# Find all article blocks
-blocks = re.findall(r'@article\{([^,]+),\n(.*?)\n\}', bibtex_data, re.DOTALL)
 count = 0
+# Split the text reliably, bypassing regex
+blocks = [b for b in bibtex_data.split("@article{") if b.strip()]
 
-for paper_id, content in blocks:
-    # Extract data using regex
-    title_match = re.search(r'title=\{(.*?)\}', content)
-    author_match = re.search(r'author=\{(.*?)\}', content)
-    journal_match = re.search(r'journal=\{(.*?)\}', content)
-    year_match = re.search(r'year=\{(\d+)\}', content)
+for block in blocks:
+    # Get the ID (e.g., wang2016abnormal)
+    paper_id = block.split(",")[0].strip()
+    
+    title = "Untitled"
+    authors = []
+    journal = "Unknown Journal"
+    year = "2024"
+    
+    # Read line by line
+    for line in block.splitlines():
+        line = line.strip()
+        if line.startswith("title="):
+            title = line.split("={")[1].rsplit("}", 1)[0].replace('"', "'")
+        elif line.startswith("author="):
+            author_str = line.split("={")[1].rsplit("}", 1)[0]
+            authors = author_str.split(" and ")
+        elif line.startswith("journal="):
+            journal = line.split("={")[1].rsplit("}", 1)[0]
+        elif line.startswith("year="):
+            year = line.split("={")[1].rsplit("}", 1)[0]
 
-    title = title_match.group(1).replace('"', "'") if title_match else "Untitled"
-    authors = author_match.group(1).split(" and ") if author_match else []
-    journal = journal_match.group(1) if journal_match else "Unknown Journal"
-    year = year_match.group(1) if year_match else "2024"
-
-    # Format authors for YAML (linking your name to the 'admin' profile)
+    # Format authors for YAML
     formatted_authors = []
     for a in authors:
         clean_author = a.replace('{\\"u}', 'ü').replace('{\\\'e}', 'é').replace('{\\\'a}', 'á').replace('{\\\'o}', 'ó')
@@ -385,7 +403,6 @@ for paper_id, content in blocks:
     
     author_yaml = "\n".join(formatted_authors)
 
-    # Build the Hugo Blox YAML Markdown
     yaml_content = f"""---
 title: "{title}"
 authors:
@@ -396,7 +413,7 @@ publication: "*{journal}*"
 abstract: ""
 ---
 """
-    # Create directory and file
+    # Force create directories
     folder_path = os.path.join("content", "publication", paper_id)
     os.makedirs(folder_path, exist_ok=True)
     
@@ -404,7 +421,9 @@ abstract: ""
     with open(file_path, "w", encoding="utf-8") as f:
         f.write(yaml_content)
     
-    print(f"✅ Created: {paper_id}")
+    print(f"✅ Created: {folder_path}/index.md")
     count += 1
 
-print(f"\n🎉 Success! {count} publications imported into 'content/publication/'")
+print("--------------------------------------------------")
+print(f"🎉 Success! {count} publications were written to disk.")
+print("--------------------------------------------------")
