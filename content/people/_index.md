@@ -1,5 +1,5 @@
 ---
-title: Our Team
+title: People
 type: landing
 
 blocks:
