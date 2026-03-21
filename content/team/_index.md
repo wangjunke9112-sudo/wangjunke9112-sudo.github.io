@@ -2,7 +2,7 @@
 title: team
 type: landing
 
-blocks:
+sections:
   - block: people
     content:
       title: Principal Investigator
