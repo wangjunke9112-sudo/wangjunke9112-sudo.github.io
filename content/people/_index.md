@@ -8,6 +8,7 @@ blocks:
       title: Principal Investigator
       user_groups:
         - Principal Investigator
+        - admin
     design:
       view: 2
       show_interests: false
