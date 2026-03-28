@@ -5,8 +5,5 @@ authors:
 date: "2023-01-01T00:00:00Z"
 publication_types: ["article-journal"]
 publication: "*Nature*, 2023, 618, 74--79"
-external_link: ""
-url_custom:
-- name: "[Full text]"
-  url: "paper.pdf"
+external_link: "paper.pdf"
 ---

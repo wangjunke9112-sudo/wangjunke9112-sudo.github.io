@@ -5,8 +5,5 @@ authors:
 date: "2023-01-01T00:00:00Z"
 publication_types: ["article-journal"]
 publication: "*ACS Applied Energy Materials*, 2023, 6, 5217--5229"
-external_link: ""
-url_custom:
-- name: "[Full text]"
-  url: "paper.pdf"
+external_link: "paper.pdf"
 ---

@@ -1,12 +1,9 @@
 ---
 title: "Quantifying electrochemical losses in perovskite solar cells"
 authors:
-- "Tulus, **J. Wang**, Y. Galagan, E. von Hauff"
+- "Tulus, J. Wang, Y. Galagan, E. von Hauff"
 date: "2023-01-01T00:00:00Z"
 publication_types: ["article-journal"]
 publication: "*Journal of Materials Chemistry C*, 2023, 11, 2911--2920"
-external_link: ""
-url_custom:
-- name: "[Full text]"
-  url: "paper.pdf"
+external_link: "paper.pdf"
 ---
