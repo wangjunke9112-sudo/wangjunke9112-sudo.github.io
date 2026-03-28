@@ -1,3 +1,6 @@
-design:
-  view: 4
-  group_by: year
+---
+title: Publications
+view: 4
+# This next line groups your papers by year!
+group_by: year
+---
