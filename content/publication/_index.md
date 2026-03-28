@@ -1,6 +1,6 @@
 ---
 title: Publications
-view: 4
+view: 2
 # This next line groups your papers by year!
 group_by: year
 ---
