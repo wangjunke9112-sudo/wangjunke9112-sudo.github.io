@@ -4,5 +4,9 @@ authors:
 - "A. Maxwell, H. Chen, L. Grater, C. Li, S. Teale, **J. Wang**, L. Zeng, Z. Wang, S. M. Park, M. Vafaie"
 date: "2024-01-01T00:00:00Z"
 publication_types: ["article-journal"]
-publication: "*ACS Energy Letters*"
+publication: "*ACS Energy Letters*, 2024, 9, 520--527"
+external_link: ""
+url_custom:
+- name: "[Full text]"
+  url: "paper.pdf"
 ---

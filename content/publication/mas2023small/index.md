@@ -1,8 +1,12 @@
 ---
 title: "Small molecule dopant-free dual hole transporting material for conventional and inverted perovskite solar cells"
 authors:
-- "M. M\u00e1s-Montoya, P. G\u00f3mez, **J. Wang**, R. A. J. Janssen, D. Curiel"
+- "Ma"
 date: "2023-01-01T00:00:00Z"
 publication_types: ["article-journal"]
-publication: "*Materials Chemistry Frontiers*"
+publication: "*Materials Chemistry Frontiers*, 2023, 7, 4019--4028"
+external_link: ""
+url_custom:
+- name: "[Full text]"
+  url: "paper.pdf"
 ---

@@ -4,5 +4,9 @@ authors:
 - "H. Chen, A. Maxwell, C. Li, S. Teale, B. Chen, T. Zhu, E. Ugur, G. Harrison, L. Grater, **J. Wang**"
 date: "2023-01-01T00:00:00Z"
 publication_types: ["article-journal"]
-publication: "*Nature*"
+publication: "*Nature*, 2023, 613, 676--681"
+external_link: ""
+url_custom:
+- name: "[Full text]"
+  url: "paper.pdf"
 ---
