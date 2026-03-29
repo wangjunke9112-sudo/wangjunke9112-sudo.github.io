@@ -7,7 +7,7 @@ role: PhD Student in Materials Science
 
 # Which group they belong to (MUST match a group from Step 1)
 user_groups:
-  - PhD Students
+  - Graduate Students
 
 # A short bio
 bio: John's research focuses on the stability of wide-bandgap perovskites.
