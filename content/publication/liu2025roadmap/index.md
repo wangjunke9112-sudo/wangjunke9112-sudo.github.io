@@ -1,9 +1,0 @@
----
-title: "Roadmap on metal-halide perovskite semiconductors and devices"
-authors: []
-date: "2025-01-01T00:00:00Z"
-publication_types: ["article-journal"]
-summary: "A. Liu, J. Xi, H. Cen, J. Dai, Y. Yang, C. Liu, S. Guo, X. Li, X. Guo, F. Yang. *Materials Today Electronics*, 2025, 11, 100138."
-abstract: ""
-url_pdf: "/uploads/liu2025roadmap.pdf"
----
