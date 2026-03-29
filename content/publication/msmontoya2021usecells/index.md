@@ -1,5 +1,5 @@
 ---
-title: "Use of Sodium Diethyldithiocarbamate to Enhance the Open\u2010Circuit Voltage of CH3NH3PbI3 Perovskite Solar Cells"
+title: "Use of Sodium Diethyldithiocarbamate to Enhance the Open\u2010Circuit Voltage of CH<sub>3</sub>NH<sub>3</sub>PbI<sub>3</sub> Perovskite Solar Cells"
 authors: []
 date: "2021-01-01T00:00:00Z"
 publication_types: ["article-journal"]
