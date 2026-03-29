@@ -10,7 +10,7 @@ last_name: Wang
 superuser: true
 
 # Role/position
-role: Professor
+role: "Professor <br> <span style='font-size: 0.9em; font-weight: 400; color: #777;'>South China University of Technology</span>"
 
 # Organizations/Affiliations
 organizations:
