@@ -1,9 +1,8 @@
 ---
 title: "Small molecule dopant-free dual hole transporting material for conventional and inverted perovskite solar cells"
-authors:
-- "Ma"
+authors: []
 date: "2023-01-01T00:00:00Z"
 publication_types: ["article-journal"]
-publication: "*Materials Chemistry Frontiers*, 2023, 7, 4019--4028"
+summary: "Ma. *Materials Chemistry Frontiers*, 2023, 7, 4019\u20134028."
 url_pdf: "paper.pdf"
 ---

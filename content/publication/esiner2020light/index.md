@@ -1,9 +1,8 @@
 ---
 title: "Light-driven electrochemical carbon dioxide reduction to carbon monoxide and methane using perovskite photovoltaics"
-authors:
-- "S. Esiner, J. Wang, R. A. J. Janssen"
+authors: []
 date: "2020-01-01T00:00:00Z"
 publication_types: ["article-journal"]
-publication: "*Cell Reports Physical Science*, 2020, 1"
+summary: "S. Esiner, J. Wang, R. A. J. Janssen. *Cell Reports Physical Science*, 2020, 1."
 url_pdf: "paper.pdf"
 ---
