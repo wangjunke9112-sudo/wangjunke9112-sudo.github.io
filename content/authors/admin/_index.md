@@ -20,6 +20,24 @@ organizations:
 # Short bio (displayed in user profile at end of posts)
 bio: My research interests include distributed robotics, mobile computing and programmable matter.
 
+# Social/Academic networking links
+social:
+  - icon: envelope
+    icon_pack: fas
+    link: 'mailto:junke.wang@physics.ox.ac.uk'
+    
+  - icon: linkedin
+    icon_pack: fab
+    link: 'https://www.linkedin.com/in/jwangscut/'
+    
+  - icon: orcid
+    icon_pack: ai
+    link: 'https://orcid.org/0000-0002-5849-7297'
+    
+  - icon: weixin  # This is the FontAwesome name for WeChat
+    icon_pack: fab
+    link: '/uploads/wechat-qr.jpg'  # Links directly to your uploaded QR code
+    
 interests:
   - Artificial Intelligence
   - Computational Linguistics
