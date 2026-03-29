@@ -48,16 +48,13 @@ social:
   - icon: linkedin
     icon_pack: fab
     link: www.linkedin.com/in/jwangscut
-  - icon: x-twitter
-    icon_pack: fab
-    link: https://x.com/jwangpv
   - icon: google-scholar
     icon_pack: ai
     link: https://scholar.google.com/citations?user=2hYAer8AAAAJ&hl=en
   - icon: orcid
     icon_pack: fab
     link: https://orcid.org/0000-0002-5849-7297
-  - icon: wechat  # This is the FontAwesome name for WeChat
+  - icon: weixin  # This is the FontAwesome name for WeChat
     icon_pack: fab
     link: '/uploads/wechat-qr.jpg'  # Links directly to your uploaded QR code
     
