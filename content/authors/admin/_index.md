@@ -1,6 +1,6 @@
 ---
 # Display name
-title: Prof. Dr. ir. Junke Wang
+title: Junke Wang
 
 # Full Name (for SEO)
 first_name: Junke
@@ -47,7 +47,7 @@ social:
     link: 'mailto:junke.wang@physics.ox.ac.uk'
   - icon: linkedin
     icon_pack: fab
-    link: www.linkedin.com/in/jwangscut
+    link: 'www.linkedin.com/in/jwangscut'
   - icon: google-scholar
     icon_pack: ai
     link: https://scholar.google.com/citations?user=2hYAer8AAAAJ&hl=en
