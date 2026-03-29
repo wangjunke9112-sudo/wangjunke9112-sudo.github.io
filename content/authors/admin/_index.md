@@ -15,27 +15,28 @@ role: Professor
 # Organizations/Affiliations
 organizations:
   - name: South China University of Technology
-    url: ''
+    url: 'https://www.scut.edu.cn/en/'
 
 # Short bio (displayed in user profile at end of posts)
-bio: My research interests include distributed robotics, mobile computing and programmable matter.
+bio: My research focuses on developing ultra-high solar-to-electricity conversion devices and automated materials discovery for next-generation optoelectronics.
    
 interests:
-  - Artificial Intelligence
-  - Computational Linguistics
-  - Information Retrieval
+  - Perovskite Multi-Junction Solar Cells
+  - High-Throughput Automated Device Fabrication
+  - Operando Characterization for Optoelectronics
+  - Sustainable Materials & Renewable Energy
 
 education:
   courses:
-    - course: PhD in Artificial Intelligence
-      institution: Stanford University
-      year: 2012
-    - course: MEng in Artificial Intelligence
-      institution: Massachusetts Institute of Technology
-      year: 2009
-    - course: BSc in Artificial Intelligence
-      institution: Massachusetts Institute of Technology
-      year: 2008
+    - course: PhD in Chemistry
+      institution: Eindhoven University of Technology
+      year: 2020
+    - course: MSc in Chemical Engineering
+      institution: Eindhoven University of Technology
+      year: 2016
+    - course: BE in Materials Science and Engineering
+      institution: Central South University
+      year: 2013
 
 # Social/Academic Networking
 # For available icons, see: https://docs.hugoblox.com/getting-started/page-builder/#icons
