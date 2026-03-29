@@ -77,6 +77,11 @@ user_groups:
   - Principal Investigator
 ---
 
+**Selected Honors**
+* [cite_start]Marie Curie Postdoctoral Fellowship (UKRI Guarantee, 2023) [cite: 1]
+* [cite_start]The 2020 Chinese Government Award for Outstanding Self-financed Students Abroad (2021) [cite: 1]
+* [cite_start]Amandus H. Lundqvist Scholarship Program, TU/e (2014) [cite: 1]
+
 Nelson Bighetti is a professor of artificial intelligence at the Stanford AI Lab. His research interests include distributed robotics, mobile computing and programmable matter. He leads the Robotic Neurobiology group, which develops self-reconfiguring robots, systems of self-organizing robots, and mobile sensor networks.
 
 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed neque elit, tristique placerat feugiat ac, facilisis vitae arcu. Proin eget egestas augue. Praesent ut sem nec arcu pellentesque aliquet. Duis dapibus diam vel metus tempus vulputate.
