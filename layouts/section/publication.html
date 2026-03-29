@@ -1,1 +1,37 @@
+{{- define "main" -}}
 
+<div class="universal-wrapper pt-3">
+  <h1 style="margin-bottom: 1.5rem;">{{ .Title }}</h1>
+</div>
+
+<div class="universal-wrapper">
+  <div class="row">
+    <div class="col-lg-12">
+
+      {{ $query := where .RegularPages "Type" "publication" }}
+      
+      {{/* "2006" is Hugo's mandatory internal code for extracting a 4-digit year */}}
+      {{ range $query.GroupByDate "2006" }}
+        
+        <h2 style="font-size: 1.8rem; font-weight: 700; color: #222; border-bottom: 2px solid #eaeaea; padding-bottom: 0.5rem; margin-top: 2.5rem; margin-bottom: 1.5rem;">{{ .Key }}</h2>
+        
+        <div>
+          {{ range .Pages }}
+             {{/* Safely uses your theme's built-in "Compact View" design */}}
+             {{ if templates.Exists "partials/functions/render_view.html" }}
+                 {{ partial "functions/render_view" (dict "page" $ "item" . "view" 2) }}
+             {{ else if templates.Exists "partials/views/compact.html" }}
+                 {{ partial "views/compact" . }}
+             {{ else }}
+                 {{ partial "li_compact" . }}
+             {{ end }}
+          {{ end }}
+        </div>
+
+      {{ end }}
+
+    </div>
+  </div>
+</div>
+
+{{- end -}}
