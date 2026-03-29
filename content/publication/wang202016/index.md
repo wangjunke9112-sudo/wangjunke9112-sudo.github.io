@@ -4,5 +4,6 @@ authors: []
 date: "2020-01-01T00:00:00Z"
 publication_types: ["article-journal"]
 summary: "J. Wang, V. Zardetto, K. Datta, D. Zhang, M. M. Wienk, R. Janssen. *Nature communications*, 2020, 11, 5254."
-url_pdf: "paper.pdf"
+abstract: ""
+url_pdf: "/uploads/wang202016.pdf"
 ---

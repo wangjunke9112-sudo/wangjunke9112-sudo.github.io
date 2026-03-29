@@ -4,5 +4,6 @@ authors: []
 date: "2020-01-01T00:00:00Z"
 publication_types: ["article-journal"]
 summary: "J. Wang, K. Datta, J. Li, M. A. Verheijen, D. Zhang, M. M. Wienk, R. Janssen. *Advanced Energy Materials*, 2020, 10, 2000566."
-url_pdf: "paper.pdf"
+abstract: ""
+url_pdf: "/uploads/wang2020understanding.pdf"
 ---

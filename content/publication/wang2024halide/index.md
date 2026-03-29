@@ -4,5 +4,6 @@ authors: []
 date: "2024-01-01T00:00:00Z"
 publication_types: ["article-journal"]
 summary: "J. Wang, L. Zeng, D. Zhang, A. Maxwell, H. Chen, K. Datta, A. Caiazzo, W. H. M. Remmerswaal, N. R. M. Schipper, Z. Chen. *Nature Energy*, 2024, 9, 70\u201380."
-url_pdf: "paper.pdf"
+abstract: ""
+url_pdf: "/uploads/wang2024halide.pdf"
 ---

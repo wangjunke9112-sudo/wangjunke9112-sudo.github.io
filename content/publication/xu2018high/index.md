@@ -4,5 +4,6 @@ authors: []
 date: "2018-01-01T00:00:00Z"
 publication_types: ["article-journal"]
 summary: "X. Xu, Z. Li, J. Wang, B. Lin, W. Ma, Y. Xia, M. R. Andersson, R. A. J. Janssen, E. Wang. *Nano Energy*, 2018, 45, 368\u2013379."
-url_pdf: "paper.pdf"
+abstract: ""
+url_pdf: "/uploads/xu2018high.pdf"
 ---
