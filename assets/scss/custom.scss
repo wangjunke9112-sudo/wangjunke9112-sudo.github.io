@@ -47,3 +47,53 @@
     text-align: justify;
     color: #333;
 }
+
+/* =========================================================
+   PUBLICATIONS LIST STYLING (20260329-Style)
+   ========================================================= */
+
+/* 1. The Bold Year Headers (2026, 2025, etc.) */
+.page-type-publication h2 {
+    font-size: 1.8rem !important;
+    font-weight: 700 !important;
+    color: #222 !important;
+    border-bottom: 2px solid #eaeaea; /* A clean, subtle divider line */
+    padding-bottom: 0.5rem;
+    margin-top: 3rem;
+    margin-bottom: 1.5rem;
+}
+
+/* Remove the huge gap above the very first year (2026) */
+.page-type-publication h2:first-of-type {
+    margin-top: 1rem;
+}
+
+/* 2. The Publication Titles (Professional, Academic Blue) */
+.media-body .article-title, 
+.media-body .article-title a {
+    font-size: 1.15rem !important;
+    font-weight: 600 !important;
+    color: #1a49a0 !important; /* A professional dark blue link color */
+    line-height: 1.4 !important;
+    margin-bottom: 0.3rem !important;
+}
+
+/* Make the title change color slightly when hovered */
+.media-body .article-title a:hover {
+    color: #0056b3 !important;
+    text-decoration: underline !important;
+}
+
+/* 3. The Author & Journal Text (Clean, readable spacing) */
+.media-body .article-style,
+.media-body .article-style p {
+    font-size: 1rem !important;
+    line-height: 1.6 !important;
+    color: #333 !important; /* A sharp, readable dark grey */
+    margin-bottom: 0 !important;
+}
+
+/* 4. Spacing between individual papers */
+.media.stream-item {
+    margin-bottom: 1.75rem !important;
+}
