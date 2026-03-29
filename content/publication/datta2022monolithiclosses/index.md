@@ -1,0 +1,10 @@
+---
+title: "Monolithic All\u2010Perovskite Tandem Solar Cells with Minimized Optical and Energetic Losses"
+authors: []
+date: "2022-01-01T00:00:00Z"
+publication_types: ["article-journal"]
+summary: "K. Datta, J. Wang, D. Zhang, V. Zardetto, W. H. M. Remmerswaal, C. H. L. Weijtens, M. M. Wienk, R. A. J. Janssen. *Advanced Materials*, 2022, 34, e2110053."
+abstract: "Perovskite\u2010based multijunction solar cells are a potentially cost\u2010effective technology that can help surpass the efficiency limits of single\u2010junction devices. However, both mixed\u2010halide wide\u2010bandgap perovskites and lead\u2010tin narrow\u2010bandgap perovskites suffer from non\u2010radiative recombination due to the formation of bulk traps and interfacial recombination centers which limit the open\u2010circuit voltage of sub\u2010cells and consequently of the integrated tandem. Additionally, the complex optical stack in a multijunction solar cell can lead to losses stemming from parasitic absorption and reflection of incident light which aggravates the current mismatch between sub\u2010cells, thereby limiting the short\u2010circuit current density of the tandem. Here, an integrated all\u2010perovskite tandem solar cell is presented that uses surface passivation strategies to reduce non\u2010radiative recombination at the perovskite\u2010fullerene interfaces, yielding a high open\u2010circuit voltage. By using optically benign transparent electrode and charge\u2010transport layers, absorption in the narrow\u2010bandgap sub\u2010cell is improved, leading to an improvement in current\u2010matching between sub\u2010cells. Collectively, these strategies allow the development of a monolithic tandem solar cell exhibiting a power\u2010conversion efficiency of over 23%."
+external_link: "https://doi.org/10.1002/adma.202110053"
+url_pdf: "/uploads/Monolithic All\u2010Perovskite Tandem Solar Cells with Minimized Optical and Energetic Losses.pdf"
+---

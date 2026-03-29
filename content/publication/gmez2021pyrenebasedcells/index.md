@@ -1,0 +1,10 @@
+---
+title: "Pyrene\u2010Based Small\u2010Molecular Hole Transport Layers for Efficient and Stable Narrow\u2010Bandgap Perovskite Solar Cells"
+authors: []
+date: "2021-01-01T00:00:00Z"
+publication_types: ["article-journal"]
+summary: "P. G\u00f3mez, J. Wang, M. M\u00e1s-Montoya, D. Bautista, C. H. L. Weijtens, D. Curiel, R. A. J. Janssen. *Solar RRL*, 2021, 5."
+abstract: "Lead\u2013tin (Pb\u2013Sn) hybrid perovskite materials possess ideal narrow bandgaps (1.2\u20131.4\u2009eV) for efficient single\u2010junction and tandem solar cells. Poly(3,4\u2010ethylenedioxythiophene):polystyrene sulfonate (PEDOT:PSS) is commonly used as hole transport layer (HTL) for Pb\u2013Sn perovskite solar cells (PSCs), despite its poor stability with these perovskites. Here, two new octacyclic heteroaromatic molecules, pyrenodiindole (PDI) and pyrenodi\u2010(7\u2010azaindole) (PDAI), are presented as the HTL for narrow\u2010bandgap (1.23\u2009eV) p\u2013i\u2013n Pb\u2010Sn PSCs. The self\u2010assembled reciprocal hydrogen\u2010bonded solid\u2010state structure of PDAI bestows robustness compared to PDI, making it less vulnerable in processing the perovskite film on top, and improves the reproducibility of device fabrication. Transient photocurrent measurements and light\u2010intensity\u2010dependent device characteristics indicate that PDI and PDAI possess similar hole extraction properties to PEDOT:PSS. As a result, similar open\u2010circuit voltages and fill factors are obtained in the PSCs. Interestingly, the use of thin PDI and PDAI as HTL in PSCs changes the optical interference and reduces parasitic absorption in the near\u2010infrared region, resulting in an improved short\u2010circuit current density. Consequently, a higher power conversion efficiency of 16.1% is obtained for PDI and PDAI, compared to 15.1% for PEDOT:PSS. In addition, the self\u2010assembled structure of PDAI led to a notable enhancement of device stability."
+external_link: "https://doi.org/10.1002/solr.202100454"
+url_pdf: "/uploads/Pyrene\u2010Based Small\u2010Molecular Hole Transport Layers for Efficient and Stable Narrow\u2010Bandgap Perovskite Solar Cells.pdf"
+---

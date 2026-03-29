@@ -1,0 +1,10 @@
+---
+title: "Ultralow dark current in near-infrared perovskite photodiodes by reducing charge injection and interfacial charge generation"
+authors: []
+date: "2021-01-01T00:00:00Z"
+publication_types: ["article-journal"]
+summary: "R. Ollearo, J. Wang, M. J. Dyson, C. H. L. Weijtens, M. Fattori, B. T. van Gorkom, A. J. J. M. van Breemen, S. C. J. Meskers, R. A. J. Janssen, G. H. Gelinck. *Nature Communications*, 2021, 12, 7277."
+abstract: "Metal halide perovskite photodiodes (PPDs) offer high responsivity and broad spectral sensitivity, making them attractive for low-cost visible and near-infrared sensing. A significant challenge in achieving high detectivity in PPDs is lowering the dark current density (<i>J</i><sub>D</sub>) and noise current (<i>i</i><sub>n</sub>). This is commonly accomplished using charge-blocking layers to reduce charge injection. By analyzing the temperature dependence of <i>J</i><sub>D</sub> for lead-tin based PPDs with different bandgaps and electron-blocking layers (EBL), we demonstrate that while EBLs eliminate electron injection, they facilitate undesired thermal charge generation at the EBL-perovskite interface. The interfacial energy offset between the EBL and the perovskite determines the magnitude and activation energy of <i>J</i><sub>D</sub>. By increasing this offset we realized a PPD with ultralow <i>J</i><sub>D</sub> and <i>i</i><sub>n</sub> of 5\u2009\u00d7\u200910<sup>\u22128</sup>\u2009mA\u2009cm<sup>\u22122</sup> and 2\u2009\u00d7\u200910<sup>\u221214</sup>\u2009A\u2009Hz<sup>\u22121/2</sup>, respectively, and wavelength sensitivity up to 1050\u2009nm, establishing a new design principle to maximize detectivity in perovskite photodiodes."
+external_link: "https://doi.org/10.1038/s41467-021-27565-1"
+url_pdf: "/uploads/Ultralow dark current in near-infrared perovskite photodiodes by reducing charge injection and interfacial charge generation.pdf"
+---

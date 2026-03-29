@@ -1,0 +1,10 @@
+---
+title: "The Importance of Conserving the Stoichiometry of Wide-Bandgap Perovskites in Additive Engineering"
+authors: []
+date: "2025-01-01T00:00:00Z"
+publication_types: ["article-journal"]
+summary: "N. R. M. Schipper, G. J. W. Aalbers, L. Bellini, S. V. Quiroz Monnens, L. M. Kessels, J. Wang, M. M. Wienk, R. A. J. Janssen. *ACS Applied Energy Materials*, 2025, 8, 14486\u201314497."
+abstract: "Additive engineering is among the most commonly used strategies to enhance the performance and stability of perovskite solar cells. Prior research often focused on optimizing device performance by using additives in the perovskite precursor solution to influence the rate of crystallization and film formation, but a fundamental understanding of the effect of additives on the stoichiometry of the absorber remains elusive. In this study, we reveal how additives affect the ABX3 stoichiometry of the perovskite absorber and its photovoltaic properties. We find that the solar cell performance of a wide-bandgap (1.77 eV) Cs0.2FA0.8Pb-(I0.6Br0.4)3 perovskite decreases when processed with either of two common additives, lead thiocyanate and lead chloride, because the additive disturbs the stoichiometry. Interestingly, the addition of excess formamidinium iodide (FAI) to the precursor solution can restore the initial ABX3 stoichiometry and fully recover the device performance. The excess of FAI that is required depends on whether the halide or pseudohalide additive is incorporated into the crystal lattice. Finally, we alter the stoichiometry of an additive-free perovskite absorber by inducing either an excess or a deficiency of FAI or lead iodide in the precursor and show that slight deviations from the ideal stoichiometry rapidly degrade the device performance. This work provides fundamental insights into the importance of bulk stoichiometry in perovskite absorbers and can serve as a basis for future rational additive engineering."
+external_link: "https://doi.org/10.1021/acsaem.5c02216"
+url_pdf: "/uploads/The Importance of Conserving the Stoichiometry of Wide-Bandgap Perovskites in Additive Engineering.pdf"
+---

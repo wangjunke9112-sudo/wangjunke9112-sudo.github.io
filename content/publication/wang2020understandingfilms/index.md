@@ -1,0 +1,10 @@
+---
+title: "Understanding the Film Formation Kinetics of Sequential Deposited Narrow\u2010Bandgap Pb\u2013Sn Hybrid Perovskite Films"
+authors: []
+date: "2020-01-01T00:00:00Z"
+publication_types: ["article-journal"]
+summary: "J. Wang, K. Datta, J. Li, M. A. Verheijen, D. Zhang, M. M. Wienk, R. A. J. Janssen. *Advanced Energy Materials*, 2020, 10."
+abstract: "Developing efficient narrow bandgap Pb\u2013Sn hybrid perovskite solar cells with high Sn\u2010content is crucial for perovskite\u2010based tandem devices. Film properties such as crystallinity, morphology, surface roughness, and homogeneity dictate photovoltaic performance. However, compared to Pb\u2010based analogs, controlling the formation of Sn\u2010containing perovskite films is much more challenging. A deeper understanding of the growth mechanisms in Pb\u2013Sn hybrid perovskites is needed to improve power conversion efficiencies. Here, in situ optical spectroscopy is performed during sequential deposition of Pb\u2013Sn hybrid perovskite films and combined with ex situ characterization techniques to reveal the temporal evolution of crystallization in Pb\u2013Sn hybrid perovskite films. Using a two\u2010step deposition method, homogeneous crystallization of mixed Pb\u2013Sn perovskites can be achieved. Solar cells based on the narrow bandgap (1.23 eV) FA<sub>0.66</sub>MA<sub>0.34</sub>Pb<sub>0.5</sub>Sn<sub>0.5</sub>I<sub>3</sub> perovskite absorber exhibit the highest efficiency among mixed Pb\u2013Sn perovskites and feature a relatively low dark carrier density compared to Sn\u2010rich devices. By passivating defect sites on the perovskite surface, the device achieves a power conversion efficiency of 16.1%, which is the highest efficiency reported for sequential solution\u2010processed narrow bandgap perovskite solar cells with 50% Sn\u2010content."
+external_link: "https://doi.org/10.1002/aenm.202000566"
+url_pdf: "/uploads/Understanding the Film Formation Kinetics of Sequential Deposited Narrow\u2010Bandgap Pb\u2013Sn Hybrid Perovskite Films.pdf"
+---
