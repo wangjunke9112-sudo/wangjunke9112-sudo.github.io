@@ -12,4 +12,8 @@ sections:
         - Graduate Students
         - Undergraduate Students 
         - Alumni
+    # ADD THIS DESIGN BLOCK:
+    design:
+      show_social: true
+      show_role: true
 ---
