@@ -17,5 +17,5 @@ publication: "*Nature Energy*, 2024, 9, 70-80"
 external_link: "https://www.nature.com/articles/s41560-023-01406-5"
 
 # 4. THE PDF LINK (This creates the [PDF] button)
-url_pdf: "paper.pdf"
+url_pdf: "/uploads/wang2024.pdf"
 ---
