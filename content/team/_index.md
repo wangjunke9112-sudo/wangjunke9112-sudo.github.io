@@ -9,6 +9,7 @@ sections:
       user_groups:
         - Principal Investigator
         - Postdoctoral Researchers
-        - PhD Students
+        - Graduate Students
+        - Undergraduate Students 
         - Alumni
 ---
