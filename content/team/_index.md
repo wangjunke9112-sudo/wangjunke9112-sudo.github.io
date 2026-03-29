@@ -16,4 +16,5 @@ sections:
     design:
       show_social: true
       show_role: true
+      show_interests: false  # <-- This hides the bullet points on the grid!
 ---
