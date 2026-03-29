@@ -1,1 +1,23 @@
 
+/* 1. Make the Publication Title slightly larger and bold */
+.media-body .article-title, 
+.media-body .article-title a {
+    font-size: 1.25rem !important;
+    font-weight: 700 !important;
+    line-height: 1.4 !important;
+    margin-bottom: 0.25rem !important;
+}
+
+/* 2. Make the Author List a nice, readable size */
+.media-body .article-metadata {
+    font-size: 1rem !important;
+    margin-bottom: 0.25rem !important;
+}
+
+/* 3. Make the Journal Details (Summary) match the authors */
+.media-body .article-style,
+.media-body .article-style p {
+    font-size: 1rem !important;
+    margin-top: 0 !important;
+    color: #444 !important; /* A professional dark grey */
+}
