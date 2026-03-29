@@ -152,21 +152,32 @@ h1, h2, h3, h4, h5, h6,
     font-weight: 400 !important;
 }
 
-/* 4. "Light Separation" - Add generous breathing room between groups */
-#people .row.justify-content-center {
-    margin-bottom: 4rem !important; /* Creates a large, clean gap after each group */
+/* =========================================================
+   TEAM PAGE - AGGRESSIVE OVERRIDES
+   ========================================================= */
+
+/* Force the Name to be Extra Bold and slightly larger */
+#people .portrait-title h2,
+#people .portrait-title h2 a,
+#people .portrait-title h3,
+#people .portrait-title h3 a {
+    font-weight: 800 !important; /* Maximum boldness */
+    font-size: 1.35rem !important;
+    color: #1a49a0 !important; /* Academic blue */
+    margin-top: 1.2rem !important;
+    margin-bottom: 0.4rem !important;
 }
 
-/* 5. Style the Organization/Affiliation text on the grid */
-#people .portrait-title p {
-    font-size: 0.85rem !important;
-    color: #888 !important; /* Lighter grey to contrast with the dark role text */
-    margin-top: 0.2rem !important;
+/* Format the Role (Professor) text */
+#people .portrait-title .people-role {
+    font-size: 0.95rem !important;
+    color: #222 !important; /* Dark, sharp text for the role */
+    font-weight: 600 !important; /* Semi-bold for the role */
+    line-height: 1.5 !important;
     margin-bottom: 0.5rem !important;
-    line-height: 1.3;
 }
 
-/* Ensure the Role text stays slightly bolder */
-#people .portrait-title h3 {
-    margin-bottom: 0 !important;
+/* Ensure generous spacing between different groups (PI vs Students) */
+#people .row.justify-content-center {
+    margin-bottom: 4rem !important; 
 }
