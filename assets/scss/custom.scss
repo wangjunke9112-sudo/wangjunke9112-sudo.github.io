@@ -153,28 +153,46 @@ h1, h2, h3, h4, h5, h6,
 }
 
 /* =========================================================
-   TEAM PAGE - AGGRESSIVE OVERRIDES
+   1. WIDEN THE AUTHOR PROFILE PAGE
    ========================================================= */
-
-/* Force the Name to be Extra Bold and slightly larger */
-#people .portrait-title h2,
-#people .portrait-title h2 a,
-#people .portrait-title h3,
-#people .portrait-title h3 a {
-    font-weight: 800 !important; /* Maximum boldness */
-    font-size: 1.35rem !important;
-    color: #1a49a0 !important; /* Academic blue */
-    margin-top: 1.2rem !important;
-    margin-bottom: 0.4rem !important;
+/* Expands the central text column so sentences don't wrap too early */
+.page-type-authors .article-container,
+.page-type-authors .universal-wrapper {
+    max-width: 1000px !important; /* Increased from the ~720px default */
 }
 
-/* Format the Role (Professor) text */
-#people .portrait-title .people-role {
-    font-size: 0.95rem !important;
-    color: #222 !important; /* Dark, sharp text for the role */
-    font-weight: 600 !important; /* Semi-bold for the role */
-    line-height: 1.5 !important;
-    margin-bottom: 0.5rem !important;
+
+/* =========================================================
+   2. TEAM PAGE: BULLETPROOF TYPOGRAPHY & SPACING
+   ========================================================= */
+/* Force the Name to be Bold */
+.portrait-title h2,
+.portrait-title h2 a {
+    font-weight: 800 !important; 
+    font-size: 1.35rem !important;
+    color: #1a49a0 !important; 
+    margin-top: 1.2rem !important;
+}
+
+/* Ensure NO dashed/dotted lines appear under names or affiliations */
+.portrait-title a {
+    border-bottom: none !important;
+    text-decoration: none !important;
+}
+
+/* Add a subtle hover effect to links instead of the dashed line */
+.portrait-title a:hover {
+    color: #0056b3 !important;
+    text-decoration: underline !important;
+}
+
+/* Format the native Organization/Affiliation text */
+.portrait-title .people-organizations,
+.portrait-title .people-organizations p {
+    font-size: 0.9rem !important;
+    color: #777 !important;
+    margin-top: 0.2rem !important;
+    line-height: 1.3 !important;
 }
 
 /* Ensure generous spacing between different groups (PI vs Students) */
