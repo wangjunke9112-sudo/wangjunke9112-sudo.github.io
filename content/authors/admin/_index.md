@@ -10,12 +10,10 @@ last_name: Wang
 superuser: true
 
 # Role/position
-role: Professor
+role: "Principal Investigator & Professor <br> <span style='font-size: 0.9em; font-weight: 400;'><a href='https://www.scut.edu.cn/en/' target='_blank' style='color: #777; text-decoration: none;'>South China University of Technology</a></span>"
 
 # Organizations/Affiliations
-organizations: Department of Materials Science and Engineering
-organizations: South China University of Technology
-url: "https://www.scut.edu.cn/en/"
+organizations: []
 
 # Short bio (displayed in user profile at end of posts)
 bio: My research focuses on developing ultra-high solar-to-electricity conversion devices and automated materials discovery for next-generation optoelectronics.
