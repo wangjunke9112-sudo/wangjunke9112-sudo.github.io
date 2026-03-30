@@ -76,11 +76,10 @@ user_groups:
   - Principal Investigator
 ---
 
-**Selected Honors**
-* [cite_start]Marie Curie Postdoctoral Fellowship (UKRI Guarantee, 2023) [cite: 1]
-* [cite_start]The 2020 Chinese Government Award for Outstanding Self-financed Students Abroad (2021) [cite: 1]
-* [cite_start]Amandus H. Lundqvist Scholarship Program, TU/e (2014) [cite: 1]
+Junke Wang is a Professor in Materials Science and Engineering at South China University of Technology. His research focuses on emerging semiconductors and multilayer optoelectronic devices, with an emphasis on understanding how processing, composition, and interfaces govern energy losses, stability, and performance.
 
-Nelson Bighetti is a professor of artificial intelligence at the Stanford AI Lab. His research interests include distributed robotics, mobile computing and programmable matter. He leads the Robotic Neurobiology group, which develops self-reconfiguring robots, systems of self-organizing robots, and mobile sensor networks.
+He received his PhD in Chemistry from Eindhoven University of Technology (TU/e) in 2020 under the supervision of Prof. René Janssen, where he developed perovskite-based multijunction solar cells and investigated interfacial and morphological control of charge transport. He then carried out postdoctoral research between TU/e and the University of Toronto (2020–2023) with Prof. Edward Sargent, focusing on high-bandgap semiconductors, tandem photovoltaics, and solar-driven fuel generation. From 2023 to 2026, he was a Marie Skłodowska-Curie Fellow at the University of Oxford in the group of Prof. Henry Snaith, working on wide-bandgap perovskites and multijunction device architectures.
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed neque elit, tristique placerat feugiat ac, facilisis vitae arcu. Proin eget egestas augue. Praesent ut sem nec arcu pellentesque aliquet. Duis dapibus diam vel metus tempus vulputate.
+His research has contributed to advancing the performance and understanding of perovskite multijunction solar cells, including the development of low-loss interconnecting layers, halide homogenization strategies, and mechanistic insights into film formation and interfacial recombination. His work spans materials chemistry, thin-film processing, and device physics, with a consistent focus on identifying and mitigating the fundamental loss mechanisms in optoelectronic devices.
+
+At South China University of Technology, he is developing a research program centered on device acceleration platforms that integrate automated fabrication, multimodal characterization, and data-driven optimization. His goal is to enable systematic exploration of complex material and process spaces and to establish scalable strategies for high-efficiency and stable optoelectronic devices, including photovoltaics, photodetectors, and light-emitting systems.
