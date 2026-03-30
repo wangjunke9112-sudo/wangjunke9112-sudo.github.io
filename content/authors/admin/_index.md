@@ -15,7 +15,7 @@ role: Professor
 # Organizations/Affiliations
 organizations: Department of Materials Science and Engineering
 organizations: South China University of Technology
-url: https://www.scut.edu.cn/en/
+url: "https://www.scut.edu.cn/en/"
 
 # Short bio (displayed in user profile at end of posts)
 bio: My research focuses on developing ultra-high solar-to-electricity conversion devices and automated materials discovery for next-generation optoelectronics.
@@ -48,7 +48,7 @@ social:
     link: 'mailto:junke.wang@physics.ox.ac.uk'
   - icon: linkedin
     icon_pack: fab
-    link: www.linkedin.com/in/jwangscut
+    link: "www.linkedin.com/in/jwangscut"
   - icon: google-scholar
     icon_pack: ai
     link: https://scholar.google.com/citations?user=2hYAer8AAAAJ&hl=en
