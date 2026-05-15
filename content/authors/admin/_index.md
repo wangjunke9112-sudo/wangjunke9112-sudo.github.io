@@ -53,7 +53,7 @@ social:
     link: 'mailto:junke.wang@hotmail.com'
   - icon: linkedin
     icon_pack: fab
-    link: "https://www.linkedin.com/in/jwangscut"
+    link: https://www.linkedin.com/in/jwangscut
   - icon: google-scholar
     icon_pack: ai
     link: https://scholar.google.com/citations?user=2hYAer8AAAAJ&hl=en
