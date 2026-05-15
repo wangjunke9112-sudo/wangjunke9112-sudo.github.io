@@ -1,80 +1,29 @@
 ---
-# Leave the homepage title empty to use the site title
-title:
-date: 2022-10-24
-type: landing
+# Hero widget
+widget: hero
+headless: true
+weight: 10
+title: LENS Lab
 
-sections:
-  - block: hero
-    content:
-      title: |
-        Wowchemy
-        Research Group
-      image:
-        filename: welcome.jpg
-      text: |
-        <br>
-        
-        The **Wowchemy Research Group** has been a center of excellence for Artificial Intelligence research, teaching, and practice since its founding in 2016.
-  
-  - block: collection
-    content:
-      title: Latest News
-      subtitle:
-      text:
-      count: 5
-      filters:
-        author: ''
-        category: ''
-        exclude_featured: false
-        publication_type: ''
-        tag: ''
-      offset: 0
-      order: desc
-      page_type: post
-    design:
-      view: card
-      columns: '1'
-  
-  - block: markdown
-    content:
-      title:
-      subtitle: ''
-      text:
-    design:
-      columns: '1'
-      background:
-        image: 
-          filename: coders.jpg
-          filters:
-            brightness: 1
-          parallax: false
-          position: center
-          size: cover
-          text_color_light: true
-      spacing:
-        padding: ['20px', '0', '20px', '0']
-      css_class: fullscreen
+# Hero text
+hero_media: welcome.jpg    # ← add a photo to assets/media/ with this name
 
-  - block: collection
-    content:
-      title: Latest Preprints
-      text: ""
-      count: 5
-      filters:
-        folders:
-          - publication
-        publication_type: 'article'
-    design:
-      view: citation
-      columns: '1'
+cta:
+  label: '**Join us**'
+  url: '/opportunities'
+cta_alt:
+  label: Our research
+  url: '/research'
 
-  - block: markdown
-    content:
-      title:
-      subtitle:
-      text: |
-        {{% cta cta_link="./people/" cta_text="Meet the team →" %}}
-    design:
-      columns: '1'
+design:
+  background:
+    gradient_start: '#003366'
+    gradient_end: '#005588'
+    text_color_light: true
 ---
+
+**Light–Energy Nanosystems and Semiconductors**
+
+We develop semiconductor optoelectronic devices that convert, control, and use light for energy and future technologies.
+
+Based at South China University of Technology · School of Materials Science and Engineering · State Key Laboratory of Luminescent Materials and Devices
