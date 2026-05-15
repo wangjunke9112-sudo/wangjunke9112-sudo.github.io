@@ -1,3 +1,5 @@
+yaml
+
 ---
 # Hero widget
 widget: hero
@@ -20,6 +22,7 @@ design:
     gradient_start: '#003366'
     gradient_end: '#005588'
     text_color_light: true
+---
 
 **Light–Energy Nanosystems and Semiconductors**
 
@@ -27,4 +30,3 @@ We develop semiconductor optoelectronic devices that convert, control, and use l
 
 Based at South China University of Technology · School of Materials Science and Engineering · State Key Laboratory of Luminescent Materials and Devices
 
----
