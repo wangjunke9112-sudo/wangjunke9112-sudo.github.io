@@ -14,7 +14,7 @@ authors:
 superuser: true
 
 # Role/position
-role: "Principal Investigator
+role: "Principal Investigator"
 
 # Organizations/Affiliations
 organizations:
