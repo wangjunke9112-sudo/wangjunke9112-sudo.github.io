@@ -22,7 +22,7 @@ organizations:
     url: 'https://www.scut.edu.cn/'
 
 # Short bio (displayed in user profile at end of posts)
-bio: Junke Wang leads the LENS Lab at SCUT, working on semiconductor optoelectronic devices for energy and light technologies.
+bio: Junke Wang leads the LENS Lab at SCUT, working on optoelectronic devices for energy and light technologies.
    
 interests:
   - Semiconductor optoelectronics
