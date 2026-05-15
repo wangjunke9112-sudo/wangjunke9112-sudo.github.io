@@ -6,23 +6,30 @@ title: Junke Wang
 first_name: Junke
 last_name: Wang
 
+# Username (must match folder name: admin)
+authors:
+  - admin
+
 # Is this the primary user of the site?
 superuser: true
 
 # Role/position
-role: "Principal Investigator & Professor <br> <span style='font-size: 0.9em; font-weight: 400;'><a href='https://www.scut.edu.cn/en/' target='_blank' style='color: #777; text-decoration: none;'>South China University of Technology</a></span>"
+role: "Principal Investigator
 
 # Organizations/Affiliations
-organizations: []
+organizations:
+  - name: South China University of Technology
+    url: 'https://www.scut.edu.cn/'
 
 # Short bio (displayed in user profile at end of posts)
-bio: My research focuses on developing ultra-high solar-to-electricity conversion devices and automated materials discovery for next-generation optoelectronics.
+bio: Junke Wang leads the LENS Lab at SCUT, working on semiconductor optoelectronic devices for energy and light technologies.
    
 interests:
-  - Perovskite Multi-Junction Solar Cells
-  - High-Throughput Automated Device Fabrication
-  - Operando Characterization for Optoelectronics
-  - Sustainable Materials & Renewable Energy
+  - Semiconductor optoelectronics
+  - Multijunction photovoltaics
+  - Perovskite thin-film devices
+  - Interface engineering
+  - Device stability
 
 education:
   courses:
@@ -43,10 +50,10 @@ education:
 social:
   - icon: envelope
     icon_pack: fas
-    link: 'mailto:junke.wang@physics.ox.ac.uk'
+    link: 'mailto:junke.wang@hotmail.com'
   - icon: linkedin
     icon_pack: fab
-    link: "www.linkedin.com/in/jwangscut"
+    link: "https://www.linkedin.com/in/jwangscut"
   - icon: google-scholar
     icon_pack: ai
     link: https://scholar.google.com/citations?user=2hYAer8AAAAJ&hl=en
