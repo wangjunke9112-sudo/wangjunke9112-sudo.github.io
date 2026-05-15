@@ -1,27 +1,50 @@
 ---
-# Leave the homepage title empty to use the site title
-title:
+title: ""
 date: 2022-10-24
 type: landing
 
 sections:
   - block: hero
     content:
-      title: |
-        Wowchemy
-        Research Group
+      title: LENS Lab
       image:
         filename: welcome.jpg
+      cta:
+        label: Join us
+        url: /opportunities/
+      cta_alt:
+        label: Our research
+        url: /#research
       text: |
-        <br>
-        
-        The **Wowchemy Research Group** has been a center of excellence for Artificial Intelligence research, teaching, and practice since its founding in 2016.
-  
+        **Light–Energy Nanosystems and Semiconductors**
+
+        We develop semiconductor optoelectronic devices that convert, control, and use light for energy and future technologies.
+
+        Based at South China University of Technology · School of Materials Science and Engineering · State Key Laboratory of Luminescent Materials and Devices.
+    design:
+      background:
+        gradient_start: '#003A6B'
+        gradient_end: '#0077B6'
+        text_color_light: true
+
+  - block: markdown
+    id: research
+    content:
+      title: Research
+      subtitle: Materials, interfaces, and devices for energy and light
+      text: |
+        The LENS Lab develops advanced semiconductor optoelectronic devices for energy and light technologies. Our work combines materials chemistry, thin-film processing, interface engineering, device physics, and stability analysis.
+
+        Initial research directions include **multijunction photovoltaics**, **perovskite and related thin-film semiconductors**, **interface engineering and energy losses**, **device stability**, and **scalable thin-film platforms**. Longer term, we aim to develop integrated optoelectronic systems that span light-driven energy conversion, sensing, and emission.
+    design:
+      columns: '1'
+
   - block: collection
+    id: news
     content:
       title: Latest News
-      subtitle:
-      text:
+      subtitle: ''
+      text: ''
       count: 5
       filters:
         author: ''
@@ -35,46 +58,18 @@ sections:
     design:
       view: card
       columns: '1'
-  
+
   - block: markdown
+    id: join
     content:
-      title:
+      title: Join us
       subtitle: ''
-      text:
-    design:
-      columns: '1'
-      background:
-        image: 
-          filename: coders.jpg
-          filters:
-            brightness: 1
-          parallax: false
-          position: center
-          size: cover
-          text_color_light: true
-      spacing:
-        padding: ['20px', '0', '20px', '0']
-      css_class: fullscreen
-
-  - block: collection
-    content:
-      title: Latest Preprints
-      text: ""
-      count: 5
-      filters:
-        folders:
-          - publication
-        publication_type: 'article'
-    design:
-      view: citation
-      columns: '1'
-
-  - block: markdown
-    content:
-      title:
-      subtitle:
       text: |
-        {{% cta cta_link="./people/" cta_text="Meet the team →" %}}
+        The LENS Lab welcomes applications from motivated postdoctoral researchers, graduate students, and research assistants interested in semiconductor optoelectronic devices for energy and light technologies.
+
+        Interested candidates are welcome to contact Junke Wang with a CV and a brief description of research interests.
+
+        [See open positions →](/opportunities/)
     design:
       columns: '1'
 ---
