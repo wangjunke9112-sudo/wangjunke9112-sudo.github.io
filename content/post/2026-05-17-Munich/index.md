@@ -13,7 +13,7 @@ Junke Wang has signed a contract with South China University of Technology (SCUT
 
 The signing ceremony took place in Munich, Germany, and was attended by Professor Hongwu Tang, Member of the Chinese Academy of Engineering.
 
-![Signing ceremony in Munich with Professor Hongwu Tang](featured-2.jpg)
+![Signing ceremony in Munich with Professor Hongwu Tang](signing-ceremony.jpg)
 
 The LENS Lab will work on multijunction perovskite optoelectronics, targeting ultra-high efficiency solar modules, solar-driven fuel generation, and multilayer image sensors through advanced materials characterisation and optical design.
 
