@@ -27,18 +27,26 @@ sections:
         gradient_end: '#0077B6'
         text_color_light: true
 
-  - block: markdown
+- block: markdown
     id: research
     content:
       title: Research
       subtitle: Materials, interfaces, and devices for energy and light
       text: |
-        The LENS Lab develops advanced semiconductor optoelectronic devices for energy and light technologies. Our work combines materials chemistry, thin-film processing, interface engineering, device physics, and stability analysis.
+        The LENS Lab works on semiconductor optoelectronic devices for 
+        energy and light technologies, combining materials chemistry, 
+        thin-film processing, interface engineering, device physics, 
+        and stability analysis.
 
-        Initial research directions include **multijunction photovoltaics**, **perovskite and related thin-film semiconductors**, **interface engineering and energy losses**, **device stability**, and **scalable thin-film platforms**. Longer term, we aim to develop integrated optoelectronic systems that span light-driven energy conversion, sensing, and emission.
+        Current directions include **multijunction perovskite photovoltaics**, 
+        **interface engineering and energy losses**, and **stability and 
+        scalable fabrication** — with a longer-term vision spanning 
+        solar fuels, photodetectors, and integrated optoelectronic platforms.
+
+        [Read more about our research →](/research/)
     design:
       columns: '1'
-
+  
   - block: collection
     id: news
     content:
