@@ -11,6 +11,9 @@ appearance:
   font: native
   font_size: M
 
+plugins_css:
+  - css/custom.css
+  
 # SEO
 
 marketing:
