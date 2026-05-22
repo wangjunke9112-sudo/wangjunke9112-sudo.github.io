@@ -25,8 +25,8 @@ sections:
         Campus Science and Technology Park, SCUT Wushan Campus.
         Metro Line 5, Wushan Station (五山站), Exit A.
       coordinates:
-        latitude: '23.1798'
-        longitude: '113.3364'
+        latitude: '23.166126'
+        longitude: '113.339236'
       contact_links:
         - icon: google-scholar
           icon_pack: ai
