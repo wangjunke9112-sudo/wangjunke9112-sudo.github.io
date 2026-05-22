@@ -7,61 +7,67 @@ sections:
   - block: markdown
     content:
       title: Research
-      subtitle: Materials, interfaces, and devices for energy and light
+      subtitle: ''
       text: |
-        The LENS Lab develops advanced semiconductor optoelectronic devices
-        for energy and light technologies. Our work combines materials
-        chemistry, thin-film processing, interface engineering, device
-        physics, and stability analysis.
+        The LENS Lab develops semiconductor optoelectronic devices for energy
+        and light technologies. Our approach integrates materials discovery,
+        thin-film fabrication, multimodal characterisation, and device physics
+        to build and understand multilayer optoelectronic platforms.
 
-        We currently pursue three interconnected research directions, with
-        a longer-term vision of developing integrated optoelectronic
-        platforms that span light-driven energy conversion, sensing,
-        and emission.
+        We pursue three interconnected research directions — building the
+        fabrication and characterisation infrastructure to study new materials,
+        developing high-performance multilayer optoelectronic devices, and
+        extending these platforms toward solar fuels and emerging device
+        applications.
     design:
       columns: '1'
 
   - block: markdown
     content:
-      title: Multijunction Optoelectronic Devices
+      title: Fabrication Platforms and Functional Materials
       text: |
-        Metal-halide perovskites offer broad bandgap tunability — spanning
-        the visible and near-infrared spectrum — making them uniquely suited
-        for monolithically stacked multijunction architectures, where
-        multiple light-absorbing layers capture more of the solar spectrum
-        than any single junction can achieve.
+        ![Fabrication platforms and functional materials](research-platforms.jpg)
 
-        Despite rapid efficiency advances, realising the full potential of
-        perovskite multijunction devices remains an open challenge. Energetic
-        losses at interfaces, optical losses inherent to stacked
-        architectures, and questions of operational stability and scalable
-        fabrication all limit what can currently be achieved. Addressing
-        these losses — rather than working around them — is the central
-        ambition of this research direction.
+        Advancing multilayer optoelectronic devices requires not only new
+        materials but also the platforms to study and optimise them
+        systematically. We develop integrated thin-film fabrication and
+        multimodal characterisation workflows — combining solution processing,
+        vacuum deposition, and a range of structural, optical, and electronic
+        characterisation techniques — to establish rigorous quality-control
+        methods and understand intrinsic material properties.
 
-        **What we do.** We develop multimodal characterisation protocols
-        that track the compositional, morphological, and optical evolution
-        of perovskite thin films during and after fabrication. These methods
-        allow us to separate process artefacts from intrinsic material
-        behaviour, establishing quality-control strategies transferable
-        across different deposition platforms. In parallel, we design and
-        implement photonic nanostructures that enhance light-matter
-        interactions by increasing the effective optical path length without
-        compromising charge transport.
+        A key objective is high-throughput fabrication and characterisation
+        of perovskite and related semiconductor thin films, enabling
+        systematic exploration of composition, processing, and interface
+        design across a wide parameter space. These platforms support both
+        materials discovery and the translation of laboratory findings into
+        reproducible, scalable device processes.
 
-        **Where it leads.** The near-term goal is high-efficiency perovskite
-        multijunction solar modules fabricated using scalable deposition
-        techniques. These high-voltage devices will also serve as platforms
-        for solar-driven electrochemical conversion of carbon dioxide into
-        chemical fuels. The same materials processing controls and optical
-        design principles extend naturally to vertically stacked perovskite
-        multilayer colour image sensors.
+        [See related publications →](/tags/fabrication/)
+    design:
+      columns: '1'
 
-        **Who should work on this.** Researchers with backgrounds in
-        thin-film semiconductors, perovskite photovoltaics, optical
-        characterisation, device physics, or electrochemical systems.
-        Curiosity about the connection between processing, microstructure,
-        and device performance matters more than any single prior skill.
+  - block: markdown
+    content:
+      title: Multilayer Solar Cells, LEDs, and Photodetectors
+      text: |
+        ![Multilayer solar cells, LEDs, and photodetectors](research-devices.jpg)
+
+        Perovskite semiconductors offer broad bandgap tunability and
+        high defect tolerance, making them compelling candidates for
+        monolithically stacked multilayer device architectures. In
+        photovoltaics, multijunction stacks can capture more of the solar
+        spectrum than single-junction devices, with efficiency potentials
+        that exceed fundamental single-junction limits.
+
+        We work on understanding and eliminating the energetic and optical
+        losses that limit real-world performance in these architectures —
+        including recombination at interfaces, compositional disorder in
+        wide-bandgap absorbers, and optical losses in multilayer stacks.
+        The same materials and device design principles extend naturally to
+        vertically stacked perovskite photodetectors and light-emitting
+        devices, where multilayer architectures enable wavelength selectivity
+        and spectral tunability not achievable in single-layer devices.
 
         [See related publications →](/tags/multijunction/)
     design:
@@ -69,62 +75,26 @@ sections:
 
   - block: markdown
     content:
-      title: Interface Engineering and Energy Losses
+      title: Solar Fuels and Novel Optoelectronic Devices
       text: |
-        The performance of any multilayer optoelectronic device is
-        ultimately governed by what happens at its interfaces. Recombination
-        at semiconductor heterojunctions, contact layers, and passivating
-        interlayers represents one of the most significant — and least
-        understood — sources of efficiency loss in perovskite devices.
+        ![Solar fuels and novel optoelectronic devices](research-solar-fuels.jpg)
 
-        **What we do.** We use a combination of electrical, optical, and
-        surface characterisation techniques to identify where and how energy
-        is lost at key interfaces. We develop passivation strategies,
-        interlayer chemistries, and contact architectures that reduce these
-        losses systematically rather than empirically.
+        High-voltage perovskite multijunction devices generate sufficient
+        photovoltage to drive electrochemical reactions directly — splitting
+        water into hydrogen and oxygen, or reducing carbon dioxide into
+        chemical fuels, using only sunlight as the energy input. We study
+        the performance, stability, and integration of all-perovskite tandem
+        devices coupled to electrochemical systems, addressing the materials
+        and interface challenges that arise at the boundary between
+        photovoltaics and electrochemistry.
 
-        **Where it leads.** Reduced interface recombination directly
-        improves open-circuit voltage — the parameter most limiting
-        perovskite multijunction performance relative to its theoretical
-        ceiling. Insights from this direction feed directly into the
-        multijunction and stability programmes.
+        Beyond solar fuels, we are interested in emerging optoelectronic
+        device platforms enabled by the same multilayer design principles —
+        including novel semiconductor materials, multifunctional devices,
+        and applications where precise control of light–matter interactions
+        opens new possibilities.
 
-        **Who should work on this.** Researchers with backgrounds in
-        surface chemistry, semiconductor physics, photoluminescence
-        characterisation, or electrochemistry.
-
-        [See related publications →](/tags/interface-engineering/)
-    design:
-      columns: '1'
-
-  - block: markdown
-    content:
-      title: Stability and Scalable Fabrication
-      text: |
-        High efficiency measured on a small laboratory device means
-        little if the performance cannot be maintained over time or
-        reproduced at larger areas. Stability and scalability are not
-        afterthoughts — they constrain every materials and processing
-        decision made earlier in the research pipeline.
-
-        **What we do.** We design systematic degradation experiments that
-        isolate specific stress factors — light, heat, humidity, bias —
-        and use in-situ and ex-situ diagnostics to track how material and
-        device properties evolve. In parallel, we develop and evaluate
-        deposition protocols suitable for scaling from laboratory to
-        module dimensions, monitoring how film uniformity and device
-        performance change with area.
-
-        **Where it leads.** Encapsulation strategies, stable contact
-        materials, and scalable ink formulations that bring laboratory
-        performance closer to what is achievable in a real deployment
-        context.
-
-        **Who should work on this.** Researchers interested in
-        degradation mechanisms, in-operando characterisation, thin-film
-        processing, or the materials science of device failure.
-
-        [See related publications →](/tags/stability/)
+        [See related publications →](/tags/solar-fuels/)
     design:
       columns: '1'
 
