@@ -12,15 +12,21 @@ sections:
         The LENS Lab is based at the School of Materials Science and Engineering and the State Key Laboratory of Luminescent Materials and Devices, South China University of Technology (SCUT), Guangzhou, China.
 
         Prospective students and postdocs are welcome to get in touch with a CV and a brief description of research interests. See the [Join Us](/opportunities/) page for details.
-      email: junke.wang@hotmail.com
+      email: wjk090426@scut.edu.cn
       address:
-        street: School of Materials Science and Engineering, South China University of Technology
+        street: Building 1, North Campus Science and Technology Park, 381 Wushan Road
         city: Guangzhou
         region: Guangdong
-        postcode: '510640'
+        postcode: '510641'
         country: China
         country_code: CN
-      directions: SCUT University Town Campus
+      directions: >-
+        State Key Laboratory of Luminescent Materials and Devices, North
+        Campus Science and Technology Park, SCUT Wushan Campus.
+        Metro Line 5, Wushan Station (五山站), Exit A.
+      coordinates:
+        latitude: '23.1798'
+        longitude: '113.3364'
       contact_links:
         - icon: google-scholar
           icon_pack: ai
