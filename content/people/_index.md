@@ -1,6 +1,6 @@
 ---
-title: Our Team
-date: 2026-05-15
+title: Group Members
+date: 2025-01-01
 type: landing
 
 sections:
@@ -16,41 +16,31 @@ sections:
 
   - block: people
     content:
-      title: Postdocs
+      title: PhD Students
       user_groups:
-        - Postdocs
+        - PhD Students
     design:
       show_interests: false
       show_role: true
-      show_social: true
+      show_social: false
 
   - block: people
     content:
-      title: Graduate Students
+      title: Master Students
       user_groups:
-        - Graduate Students
+        - Master Students
     design:
       show_interests: false
       show_role: true
-      show_social: true
+      show_social: false
 
   - block: people
     content:
-      title: Undergraduate Students
+      title: Undergraduate Researchers
       user_groups:
         - Undergraduate Students
     design:
       show_interests: false
       show_role: true
-      show_social: true
-
-  - block: people
-    content:
-      title: Alumni
-      user_groups:
-        - Alumni
-    design:
-      show_interests: false
-      show_role: true
-      show_social: true
+      show_social: false
 ---
