@@ -9,7 +9,7 @@ summary: "Junke Wang presented his research on perovskite multijunction solar ce
 draft: false
 ---
 
-Junke Wang visited the [Aydin Group](https://aydin.cup.uni-muenchen.de/) at Ludwig Maximilian University of Munich (LMU Munich), where he presented an invited talk as part of their Solar Energy Seminar Series — joining as the 15th speaker in the series.
+Junke Wang visited the [Aydin Group](https://aydin.cup.uni-muenchen.de/) at Ludwig Maximilian University of Munich (LMU Munich) as an invited speaker at their Solar Energy Seminar Series.
 
 ![Dr. Erkan Aydin and Dr. Junke Wang in the PV Fabrication Lab](featured.jpg)
 
