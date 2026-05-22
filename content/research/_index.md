@@ -64,6 +64,7 @@ sections:
         and device performance matters more than any single prior skill.
     design:
       columns: '1'
+[See related publications →](/tags/multijunction/)
 
   - block: markdown
     content:
@@ -92,6 +93,7 @@ sections:
         characterisation, or electrochemistry.
     design:
       columns: '1'
+[See related publications →](/tags/interface-engineering/)
 
   - block: markdown
     content:
@@ -121,6 +123,7 @@ sections:
         processing, or the materials science of device failure.
     design:
       columns: '1'
+[See related publications →](/tags/stability/)
 
   - block: markdown
     content:
