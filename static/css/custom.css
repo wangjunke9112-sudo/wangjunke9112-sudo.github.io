@@ -1,13 +1,10 @@
 /* =========================================================
    LENS Lab — custom.css
-   Place this file at: static/css/custom.css
-   Then add to config/_default/params.yaml:
-     custom_css:
-       - css/custom.css
+   Place at: static/css/custom.css
    ========================================================= */
 
 /* ---------------------------------------------------------
-   FONT — Inter from Google Fonts
+   FONT — Inter
    --------------------------------------------------------- */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
@@ -20,15 +17,18 @@ h1, h2, h3, h4, h5, h6,
 }
 
 /* ---------------------------------------------------------
-   FOOTER — hide Hugo Blox credit, keep copyright
+   FOOTER — hide Hugo Blox credit line only
+   Targets the specific link text, not the whole paragraph
    --------------------------------------------------------- */
-a[href*="hugoblox.com"],
-a[href*="wowchemy.com"] {
+footer .powered-by,
+footer [class*="powered"],
+footer a[href*="hugoblox.com"] {
   display: none !important;
 }
 
-/* Hide the full "Published with..." sentence */
-footer p:last-child {
+/* Hide the parent span/p that wraps "Published with..." 
+   without touching the copyright line above it */
+footer p:has(a[href*="hugoblox.com"]) {
   display: none !important;
 }
 
@@ -150,15 +150,15 @@ footer p:last-child {
 
 /* =========================================================
    DARK MODE
-   Hugo Blox sets data-theme="dark" on <html> when dark mode
-   is active. All rules below override light-mode colors.
+   Hugo Blox sets data-theme="dark" on <html> element.
+   Using html[data-theme="dark"] for maximum specificity.
    ========================================================= */
 
 /* ---------------------------------------------------------
    DARK MODE — body and general text
    --------------------------------------------------------- */
 html[data-theme="dark"] body {
-  color: #E2E8F0;
+  color: #E2E8F0 !important;
 }
 
 html[data-theme="dark"] h1,
@@ -191,16 +191,21 @@ html[data-theme="dark"] .page-type-publication h2 {
 }
 
 /* ---------------------------------------------------------
-   DARK MODE — publication title links
+   DARK MODE — publication links
+   Broad catch-all: every <a> on the publication list page
+   plus specific selectors for article titles
    --------------------------------------------------------- */
+html[data-theme="dark"] .page-type-publication a,
 html[data-theme="dark"] .media-body .article-title,
 html[data-theme="dark"] .media-body .article-title a,
-html[data-theme="dark"] .page-type-publication a {
+html[data-theme="dark"] .media-body h3 a,
+html[data-theme="dark"] .media-body p a,
+html[data-theme="dark"] .media-body li a {
   color: #90CAF9 !important;
 }
 
-html[data-theme="dark"] .media-body .article-title a:hover,
-html[data-theme="dark"] .page-type-publication a:hover {
+html[data-theme="dark"] .page-type-publication a:hover,
+html[data-theme="dark"] .media-body .article-title a:hover {
   color: #ffffff !important;
 }
 
@@ -208,7 +213,9 @@ html[data-theme="dark"] .page-type-publication a:hover {
    DARK MODE — author metadata and journal text
    --------------------------------------------------------- */
 html[data-theme="dark"] .media-body .article-metadata,
-html[data-theme="dark"] .article-metadata {
+html[data-theme="dark"] .article-metadata,
+html[data-theme="dark"] .media-body p,
+html[data-theme="dark"] .media-body li {
   color: #94A3B8 !important;
 }
 
@@ -252,5 +259,5 @@ html[data-theme="dark"] .btn-outline-primary:hover {
    DARK MODE — footer
    --------------------------------------------------------- */
 html[data-theme="dark"] footer {
-  color: #94A3B8;
+  color: #94A3B8 !important;
 }
