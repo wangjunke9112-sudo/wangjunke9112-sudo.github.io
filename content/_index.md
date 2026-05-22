@@ -35,8 +35,7 @@ sections:
       text: |
         The LENS Lab works on semiconductor optoelectronic devices for 
         energy and light technologies, combining materials chemistry, 
-        thin-film processing, interface engineering, device physics, 
-        and stability analysis.
+        thin-film processing, device physics, and stability analysis.
 
         Current directions include **multijunction perovskite photovoltaics**, 
         **interface engineering and energy losses**, and **stability and 
