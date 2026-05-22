@@ -1,1 +1,256 @@
+/* =========================================================
+   LENS Lab — custom.css
+   Place this file at: static/css/custom.css
+   Then add to config/_default/params.yaml:
+     custom_css:
+       - css/custom.css
+   ========================================================= */
 
+/* ---------------------------------------------------------
+   FONT — Inter from Google Fonts
+   --------------------------------------------------------- */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+body,
+h1, h2, h3, h4, h5, h6,
+.navbar-brand, .nav-link,
+.article-title, .pub-title, .section-heading {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI",
+    Roboto, Helvetica, Arial, sans-serif !important;
+}
+
+/* ---------------------------------------------------------
+   FOOTER — hide Hugo Blox credit, keep copyright
+   --------------------------------------------------------- */
+a[href*="hugoblox.com"],
+a[href*="wowchemy.com"] {
+  display: none !important;
+}
+
+/* Hide the full "Published with..." sentence */
+footer p:last-child {
+  display: none !important;
+}
+
+/* ---------------------------------------------------------
+   PUBLICATIONS LIST — light mode
+   --------------------------------------------------------- */
+.page-type-publication h2 {
+  font-size: 1.8rem !important;
+  font-weight: 700 !important;
+  color: #222 !important;
+  border-bottom: 2px solid #eaeaea !important;
+  padding-bottom: 0.5rem;
+  margin-top: 3rem;
+  margin-bottom: 1.5rem;
+}
+
+.page-type-publication h2:first-of-type {
+  margin-top: 1rem;
+}
+
+.media-body .article-title,
+.media-body .article-title a {
+  font-size: 1.15rem !important;
+  font-weight: 600 !important;
+  color: #1a49a0 !important;
+  line-height: 1.4 !important;
+  margin-bottom: 0.3rem !important;
+}
+
+.media-body .article-title a:hover {
+  color: #0056b3 !important;
+  text-decoration: underline !important;
+}
+
+.media-body .article-metadata {
+  font-size: 1rem !important;
+  margin-bottom: 0.25rem !important;
+  color: #444 !important;
+}
+
+.media-body .article-style,
+.media-body .article-style p {
+  font-size: 1rem !important;
+  line-height: 1.6 !important;
+  color: #333 !important;
+  margin-bottom: 0 !important;
+}
+
+.media.stream-item {
+  margin-bottom: 1.75rem !important;
+}
+
+/* ---------------------------------------------------------
+   INDIVIDUAL PUBLICATION PAGE — light mode
+   --------------------------------------------------------- */
+.page-type-publication h1,
+.pub-title {
+  font-size: 1.75rem !important;
+  font-weight: 700;
+  line-height: 1.3;
+  margin-bottom: 1.5rem;
+}
+
+.article-style {
+  font-size: 1.1rem;
+  line-height: 1.7;
+  color: #333;
+}
+
+/* ---------------------------------------------------------
+   TEAM / PEOPLE PAGE — light mode
+   --------------------------------------------------------- */
+#people .portrait {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+#people .portrait:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.portrait-title h2,
+.portrait-title h2 a {
+  font-weight: 800 !important;
+  font-size: 1.35rem !important;
+  color: #1a49a0 !important;
+  margin-top: 1.2rem !important;
+}
+
+.portrait-title a {
+  border-bottom: none !important;
+  text-decoration: none !important;
+}
+
+.portrait-title a:hover {
+  color: #0056b3 !important;
+  text-decoration: underline !important;
+}
+
+.portrait-title .people-organizations,
+.portrait-title .people-organizations p {
+  font-size: 0.9rem !important;
+  color: #777 !important;
+  margin-top: 0.2rem !important;
+  line-height: 1.3 !important;
+}
+
+#people .row.justify-content-center {
+  margin-bottom: 4rem !important;
+}
+
+/* ---------------------------------------------------------
+   AUTHOR PROFILE PAGE
+   --------------------------------------------------------- */
+.page-type-authors .article-container,
+.page-type-authors .universal-wrapper {
+  max-width: 1000px !important;
+}
+
+/* =========================================================
+   DARK MODE
+   Hugo Blox sets data-theme="dark" on <html> when dark mode
+   is active. All rules below override light-mode colors.
+   ========================================================= */
+
+/* ---------------------------------------------------------
+   DARK MODE — body and general text
+   --------------------------------------------------------- */
+html[data-theme="dark"] body {
+  color: #E2E8F0;
+}
+
+html[data-theme="dark"] h1,
+html[data-theme="dark"] h2,
+html[data-theme="dark"] h3,
+html[data-theme="dark"] h4,
+html[data-theme="dark"] h5 {
+  color: #E2E8F0 !important;
+}
+
+/* ---------------------------------------------------------
+   DARK MODE — navbar
+   --------------------------------------------------------- */
+html[data-theme="dark"] .navbar {
+  background-color: #0F1623 !important;
+  border-bottom: 1px solid #2D3A4F !important;
+}
+
+html[data-theme="dark"] .navbar-brand,
+html[data-theme="dark"] .nav-link {
+  color: #E2E8F0 !important;
+}
+
+/* ---------------------------------------------------------
+   DARK MODE — publication year headers
+   --------------------------------------------------------- */
+html[data-theme="dark"] .page-type-publication h2 {
+  color: #E2E8F0 !important;
+  border-bottom-color: #2D3A4F !important;
+}
+
+/* ---------------------------------------------------------
+   DARK MODE — publication title links
+   --------------------------------------------------------- */
+html[data-theme="dark"] .media-body .article-title,
+html[data-theme="dark"] .media-body .article-title a,
+html[data-theme="dark"] .page-type-publication a {
+  color: #90CAF9 !important;
+}
+
+html[data-theme="dark"] .media-body .article-title a:hover,
+html[data-theme="dark"] .page-type-publication a:hover {
+  color: #ffffff !important;
+}
+
+/* ---------------------------------------------------------
+   DARK MODE — author metadata and journal text
+   --------------------------------------------------------- */
+html[data-theme="dark"] .media-body .article-metadata,
+html[data-theme="dark"] .article-metadata {
+  color: #94A3B8 !important;
+}
+
+html[data-theme="dark"] .media-body .article-style,
+html[data-theme="dark"] .media-body .article-style p,
+html[data-theme="dark"] .article-style {
+  color: #CBD5E1 !important;
+}
+
+/* ---------------------------------------------------------
+   DARK MODE — team / people page
+   --------------------------------------------------------- */
+html[data-theme="dark"] .portrait-title h2,
+html[data-theme="dark"] .portrait-title h2 a {
+  color: #90CAF9 !important;
+}
+
+html[data-theme="dark"] .portrait-title a:hover {
+  color: #ffffff !important;
+}
+
+html[data-theme="dark"] .portrait-title .people-organizations,
+html[data-theme="dark"] .portrait-title .people-organizations p {
+  color: #94A3B8 !important;
+}
+
+/* ---------------------------------------------------------
+   DARK MODE — PDF / Cite buttons
+   --------------------------------------------------------- */
+html[data-theme="dark"] .btn-outline-primary {
+  border-color: #64B5F6 !important;
+  color: #64B5F6 !important;
+}
+
+html[data-theme="dark"] .btn-outline-primary:hover {
+  background-color: #64B5F6 !important;
+  color: #0F1623 !important;
+}
+
+/* ---------------------------------------------------------
+   DARK MODE — footer
+   --------------------------------------------------------- */
+html[data-theme="dark"] footer {
+  color: #94A3B8;
+}
