@@ -158,23 +158,6 @@ h1, h2, h3, h4, h5, h6,
 }
 
 /* ---------------------------------------------------------
-   FOOTER
-   --------------------------------------------------------- */
-
-/* Keep copyright, hide Hugo Blox credit */
-footer a[href*="hugoblox.com"],
-footer a[href*="wowchemy.com"],
-footer a[href*="github.com/HugoBlox"] {
-  display: none !important;
-}
-
-/* Hide the entire sentence containing the Hugo Blox link.
-   We target the parent <p> via a wrapper class Hugo Blox adds. */
-.powered-by {
-  display: none !important;
-}
-
-/* ---------------------------------------------------------
    DARK MODE — publication year headers
    --------------------------------------------------------- */
 
