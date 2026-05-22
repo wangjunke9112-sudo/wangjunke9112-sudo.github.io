@@ -122,16 +122,16 @@ sections:
     design:
       columns: '1'
 
-- block: markdown
+  - block: markdown
     content:
       title: Laboratory Facilities
       text: |
         The LENS Lab is being established at SCUT with a dedicated
         infrastructure for multijunction perovskite device research —
         including a multi-glovebox fabrication suite, vacuum deposition
-        systems, current-voltage and stability testing, and access to the full shared
-        characterisation infrastructure of the State Key Laboratory of
-        Luminescent Materials and Devices (SKLLMD).
+        systems, current-voltage and stability testing, and access to the
+        full shared characterisation infrastructure of the State Key
+        Laboratory of Luminescent Materials and Devices (SKLLMD).
 
         [View full facilities →](/research/facilities/)
     design:
