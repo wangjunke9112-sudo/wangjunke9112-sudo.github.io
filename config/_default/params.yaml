@@ -118,3 +118,7 @@ publications:
 
 power_ups:
 hide_published_with: true
+
+# Custom CSS
+custom_css:
+  - css/custom.css
