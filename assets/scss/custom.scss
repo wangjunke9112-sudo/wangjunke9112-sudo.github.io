@@ -1,28 +1,24 @@
 /* =========================================================
    LENS Lab — custom.scss
-   Merged: existing styles + dark mode fixes
+   Flat selectors only — compatible with Hugo SCSS processor
    ========================================================= */
 
-/* =========================================================
-   FONT IMPORT (Inter)
-   ========================================================= */
+/* ---------------------------------------------------------
+   FONT
+   --------------------------------------------------------- */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
-body {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-    Helvetica, Arial, sans-serif !important;
-}
-
+body,
 h1, h2, h3, h4, h5, h6,
 .navbar-brand, .nav-link,
 .article-title, .pub-title, .section-heading {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-    Helvetica, Arial, sans-serif !important;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI",
+    Roboto, Helvetica, Arial, sans-serif !important;
 }
 
-/* =========================================================
-   PUBLICATIONS LIST
-   ========================================================= */
+/* ---------------------------------------------------------
+   PUBLICATIONS LIST — light mode
+   --------------------------------------------------------- */
 
 /* Year headers */
 .page-type-publication h2 {
@@ -39,7 +35,7 @@ h1, h2, h3, h4, h5, h6,
   margin-top: 1rem;
 }
 
-/* Publication titles */
+/* Publication title links */
 .media-body .article-title,
 .media-body .article-title a {
   font-size: 1.15rem !important;
@@ -54,10 +50,11 @@ h1, h2, h3, h4, h5, h6,
   text-decoration: underline !important;
 }
 
-/* Author list */
+/* Author metadata */
 .media-body .article-metadata {
   font-size: 1rem !important;
   margin-bottom: 0.25rem !important;
+  color: #444 !important;
 }
 
 /* Journal / summary text */
@@ -74,9 +71,9 @@ h1, h2, h3, h4, h5, h6,
   margin-bottom: 1.75rem !important;
 }
 
-/* =========================================================
-   INDIVIDUAL PUBLICATION PAGE
-   ========================================================= */
+/* ---------------------------------------------------------
+   INDIVIDUAL PUBLICATION PAGE — light mode
+   --------------------------------------------------------- */
 
 .page-type-publication h1,
 .pub-title {
@@ -99,9 +96,9 @@ h1, h2, h3, h4, h5, h6,
   color: #333;
 }
 
-/* =========================================================
-   TEAM / PEOPLE PAGE
-   ========================================================= */
+/* ---------------------------------------------------------
+   TEAM / PEOPLE PAGE — light mode
+   --------------------------------------------------------- */
 
 #people .section-heading h2 {
   font-size: 1.8rem !important;
@@ -151,139 +148,160 @@ h1, h2, h3, h4, h5, h6,
   margin-bottom: 4rem !important;
 }
 
-/* =========================================================
+/* ---------------------------------------------------------
    AUTHOR PROFILE PAGE
-   ========================================================= */
+   --------------------------------------------------------- */
 
 .page-type-authors .article-container,
 .page-type-authors .universal-wrapper {
   max-width: 1000px !important;
 }
 
-/* =========================================================
-   FOOTER — hide Hugo Blox credit line
-   ========================================================= */
+/* ---------------------------------------------------------
+   FOOTER
+   --------------------------------------------------------- */
 
-footer .powered-by,
-footer a[href*="hugoblox"],
-footer a[href*="wowchemy"],
-footer p:has(a[href*="hugoblox"]),
-footer p:has(a[href*="wowchemy"]),
+/* Keep copyright, hide Hugo Blox credit */
+footer a[href*="hugoblox.com"],
+footer a[href*="wowchemy.com"],
+footer a[href*="github.com/HugoBlox"] {
+  display: none !important;
+}
+
+/* Hide the entire sentence containing the Hugo Blox link.
+   We target the parent <p> via a wrapper class Hugo Blox adds. */
 .powered-by {
   display: none !important;
 }
 
-/* =========================================================
-   DARK MODE OVERRIDES
-   All hardcoded light colors above are reset here for dark.
-   ========================================================= */
+/* ---------------------------------------------------------
+   DARK MODE — publication year headers
+   --------------------------------------------------------- */
 
-[data-theme="dark"] {
+[data-theme="dark"] .page-type-publication h2 {
+  color: #E2E8F0 !important;
+  border-bottom-color: #2D3A4F !important;
+}
 
-  /* --- Publications list --- */
+/* ---------------------------------------------------------
+   DARK MODE — publication title links
+   --------------------------------------------------------- */
 
-  /* Year headers */
-  .page-type-publication h2 {
-    color: #E8EDF2 !important;
-    border-bottom-color: #2D3A4F !important;
-  }
+[data-theme="dark"] .media-body .article-title,
+[data-theme="dark"] .media-body .article-title a {
+  color: #90CAF9 !important;
+}
 
-  /* Publication title links */
-  .media-body .article-title,
-  .media-body .article-title a {
-    color: #90CAF9 !important;
-  }
+[data-theme="dark"] .media-body .article-title a:hover {
+  color: #ffffff !important;
+}
 
-  .media-body .article-title a:hover {
-    color: #ffffff !important;
-  }
+/* ---------------------------------------------------------
+   DARK MODE — author metadata and journal text
+   --------------------------------------------------------- */
 
-  /* Author metadata */
-  .media-body .article-metadata,
-  .article-metadata {
-    color: #94A3B8 !important;
-  }
+[data-theme="dark"] .media-body .article-metadata,
+[data-theme="dark"] .article-metadata {
+  color: #94A3B8 !important;
+}
 
-  /* Journal / summary text */
-  .media-body .article-style,
-  .media-body .article-style p {
-    color: #94A3B8 !important;
-  }
+[data-theme="dark"] .media-body .article-style,
+[data-theme="dark"] .media-body .article-style p {
+  color: #94A3B8 !important;
+}
 
-  /* --- Individual publication page --- */
+/* ---------------------------------------------------------
+   DARK MODE — individual publication page
+   --------------------------------------------------------- */
 
-  .article-metadata {
-    color: #94A3B8 !important;
-  }
+[data-theme="dark"] .article-metadata {
+  color: #94A3B8 !important;
+}
 
-  .article-style {
-    color: #CBD5E1 !important;
-  }
+[data-theme="dark"] .article-style {
+  color: #CBD5E1 !important;
+}
 
-  /* --- Team page --- */
+/* ---------------------------------------------------------
+   DARK MODE — plain links on publication list page
+   (fallback: some pub titles render as bare <a> not in .media-body)
+   --------------------------------------------------------- */
 
-  #people .section-heading h2 {
-    color: #E8EDF2 !important;
-    border-bottom-color: #2D3A4F !important;
-  }
+[data-theme="dark"] .page-type-publication a {
+  color: #90CAF9 !important;
+}
 
-  .portrait-title h2,
-  .portrait-title h2 a {
-    color: #90CAF9 !important;
-  }
+[data-theme="dark"] .page-type-publication a:hover {
+  color: #ffffff !important;
+}
 
-  .portrait-title a:hover {
-    color: #ffffff !important;
-  }
+/* ---------------------------------------------------------
+   DARK MODE — team / people page
+   --------------------------------------------------------- */
 
-  .portrait-title .people-organizations,
-  .portrait-title .people-organizations p {
-    color: #94A3B8 !important;
-  }
+[data-theme="dark"] #people .section-heading h2 {
+  color: #E2E8F0 !important;
+  border-bottom-color: #2D3A4F !important;
+}
 
-  /* Portrait card background */
-  .portrait {
-    background-color: #1A2233 !important;
-    border-color: #2D3A4F !important;
-  }
+[data-theme="dark"] .portrait-title h2,
+[data-theme="dark"] .portrait-title h2 a {
+  color: #90CAF9 !important;
+}
 
-  /* --- Navbar --- */
+[data-theme="dark"] .portrait-title a:hover {
+  color: #ffffff !important;
+}
 
-  .navbar {
-    background-color: #0F1623 !important;
-    border-bottom: 1px solid #2D3A4F !important;
-  }
+[data-theme="dark"] .portrait-title .people-organizations,
+[data-theme="dark"] .portrait-title .people-organizations p {
+  color: #94A3B8 !important;
+}
 
-  .navbar-brand,
-  .nav-link {
-    color: #E8EDF2 !important;
-  }
+/* ---------------------------------------------------------
+   DARK MODE — navbar
+   --------------------------------------------------------- */
 
-  /* --- General body and surfaces --- */
+[data-theme="dark"] .navbar {
+  background-color: #0F1623 !important;
+  border-bottom: 1px solid #2D3A4F !important;
+}
 
-  body {
-    color: #E8EDF2;
-    background-color: #0F1623;
-  }
+[data-theme="dark"] .navbar-brand,
+[data-theme="dark"] .nav-link {
+  color: #E2E8F0 !important;
+}
 
-  /* PDF / Cite / link buttons */
-  .btn-outline-primary {
-    border-color: #64B5F6 !important;
-    color: #64B5F6 !important;
-  }
+/* ---------------------------------------------------------
+   DARK MODE — PDF / Cite buttons
+   --------------------------------------------------------- */
 
-  .btn-outline-primary:hover {
-    background-color: #64B5F6 !important;
-    color: #0F1623 !important;
-  }
+[data-theme="dark"] .btn-outline-primary {
+  border-color: #64B5F6 !important;
+  color: #64B5F6 !important;
+}
 
-  /* Section headings on new landing pages */
-  h2 {
-    color: #E8EDF2;
-  }
+[data-theme="dark"] .btn-outline-primary:hover {
+  background-color: #64B5F6 !important;
+  color: #0F1623 !important;
+}
 
-  /* Footer */
-  footer {
-    color: #94A3B8;
-  }
+/* ---------------------------------------------------------
+   DARK MODE — general body text and headings
+   --------------------------------------------------------- */
+
+[data-theme="dark"] body {
+  color: #E2E8F0;
+}
+
+[data-theme="dark"] h1,
+[data-theme="dark"] h2,
+[data-theme="dark"] h3,
+[data-theme="dark"] h4,
+[data-theme="dark"] h5 {
+  color: #E2E8F0;
+}
+
+[data-theme="dark"] footer {
+  color: #94A3B8;
 }
