@@ -1,201 +1,289 @@
 /* =========================================================
-   GLOBAL FONT IMPORT (Inter - Modern Sans-Serif)
+   LENS Lab — custom.scss
+   Merged: existing styles + dark mode fixes
+   ========================================================= */
+
+/* =========================================================
+   FONT IMPORT (Inter)
    ========================================================= */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
-/* Apply to all standard text */
 body {
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif !important;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    Helvetica, Arial, sans-serif !important;
 }
 
-/* Apply to all headings, website titles, and navigation tabs */
 h1, h2, h3, h4, h5, h6,
 .navbar-brand, .nav-link,
 .article-title, .pub-title, .section-heading {
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif !important;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    Helvetica, Arial, sans-serif !important;
 }
 
-/* 1. Make the Publication Title slightly larger and bold */
-.media-body .article-title, 
+/* =========================================================
+   PUBLICATIONS LIST
+   ========================================================= */
+
+/* Year headers */
+.page-type-publication h2 {
+  font-size: 1.8rem !important;
+  font-weight: 700 !important;
+  color: #222 !important;
+  border-bottom: 2px solid #eaeaea;
+  padding-bottom: 0.5rem;
+  margin-top: 3rem;
+  margin-bottom: 1.5rem;
+}
+
+.page-type-publication h2:first-of-type {
+  margin-top: 1rem;
+}
+
+/* Publication titles */
+.media-body .article-title,
 .media-body .article-title a {
-    font-size: 1.25rem !important;
-    font-weight: 700 !important;
-    line-height: 1.4 !important;
-    margin-bottom: 0.25rem !important;
+  font-size: 1.15rem !important;
+  font-weight: 600 !important;
+  color: #1a49a0 !important;
+  line-height: 1.4 !important;
+  margin-bottom: 0.3rem !important;
 }
 
-/* 2. Make the Author List a nice, readable size */
+.media-body .article-title a:hover {
+  color: #0056b3 !important;
+  text-decoration: underline !important;
+}
+
+/* Author list */
 .media-body .article-metadata {
-    font-size: 1rem !important;
-    margin-bottom: 0.25rem !important;
+  font-size: 1rem !important;
+  margin-bottom: 0.25rem !important;
 }
 
-/* 3. Make the Journal Details (Summary) match the authors */
+/* Journal / summary text */
 .media-body .article-style,
 .media-body .article-style p {
-    font-size: 1rem !important;
-    margin-top: 0 !important;
-    color: #444 !important; /* A professional dark grey */
+  font-size: 1rem !important;
+  line-height: 1.6 !important;
+  color: #333 !important;
+  margin-bottom: 0 !important;
 }
 
-/* --- Styling for the Individual Publication/Abstract Page --- */
+/* Spacing between papers */
+.media.stream-item {
+  margin-bottom: 1.75rem !important;
+}
 
-/* Shrink the massive page title */
+/* =========================================================
+   INDIVIDUAL PUBLICATION PAGE
+   ========================================================= */
+
 .page-type-publication h1,
 .pub-title {
-    font-size: 1.75rem !important;
-    font-weight: 700;
-    line-height: 1.3;
-    margin-bottom: 1.5rem;
+  font-size: 1.75rem !important;
+  font-weight: 700;
+  line-height: 1.3;
+  margin-bottom: 1.5rem;
 }
 
-/* Add breathing room around the meta-data (date, etc.) */
 .article-metadata {
-    margin-bottom: 2rem !important;
-    font-size: 0.95rem;
-    color: #666;
+  margin-bottom: 2rem !important;
+  font-size: 0.95rem;
+  color: #666;
 }
 
-/* Style the abstract text to look like a proper academic paper */
 .article-style {
-    font-size: 1.1rem;
-    line-height: 1.7;
-    text-align: justify;
-    color: #333;
+  font-size: 1.1rem;
+  line-height: 1.7;
+  text-align: justify;
+  color: #333;
 }
 
 /* =========================================================
-   PUBLICATIONS LIST STYLING (20260329-Style)
+   TEAM / PEOPLE PAGE
    ========================================================= */
 
-/* 1. The Bold Year Headers (2026, 2025, etc.) */
-.page-type-publication h2 {
-    font-size: 1.8rem !important;
-    font-weight: 700 !important;
-    color: #222 !important;
-    border-bottom: 2px solid #eaeaea; /* A clean, subtle divider line */
-    padding-bottom: 0.5rem;
-    margin-top: 3rem;
-    margin-bottom: 1.5rem;
-}
-
-/* Remove the huge gap above the very first year (2026) */
-.page-type-publication h2:first-of-type {
-    margin-top: 1rem;
-}
-
-/* 2. The Publication Titles (Professional, Academic Blue) */
-.media-body .article-title, 
-.media-body .article-title a {
-    font-size: 1.15rem !important;
-    font-weight: 600 !important;
-    color: #1a49a0 !important; /* A professional dark blue link color */
-    line-height: 1.4 !important;
-    margin-bottom: 0.3rem !important;
-}
-
-/* Make the title change color slightly when hovered */
-.media-body .article-title a:hover {
-    color: #0056b3 !important;
-    text-decoration: underline !important;
-}
-
-/* 3. The Author & Journal Text (Clean, readable spacing) */
-.media-body .article-style,
-.media-body .article-style p {
-    font-size: 1rem !important;
-    line-height: 1.6 !important;
-    color: #333 !important; /* A sharp, readable dark grey */
-    margin-bottom: 0 !important;
-}
-
-/* 4. Spacing between individual papers */
-.media.stream-item {
-    margin-bottom: 1.75rem !important;
-}
-
-/* =========================================================
-   TEAM PAGE STYLING
-   ========================================================= */
-
-/* 1. Group Headers (PI, Postdocs, etc.) to match Publications */
 #people .section-heading h2 {
-    font-size: 1.8rem !important;
-    font-weight: 700 !important;
-    color: #222 !important;
-    border-bottom: 2px solid #eaeaea;
-    padding-bottom: 0.5rem;
-    margin-bottom: 2rem;
+  font-size: 1.8rem !important;
+  font-weight: 700 !important;
+  color: #222 !important;
+  border-bottom: 2px solid #eaeaea;
+  padding-bottom: 0.5rem;
+  margin-bottom: 2rem;
 }
 
-/* 2. Sleek hover effect for Profile Pictures */
 #people .portrait {
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 #people .portrait:hover {
-    transform: translateY(-5px); /* Lifts the image up slightly */
-    box-shadow: 0 10px 20px rgba(0,0,0,0.1); /* Adds a soft drop shadow */
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
 }
 
-/* 3. Name and Role Text Formatting */
-#people .portrait-title h2 {
-    font-size: 1.2rem !important;
-    font-weight: 600 !important;
-    margin-top: 1.2rem !important;
-    color: #1a49a0 !important; /* Subtle academic blue for names */
-}
-
-#people .portrait-title h3 {
-    font-size: 0.95rem !important;
-    color: #666 !important; /* Professional grey for the role */
-    font-weight: 400 !important;
-}
-
-/* =========================================================
-   1. WIDEN THE AUTHOR PROFILE PAGE
-   ========================================================= */
-/* Expands the central text column so sentences don't wrap too early */
-.page-type-authors .article-container,
-.page-type-authors .universal-wrapper {
-    max-width: 1000px !important; /* Increased from the ~720px default */
-}
-
-
-/* =========================================================
-   2. TEAM PAGE: BULLETPROOF TYPOGRAPHY & SPACING
-   ========================================================= */
-/* Force the Name to be Bold */
 .portrait-title h2,
 .portrait-title h2 a {
-    font-weight: 800 !important; 
-    font-size: 1.35rem !important;
-    color: #1a49a0 !important; 
-    margin-top: 1.2rem !important;
+  font-weight: 800 !important;
+  font-size: 1.35rem !important;
+  color: #1a49a0 !important;
+  margin-top: 1.2rem !important;
 }
 
-/* Ensure NO dashed/dotted lines appear under names or affiliations */
 .portrait-title a {
-    border-bottom: none !important;
-    text-decoration: none !important;
+  border-bottom: none !important;
+  text-decoration: none !important;
 }
 
-/* Add a subtle hover effect to links instead of the dashed line */
 .portrait-title a:hover {
-    color: #0056b3 !important;
-    text-decoration: underline !important;
+  color: #0056b3 !important;
+  text-decoration: underline !important;
 }
 
-/* Format the native Organization/Affiliation text */
 .portrait-title .people-organizations,
 .portrait-title .people-organizations p {
-    font-size: 0.9rem !important;
-    color: #777 !important;
-    margin-top: 0.2rem !important;
-    line-height: 1.3 !important;
+  font-size: 0.9rem !important;
+  color: #777 !important;
+  margin-top: 0.2rem !important;
+  line-height: 1.3 !important;
 }
 
-/* Ensure generous spacing between different groups (PI vs Students) */
 #people .row.justify-content-center {
-    margin-bottom: 4rem !important; 
+  margin-bottom: 4rem !important;
+}
+
+/* =========================================================
+   AUTHOR PROFILE PAGE
+   ========================================================= */
+
+.page-type-authors .article-container,
+.page-type-authors .universal-wrapper {
+  max-width: 1000px !important;
+}
+
+/* =========================================================
+   FOOTER — hide Hugo Blox credit line
+   ========================================================= */
+
+footer .powered-by,
+footer a[href*="hugoblox"],
+footer a[href*="wowchemy"],
+footer p:has(a[href*="hugoblox"]),
+footer p:has(a[href*="wowchemy"]),
+.powered-by {
+  display: none !important;
+}
+
+/* =========================================================
+   DARK MODE OVERRIDES
+   All hardcoded light colors above are reset here for dark.
+   ========================================================= */
+
+[data-theme="dark"] {
+
+  /* --- Publications list --- */
+
+  /* Year headers */
+  .page-type-publication h2 {
+    color: #E8EDF2 !important;
+    border-bottom-color: #2D3A4F !important;
+  }
+
+  /* Publication title links */
+  .media-body .article-title,
+  .media-body .article-title a {
+    color: #90CAF9 !important;
+  }
+
+  .media-body .article-title a:hover {
+    color: #ffffff !important;
+  }
+
+  /* Author metadata */
+  .media-body .article-metadata,
+  .article-metadata {
+    color: #94A3B8 !important;
+  }
+
+  /* Journal / summary text */
+  .media-body .article-style,
+  .media-body .article-style p {
+    color: #94A3B8 !important;
+  }
+
+  /* --- Individual publication page --- */
+
+  .article-metadata {
+    color: #94A3B8 !important;
+  }
+
+  .article-style {
+    color: #CBD5E1 !important;
+  }
+
+  /* --- Team page --- */
+
+  #people .section-heading h2 {
+    color: #E8EDF2 !important;
+    border-bottom-color: #2D3A4F !important;
+  }
+
+  .portrait-title h2,
+  .portrait-title h2 a {
+    color: #90CAF9 !important;
+  }
+
+  .portrait-title a:hover {
+    color: #ffffff !important;
+  }
+
+  .portrait-title .people-organizations,
+  .portrait-title .people-organizations p {
+    color: #94A3B8 !important;
+  }
+
+  /* Portrait card background */
+  .portrait {
+    background-color: #1A2233 !important;
+    border-color: #2D3A4F !important;
+  }
+
+  /* --- Navbar --- */
+
+  .navbar {
+    background-color: #0F1623 !important;
+    border-bottom: 1px solid #2D3A4F !important;
+  }
+
+  .navbar-brand,
+  .nav-link {
+    color: #E8EDF2 !important;
+  }
+
+  /* --- General body and surfaces --- */
+
+  body {
+    color: #E8EDF2;
+    background-color: #0F1623;
+  }
+
+  /* PDF / Cite / link buttons */
+  .btn-outline-primary {
+    border-color: #64B5F6 !important;
+    color: #64B5F6 !important;
+  }
+
+  .btn-outline-primary:hover {
+    background-color: #64B5F6 !important;
+    color: #0F1623 !important;
+  }
+
+  /* Section headings on new landing pages */
+  h2 {
+    color: #E8EDF2;
+  }
+
+  /* Footer */
+  footer {
+    color: #94A3B8;
+  }
 }
