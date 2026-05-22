@@ -45,7 +45,9 @@ header:
 
 footer:
   copyright:
-    notice: '© 2026 LENS Lab. All rights reserved.'
+    notice: '© {year} LENS Lab. All rights reserved.'
+    license:
+      enable: false
 
 # Localization
 
