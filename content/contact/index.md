@@ -16,8 +16,8 @@ sections:
       address:
         street: Building 1, North Campus Science and Technology Park, 381 Wushan Road
         city: Guangzhou
-        region: Guangdong
         postcode: '510641'
+        region: Guangdong
         country: China
         country_code: CN
       directions: >-
