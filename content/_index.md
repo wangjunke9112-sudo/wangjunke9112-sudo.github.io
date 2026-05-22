@@ -14,7 +14,7 @@ sections:
         url: /opportunities/
       cta_alt:
         label: Our research
-        url: /#research
+        url: /research/
       text: |
         **Light–Energy Nanosystems and Semiconductors**
 
@@ -27,25 +27,26 @@ sections:
         gradient_end: '#0077B6'
         text_color_light: true
 
-- block: markdown
+  - block: markdown
     id: research
     content:
       title: Research
       subtitle: Materials, interfaces, and devices for energy and light
       text: |
-        The LENS Lab works on semiconductor optoelectronic devices for 
-        energy and light technologies, combining materials chemistry, 
-        thin-film processing, device physics, and stability analysis.
+        The LENS Lab works on semiconductor optoelectronic devices for
+        energy and light technologies, combining materials chemistry,
+        thin-film processing, interface engineering, device physics,
+        and stability analysis.
 
-        Current directions include **multijunction perovskite photovoltaics**, 
-        **interface engineering and energy losses**, and **stability and 
-        scalable fabrication** — with a longer-term vision spanning 
+        Current directions include **multijunction perovskite photovoltaics**,
+        **interface engineering and energy losses**, and **stability and
+        scalable fabrication** — with a longer-term vision spanning
         solar fuels, photodetectors, and integrated optoelectronic platforms.
 
         [Read more about our research →](/research/)
     design:
       columns: '1'
-  
+
   - block: collection
     id: news
     content:
@@ -72,9 +73,13 @@ sections:
       title: Join us
       subtitle: ''
       text: |
-        The LENS Lab welcomes applications from motivated postdoctoral researchers, graduate students, and research assistants interested in semiconductor optoelectronic devices for energy and light technologies.
+        The LENS Lab welcomes applications from motivated postdoctoral
+        researchers, graduate students, and research assistants interested
+        in semiconductor optoelectronic devices for energy and light
+        technologies.
 
-        Interested candidates are welcome to contact Junke Wang with a CV and a brief description of research interests.
+        Interested candidates are welcome to contact Junke Wang with a CV
+        and a brief description of research interests.
 
         [See open positions →](/opportunities/)
     design:
