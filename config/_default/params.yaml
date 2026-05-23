@@ -6,16 +6,13 @@
 # Appearance
 
 appearance:
-  theme_day: dark
-  theme_night: dark
+  theme_day: ocean
+  theme_night: ocean
   font: ''
   font_size: M
 
 plugins_css:
   - css/custom.css
-
-plugins_js:
-  - js/width-fix.js
 
 # SEO
 
