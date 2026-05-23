@@ -416,3 +416,27 @@ html[data-theme="dark"] ::-webkit-scrollbar-thumb {
   background-color: #1A2E42;
   border-radius: 3px;
 }
+
+/* =========================================================
+   WIDTH FIX — exact selectors from DOM inspection
+   Targets: .container > .row.justify-content-center > .col-12
+   on landing pages (research, join us, contact, etc.)
+   ========================================================= */
+
+/* Constrain the container on landing pages */
+.home-section.wg-markdown .container {
+  max-width: 780px !important;
+}
+
+/* Constrain the column inside */
+.home-section.wg-markdown .col-12 {
+  max-width: 780px !important;
+  padding-left: 1.5rem !important;
+  padding-right: 1.5rem !important;
+}
+
+/* Keep hero section full width — override the above */
+.home-section.wg-hero .container,
+.home-section.wg-hero .col-12 {
+  max-width: 100% !important;
+}
