@@ -1,70 +1,97 @@
 /* =========================================================
    LENS Lab — custom.css
    Place at: static/css/custom.css
-   Modern dark-default theme with geometric sans-serif
    ========================================================= */
 
 /* ---------------------------------------------------------
-   FONTS — DM Sans (modern, slightly rounded, scientific)
-   Replaces Inter with something more distinctive
+   FONT — Outfit (geometric, modern, slightly rounded)
+   Much cleaner than DM Sans at body sizes
    --------------------------------------------------------- */
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=DM+Mono:wght@400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap');
 
 body,
 h1, h2, h3, h4, h5, h6,
 .navbar-brand, .nav-link,
 .article-title, .pub-title, .section-heading,
-p, li, td, th, blockquote {
-  font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, "Segoe UI",
+p, li, td, th, blockquote, button, input {
+  font-family: 'Outfit', -apple-system, BlinkMacSystemFont, "Segoe UI",
     Roboto, Helvetica, Arial, sans-serif !important;
 }
 
-code, pre, .highlight {
-  font-family: 'DM Mono', 'SFMono-Regular', Consolas, monospace !important;
-}
-
 /* ---------------------------------------------------------
-   FORCE DARK MODE ALWAYS
-   Set html[data-theme] to dark on load so users always see
-   the dark theme first. User can still toggle to light.
-   --------------------------------------------------------- */
-
-/* Dark background on the root level */
-html {
-  background-color: #0F1319 !important;
-}
-
-/* ---------------------------------------------------------
-   LIGHT MODE — clean but secondary
+   LIGHT MODE — restore ocean-theme navbar colour
    --------------------------------------------------------- */
 body {
   font-size: 1.02rem;
   line-height: 1.78;
-  letter-spacing: 0.01em;
-  background-color: #ffffff;
-  color: #1a1a2e;
+}
+
+/* Restore the blue navbar in light mode (was lost when we
+   overrode the theme). Ocean theme uses #1565c0. */
+.navbar {
+  background-color: #1565c0 !important;
+}
+
+.navbar .navbar-brand,
+.navbar .nav-link {
+  color: #ffffff !important;
+}
+
+.navbar .nav-link:hover {
+  color: rgba(255,255,255,0.75) !important;
 }
 
 /* ---------------------------------------------------------
-   DARK MODE — primary look
-   Matches Arkmetrica: very dark bg, near-white text,
-   accent cyan highlights
+   NAVBAR — size and spacing (both modes)
+   --------------------------------------------------------- */
+.navbar .nav-link {
+  font-size: 0.95rem !important;
+  font-weight: 500 !important;
+  letter-spacing: 0.04em !important;
+  text-transform: uppercase !important;
+  padding-left: 0.9rem !important;
+  padding-right: 0.9rem !important;
+}
+
+.navbar-brand {
+  font-size: 1.4rem !important;
+  font-weight: 700 !important;
+  letter-spacing: -0.01em !important;
+}
+
+/* ---------------------------------------------------------
+   DARK MODE — deep blue-grey background
+   #0D1B2A: dark navy-blue, not pure black, similar to
+   high-end scientific dashboards and Arkmetrica palette
    --------------------------------------------------------- */
 html[data-theme="dark"] body {
-  background-color: #0F1319 !important;
-  color: #DDE3EC !important;
+  background-color: #0D1B2A !important;
+  color: #D8E2EE !important;
 }
 
 html[data-theme="dark"] {
-  background-color: #0F1319 !important;
+  background-color: #0D1B2A !important;
 }
 
-/* All sections get the dark bg */
 html[data-theme="dark"] section,
-html[data-theme="dark"] .wg-section,
-html[data-theme="dark"] .universal-wrapper,
-html[data-theme="dark"] main {
-  background-color: #0F1319 !important;
+html[data-theme="dark"] main,
+html[data-theme="dark"] .page-body {
+  background-color: #0D1B2A !important;
+}
+
+/* Navbar dark — slightly deeper than page bg */
+html[data-theme="dark"] .navbar {
+  background-color: #091524 !important;
+  border-bottom: 1px solid #1A2E42 !important;
+}
+
+html[data-theme="dark"] .navbar .navbar-brand,
+html[data-theme="dark"] .navbar .nav-link {
+  color: #D8E2EE !important;
+}
+
+html[data-theme="dark"] .navbar .nav-link:hover {
+  color: #56CFE1 !important;
 }
 
 /* Headings */
@@ -73,13 +100,13 @@ html[data-theme="dark"] h2,
 html[data-theme="dark"] h3,
 html[data-theme="dark"] h4,
 html[data-theme="dark"] h5 {
-  color: #F0F4FA !important;
+  color: #EAF0F8 !important;
 }
 
 /* Body text */
 html[data-theme="dark"] p,
 html[data-theme="dark"] li {
-  color: #C8D0DC !important;
+  color: #B8C8DC !important;
 }
 
 /* Links */
@@ -89,157 +116,72 @@ html[data-theme="dark"] a {
 
 html[data-theme="dark"] a:hover {
   color: #ffffff !important;
-  text-decoration: underline;
 }
 
 /* ---------------------------------------------------------
-   PAGE WIDTH — match Publications / News width everywhere
+   PAGE WIDTH
+   Using !important on max-width alone is not enough in Hugo
+   Blox — we also need to override Bootstrap's col- classes.
+   These are the actual classes rendered on your pages.
    --------------------------------------------------------- */
 
-/* Target landing page content blocks */
-.page-type-landing .wg-page-header,
-.page-type-landing .col-12,
-.page-type-landing .article-container,
+/* Target the Bootstrap column that wraps landing page text */
+.col-12.col-lg-8,
+.col-12.col-xl-8,
 .col-lg-8,
 .col-xl-8 {
   max-width: 740px !important;
+  flex: 0 0 740px !important;
 }
 
-/* Universal content wrapper on landing pages */
-.home-section .home-section-bg + div,
-.home-section > div > div > div {
+/* Article container (used on publication, post, author pages) */
+.article-container {
   max-width: 740px !important;
-  margin-left: auto !important;
-  margin-right: auto !important;
   padding-left: 1.5rem !important;
   padding-right: 1.5rem !important;
 }
 
-/* Block markdown wrapper */
-.block-markdown,
-.wg-markdown .article-style {
+/* The universal wrapper used in landing page sections */
+.universal-wrapper {
+  max-width: 1000px !important;
+}
+
+/* Home section inner row — constrain text column */
+.home-section .row > .col-12 {
   max-width: 740px !important;
   margin-left: auto !important;
   margin-right: auto !important;
 }
 
-/* Section containers on landing pages */
-section.home-section .container,
-section.home-section .container-fluid {
-  max-width: 940px !important;
-}
-
-/* Keep hero full width */
-.wg-hero,
-.wg-hero .container,
+/* Keep hero full width always */
+.wg-hero .col-12,
+.wg-hero .row > .col-12,
 .wg-hero .universal-wrapper {
   max-width: 100% !important;
+  flex: unset !important;
 }
 
 /* ---------------------------------------------------------
-   NAVBAR — larger nav links, clear hierarchy
-   --------------------------------------------------------- */
-.navbar .nav-link {
-  font-size: 1rem !important;
-  font-weight: 500 !important;
-  letter-spacing: 0.03em !important;
-  text-transform: uppercase !important;
-  padding-left: 0.85rem !important;
-  padding-right: 0.85rem !important;
-}
-
-.navbar-brand {
-  font-size: 1.4rem !important;
-  font-weight: 700 !important;
-  letter-spacing: -0.01em !important;
-}
-
-/* Navbar dark styling */
-html[data-theme="dark"] .navbar {
-  background-color: #0A0D13 !important;
-  border-bottom: 1px solid #1E2530 !important;
-}
-
-html[data-theme="dark"] .navbar-brand {
-  color: #F0F4FA !important;
-}
-
-html[data-theme="dark"] .nav-link {
-  color: #A0ABBE !important;
-}
-
-html[data-theme="dark"] .nav-link:hover {
-  color: #56CFE1 !important;
-}
-
-/* Navbar light mode */
-.navbar {
-  border-bottom: 1px solid rgba(0,0,0,0.06);
-}
-
-/* ---------------------------------------------------------
-   HERO SECTION
-   --------------------------------------------------------- */
-.wg-hero {
-  padding-top: 5rem !important;
-  padding-bottom: 5rem !important;
-}
-
-.hero-title {
-  font-size: 2.8rem !important;
-  font-weight: 700 !important;
-  letter-spacing: -0.03em !important;
-  line-height: 1.15 !important;
-}
-
-.hero-lead {
-  font-size: 1.1rem !important;
-  line-height: 1.75 !important;
-  opacity: 0.88;
-}
-
-/* ---------------------------------------------------------
-   SECTION HEADINGS on landing pages
-   --------------------------------------------------------- */
-.home-section h1,
-.home-section h2.section-heading {
-  font-size: 1.7rem !important;
-  font-weight: 700 !important;
-  letter-spacing: -0.02em !important;
-  margin-bottom: 1.25rem !important;
-}
-
-html[data-theme="dark"] .home-section h1,
-html[data-theme="dark"] .home-section h2.section-heading {
-  color: #F0F4FA !important;
-}
-
-/* Subtle section divider */
-.home-section {
-  padding-top: 3.5rem !important;
-  padding-bottom: 3.5rem !important;
-  border-bottom: 1px solid rgba(255,255,255,0.04);
-}
-
-/* ---------------------------------------------------------
-   IMAGES WITH WHITE BACKGROUNDS — handle gracefully
-   In dark mode, add a subtle rounded container so white-bg
-   images don't clash harshly with the dark page background.
+   IMAGES WITH WHITE BACKGROUNDS in dark mode
+   Adds a subtle frame so white-bg images don't float
+   harshly against the dark page background
    --------------------------------------------------------- */
 html[data-theme="dark"] .article-style img,
 html[data-theme="dark"] .home-section img,
 html[data-theme="dark"] .wg-markdown img {
   border-radius: 8px !important;
-  box-shadow: 0 0 0 1px rgba(255,255,255,0.08),
-              0 4px 24px rgba(0,0,0,0.4) !important;
-  background-color: #ffffff;
+  padding: 6px !important;
+  background-color: #ffffff !important;
+  box-shadow: 0 2px 16px rgba(0,0,0,0.5) !important;
 }
 
-/* Portrait / avatar images — keep circular, no extra shadow */
+/* Portrait / avatar — keep circular, cyan ring */
 html[data-theme="dark"] .avatar img,
 html[data-theme="dark"] .portrait img {
-  box-shadow: 0 0 0 3px rgba(86, 207, 225, 0.25) !important;
+  padding: 0 !important;
   background-color: transparent !important;
+  box-shadow: 0 0 0 3px rgba(86, 207, 225, 0.3) !important;
+  border-radius: 50% !important;
 }
 
 /* ---------------------------------------------------------
@@ -253,7 +195,6 @@ html[data-theme="dark"] .portrait img {
   padding-bottom: 0.5rem;
   margin-top: 3rem;
   margin-bottom: 1.5rem;
-  letter-spacing: -0.02em !important;
 }
 
 .page-type-publication h2:first-of-type {
@@ -293,29 +234,11 @@ html[data-theme="dark"] .portrait img {
 }
 
 /* ---------------------------------------------------------
-   INDIVIDUAL PUBLICATION PAGE — light mode
-   --------------------------------------------------------- */
-.page-type-publication h1,
-.pub-title {
-  font-size: 1.7rem !important;
-  font-weight: 700;
-  line-height: 1.25;
-  letter-spacing: -0.02em !important;
-  margin-bottom: 1.5rem;
-}
-
-.article-style {
-  font-size: 1.05rem;
-  line-height: 1.8;
-  color: #333;
-}
-
-/* ---------------------------------------------------------
    DARK MODE — publications
    --------------------------------------------------------- */
 html[data-theme="dark"] .page-type-publication h2 {
-  color: #E8EDF5 !important;
-  border-bottom-color: #1E2530 !important;
+  color: #EAF0F8 !important;
+  border-bottom-color: #1A2E42 !important;
 }
 
 html[data-theme="dark"] .media-body .article-title,
@@ -331,13 +254,30 @@ html[data-theme="dark"] .page-type-publication a:hover {
 
 html[data-theme="dark"] .media-body .article-metadata,
 html[data-theme="dark"] .article-metadata {
-  color: #7A8AA0 !important;
+  color: #6A7E94 !important;
 }
 
 html[data-theme="dark"] .media-body .article-style,
 html[data-theme="dark"] .media-body .article-style p,
 html[data-theme="dark"] .article-style {
-  color: #A0ABBE !important;
+  color: #8A9EBA !important;
+}
+
+/* ---------------------------------------------------------
+   INDIVIDUAL PUBLICATION PAGE
+   --------------------------------------------------------- */
+.page-type-publication h1,
+.pub-title {
+  font-size: 1.7rem !important;
+  font-weight: 700;
+  line-height: 1.25;
+  margin-bottom: 1.5rem;
+}
+
+.article-style {
+  font-size: 1.05rem;
+  line-height: 1.8;
+  color: #333;
 }
 
 /* ---------------------------------------------------------
@@ -358,7 +298,6 @@ html[data-theme="dark"] .article-style {
   font-size: 1.2rem !important;
   color: #1a49a0 !important;
   margin-top: 1rem !important;
-  letter-spacing: -0.01em !important;
 }
 
 .portrait-title a {
@@ -386,7 +325,7 @@ html[data-theme="dark"] .portrait-title h2 a {
 
 html[data-theme="dark"] .portrait-title .people-organizations,
 html[data-theme="dark"] .portrait-title .people-organizations p {
-  color: #7A8AA0 !important;
+  color: #6A7E94 !important;
 }
 
 /* ---------------------------------------------------------
@@ -407,7 +346,6 @@ html[data-theme="dark"] .portrait-title .people-organizations p {
   text-transform: uppercase !important;
   border-radius: 4px !important;
   padding: 0.25rem 0.7rem !important;
-  transition: all 0.15s ease !important;
 }
 
 html[data-theme="dark"] .btn-outline-primary {
@@ -417,7 +355,23 @@ html[data-theme="dark"] .btn-outline-primary {
 
 html[data-theme="dark"] .btn-outline-primary:hover {
   background-color: #56CFE1 !important;
-  color: #0F1319 !important;
+  color: #0D1B2A !important;
+}
+
+/* ---------------------------------------------------------
+   NEWS CARDS
+   --------------------------------------------------------- */
+html[data-theme="dark"] .card {
+  background-color: #112236 !important;
+  border-color: #1A2E42 !important;
+}
+
+html[data-theme="dark"] .card-title a {
+  color: #EAF0F8 !important;
+}
+
+html[data-theme="dark"] .card-text {
+  color: #7A94AC !important;
 }
 
 /* ---------------------------------------------------------
@@ -425,13 +379,12 @@ html[data-theme="dark"] .btn-outline-primary:hover {
    --------------------------------------------------------- */
 footer {
   font-size: 0.84rem;
-  letter-spacing: 0.01em;
 }
 
 html[data-theme="dark"] footer {
-  background-color: #0A0D13 !important;
-  color: #4A5568 !important;
-  border-top: 1px solid #1E2530 !important;
+  background-color: #091524 !important;
+  color: #3A5068 !important;
+  border-top: 1px solid #1A2E42 !important;
 }
 
 footer .powered-by,
@@ -444,38 +397,22 @@ footer p:has(a[href*="hugoblox.com"]) {
 }
 
 /* ---------------------------------------------------------
-   NEWS / POST CARDS
-   --------------------------------------------------------- */
-html[data-theme="dark"] .card {
-  background-color: #141820 !important;
-  border-color: #1E2530 !important;
-}
-
-html[data-theme="dark"] .card-title a {
-  color: #F0F4FA !important;
-}
-
-html[data-theme="dark"] .card-text {
-  color: #8A9BB0 !important;
-}
-
-/* ---------------------------------------------------------
-   SCROLLBAR (dark mode) — subtle dark scrollbar
+   SCROLLBAR — subtle in dark mode
    --------------------------------------------------------- */
 html[data-theme="dark"] {
-  scrollbar-color: #2A3444 #0F1319;
+  scrollbar-color: #1A2E42 #0D1B2A;
   scrollbar-width: thin;
 }
 
 html[data-theme="dark"] ::-webkit-scrollbar {
-  width: 6px;
+  width: 5px;
 }
 
 html[data-theme="dark"] ::-webkit-scrollbar-track {
-  background: #0F1319;
+  background: #0D1B2A;
 }
 
 html[data-theme="dark"] ::-webkit-scrollbar-thumb {
-  background-color: #2A3444;
+  background-color: #1A2E42;
   border-radius: 3px;
 }
