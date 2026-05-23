@@ -1,13 +1,11 @@
 /* =========================================================
    LENS Lab — custom.css
-   Final clean version — May 2026
+   Clean full version — May 2026
    Place at: static/css/custom.css
    ========================================================= */
 
 /* ---------------------------------------------------------
    FONT — Outfit
-   Loaded first so it's available immediately.
-   Overrides Wowchemy's html-level roboto rule.
    --------------------------------------------------------- */
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap');
 
@@ -28,7 +26,16 @@ p, li, td, th, blockquote, button, input {
 }
 
 /* ---------------------------------------------------------
-   NAVBAR — light mode (ocean theme blue restored)
+   GLOBAL WIDTH SETTINGS
+   Change --lens-readable-width if you want narrower/wider.
+   --------------------------------------------------------- */
+:root {
+  --lens-readable-width: 740px;
+  --lens-readable-padding: 1.5rem;
+}
+
+/* ---------------------------------------------------------
+   NAVBAR — light mode
    --------------------------------------------------------- */
 .navbar {
   background-color: #1565c0 !important;
@@ -59,63 +66,52 @@ p, li, td, th, blockquote, button, input {
 }
 
 /* ---------------------------------------------------------
-   WIDTH FIX — consistent narrow content width across tabs
-   Matches the News-style narrow reading width.
-   Hero stays full width.
+   WIDTH — consistent narrow content width across pages
    --------------------------------------------------------- */
 
-:root {
-  --lens-content-width: 740px;
-  --lens-side-padding: 1.5rem;
-}
-
-/* Standard pages and listing pages: News, Publications, etc. */
-.universal-wrapper {
-  max-width: var(--lens-content-width) !important;
-  width: min(var(--lens-content-width), calc(100% - 2rem)) !important;
+/* Standard pages and listing pages: News, Publications, Posts */
+.universal-wrapper,
+.article-container {
+  max-width: var(--lens-readable-width) !important;
+  width: min(var(--lens-readable-width), calc(100vw - 2rem)) !important;
   margin-left: auto !important;
   margin-right: auto !important;
-  padding-left: var(--lens-side-padding) !important;
-  padding-right: var(--lens-side-padding) !important;
+  padding-left: var(--lens-readable-padding) !important;
+  padding-right: var(--lens-readable-padding) !important;
   box-sizing: border-box !important;
 }
 
-/* Landing-page sections: Research, People, Contact, featurette sections */
-body .page-body .home-section.wg-markdown .container,
-body .page-body .home-section.wg-people .container,
-body .page-body .home-section.wg-contact .container,
-body .page-body .home-section.wg-featurette .container {
-  max-width: var(--lens-content-width) !important;
-  width: min(var(--lens-content-width), calc(100% - 2rem)) !important;
+/* Landing-page section containers: Research, Join Us, Contact, etc. */
+.page-body .home-section:not(.wg-hero) > .container,
+.page-body .home-section:not(.wg-hero) .container {
+  max-width: var(--lens-readable-width) !important;
+  width: min(var(--lens-readable-width), calc(100vw - 2rem)) !important;
   margin-left: auto !important;
   margin-right: auto !important;
-  padding-left: var(--lens-side-padding) !important;
-  padding-right: var(--lens-side-padding) !important;
+  padding-left: var(--lens-readable-padding) !important;
+  padding-right: var(--lens-readable-padding) !important;
   box-sizing: border-box !important;
 }
 
-/* Individual article, publication, post, and author pages */
-.article-container,
-.page-type-authors .article-container,
-.page-type-authors .universal-wrapper {
-  max-width: var(--lens-content-width) !important;
-  width: min(var(--lens-content-width), calc(100% - 2rem)) !important;
-  margin-left: auto !important;
-  margin-right: auto !important;
-  padding-left: var(--lens-side-padding) !important;
-  padding-right: var(--lens-side-padding) !important;
-  box-sizing: border-box !important;
-}
-
-/* Keep homepage hero/banner full width */
-body .page-body .home-section.wg-hero .container {
+/* Keep hero/banner sections full width */
+.page-body .home-section.wg-hero > .container,
+.page-body .home-section.hero > .container,
+.page-body .home-section.wg-hero .container,
+.page-body .home-section.hero .container {
   max-width: 100% !important;
   width: 100% !important;
 }
 
+/* Author pages should stay narrow */
+.page-type-authors .article-container,
+.page-type-authors .universal-wrapper {
+  max-width: var(--lens-readable-width) !important;
+  width: min(var(--lens-readable-width), calc(100vw - 2rem)) !important;
+}
+
 /* ---------------------------------------------------------
    DARK MODE
-   Background: #0D1B2A — deep navy blue, not pure black
+   Background: #0D1B2A — deep navy blue
    --------------------------------------------------------- */
 html[data-theme="dark"],
 html[data-theme="dark"] body,
@@ -167,8 +163,7 @@ html[data-theme="dark"] a:hover {
 }
 
 /* ---------------------------------------------------------
-   IMAGES — white background handling in dark mode
-   Adds a subtle frame so white-bg figures don't clash
+   IMAGES — dark mode white-background handling
    --------------------------------------------------------- */
 html[data-theme="dark"] .article-style img,
 html[data-theme="dark"] .home-section img,
@@ -268,7 +263,7 @@ html[data-theme="dark"] .article-style {
 }
 
 /* ---------------------------------------------------------
-   INDIVIDUAL PUBLICATION PAGE
+   INDIVIDUAL PUBLICATION / ARTICLE PAGE
    --------------------------------------------------------- */
 .page-type-publication h1,
 .pub-title {
@@ -393,6 +388,7 @@ footer a[href*="hugoblox.com"] {
   display: none !important;
 }
 
+/* Hide Hugo Blox credit line in modern browsers */
 footer p:has(a[href*="hugoblox.com"]) {
   display: none !important;
 }
