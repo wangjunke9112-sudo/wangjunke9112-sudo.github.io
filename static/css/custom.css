@@ -261,3 +261,38 @@ html[data-theme="dark"] .btn-outline-primary:hover {
 html[data-theme="dark"] footer {
   color: #94A3B8 !important;
 }
+/* =========================================================
+   PAGE WIDTH — unify content width across landing pages
+   Publications and post pages use ~700-720px max width
+   Landing pages currently use a wider container — match them
+   ========================================================= */
+
+/* Constrain landing-page section containers */
+.page-type-landing .universal-wrapper,
+.universal-wrapper.universal-wrapper-padding-y,
+section .universal-wrapper {
+  max-width: 720px !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+/* Keep hero block full-width — it's designed to span edge to edge */
+.wg-hero .universal-wrapper,
+section:has(.wg-hero) .universal-wrapper,
+.hero-block .universal-wrapper {
+  max-width: 1140px !important;
+}
+
+/* =========================================================
+   NAVBAR — slightly larger nav links, brand stays larger
+   ========================================================= */
+.navbar .nav-link {
+  font-size: 1rem !important;
+  font-weight: 500 !important;
+  letter-spacing: 0.01em !important;
+}
+
+.navbar-brand {
+  font-size: 1.35rem !important;
+  font-weight: 700 !important;
+}
