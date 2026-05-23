@@ -9,6 +9,13 @@
    --------------------------------------------------------- */
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap');
 
+html,
+html body {
+  font-family: 'Outfit', -apple-system, BlinkMacSystemFont,
+    "Segoe UI", Roboto, Helvetica, Arial, sans-serif !important;
+  font-size: 16px !important;
+}
+
 body,
 h1, h2, h3, h4, h5, h6,
 .navbar-brand, .nav-link,
@@ -418,25 +425,32 @@ html[data-theme="dark"] ::-webkit-scrollbar-thumb {
 }
 
 /* =========================================================
-   WIDTH FIX — exact selectors from DOM inspection
-   Targets: .container > .row.justify-content-center > .col-12
-   on landing pages (research, join us, contact, etc.)
+   WIDTH FIX — high specificity, verified working
    ========================================================= */
-
-/* Constrain the container on landing pages */
-.home-section.wg-markdown .container {
-  max-width: 780px !important;
+body .page-body .home-section.wg-markdown .container {
+  max-width: 740px !important;
+  width: 740px !important;
 }
 
-/* Constrain the column inside */
-.home-section.wg-markdown .col-12 {
-  max-width: 780px !important;
-  padding-left: 1.5rem !important;
-  padding-right: 1.5rem !important;
+body .page-body .home-section.wg-people .container {
+  max-width: 740px !important;
+  width: 740px !important;
 }
 
-/* Keep hero section full width — override the above */
-.home-section.wg-hero .container,
-.home-section.wg-hero .col-12 {
+body .page-body .home-section.wg-contact .container {
+  max-width: 740px !important;
+  width: 740px !important;
+}
+
+body .page-body .home-section.wg-hero .container {
   max-width: 100% !important;
+  width: 100% !important;
+}
+
+/* Font — beats wowchemy html-level rule */
+html,
+html body {
+  font-family: 'Outfit', -apple-system, BlinkMacSystemFont,
+    "Segoe UI", Roboto, Helvetica, Arial, sans-serif !important;
+  font-size: 16px !important;
 }
