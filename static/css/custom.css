@@ -5,40 +5,140 @@
    ========================================================= */
 
 /* ---------------------------------------------------------
-   FONT — Inter
+   FONT — Inter, clean Ark-like sans-serif
    --------------------------------------------------------- */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
 
+:root {
+  --lens-font: 'Inter', -apple-system, BlinkMacSystemFont,
+    "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+
+  --lens-readable-width: 740px;
+  --lens-readable-padding: 1.5rem;
+
+  --lens-blue: #1565c0;
+  --lens-cyan: #56CFE1;
+  --lens-dark-bg: #0D1B2A;
+  --lens-dark-nav: #091524;
+  --lens-dark-border: #1A2E42;
+  --lens-dark-text: #D8E2EE;
+  --lens-dark-muted: #B8C8DC;
+}
+
+/* Force consistent font everywhere */
 html,
-html body {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont,
-    "Segoe UI", Roboto, Helvetica, Arial, sans-serif !important;
+body,
+main,
+section,
+div,
+span,
+p,
+li,
+ul,
+ol,
+a,
+button,
+input,
+textarea,
+select,
+table,
+td,
+th,
+blockquote,
+figcaption,
+.navbar,
+.navbar-brand,
+.nav-link,
+.page-body,
+.page-wrapper,
+.home-section,
+.container,
+.universal-wrapper,
+.article-container,
+.article-style,
+.article-title,
+.pub-title,
+.section-heading,
+.media-body,
+.card,
+.card-title,
+.card-text,
+.portrait-title,
+footer {
+  font-family: var(--lens-font) !important;
+}
+
+/* Headings also use the same font */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.home-section h1,
+.home-section h2,
+.home-section h3,
+.home-section h4,
+.article-style h1,
+.article-style h2,
+.article-style h3,
+.article-style h4,
+.markdown h1,
+.markdown h2,
+.markdown h3,
+.markdown h4,
+.wg-markdown h1,
+.wg-markdown h2,
+.wg-markdown h3,
+.wg-markdown h4,
+.hero-title,
+.hero-lead {
+  font-family: var(--lens-font) !important;
+  letter-spacing: -0.015em;
+}
+
+/* Global typography */
+html,
+body {
   font-size: 16px !important;
   line-height: 1.75 !important;
 }
 
-h1, h2, h3, h4, h5, h6,
-.navbar-brand, .nav-link,
-.article-title, .pub-title, .section-heading,
-p, li, td, th, blockquote, button, input {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont,
-    "Segoe UI", Roboto, Helvetica, Arial, sans-serif !important;
+p,
+li,
+.article-style,
+.article-style p,
+.home-section p {
+  font-weight: 400 !important;
+  line-height: 1.75 !important;
+}
+
+h1 {
+  font-weight: 700 !important;
+  line-height: 1.15 !important;
+}
+
+h2 {
+  font-weight: 650 !important;
+  line-height: 1.25 !important;
+}
+
+h3 {
+  font-weight: 600 !important;
+  line-height: 1.3 !important;
+}
+
+h4,
+h5,
+h6 {
+  font-weight: 600 !important;
 }
 
 /* ---------------------------------------------------------
-   GLOBAL WIDTH SETTINGS
-   Change --lens-readable-width if you want narrower/wider.
-   --------------------------------------------------------- */
-:root {
-  --lens-readable-width: 740px;
-  --lens-readable-padding: 1.5rem;
-}
-
-/* ---------------------------------------------------------
-   NAVBAR — light mode
+   NAVBAR
    --------------------------------------------------------- */
 .navbar {
-  background-color: #1565c0 !important;
+  background-color: var(--lens-blue) !important;
 }
 
 .navbar .navbar-brand,
@@ -66,10 +166,10 @@ p, li, td, th, blockquote, button, input {
 }
 
 /* ---------------------------------------------------------
-   WIDTH — consistent narrow content width across pages
+   WIDTH — consistent narrow content width
    --------------------------------------------------------- */
 
-/* Standard pages and listing pages: News, Publications, Posts */
+/* Standard pages and listing pages */
 .universal-wrapper,
 .article-container {
   max-width: var(--lens-readable-width) !important;
@@ -93,7 +193,7 @@ p, li, td, th, blockquote, button, input {
   box-sizing: border-box !important;
 }
 
-/* Keep hero/banner sections full width */
+/* Keep hero/banner full width */
 .page-body .home-section.wg-hero > .container,
 .page-body .home-section.hero > .container,
 .page-body .home-section.wg-hero .container,
@@ -110,82 +210,40 @@ p, li, td, th, blockquote, button, input {
 }
 
 /* ---------------------------------------------------------
-   DARK MODE
-   Background: #0D1B2A — deep navy blue
+   RESEARCH PAGE / MARKDOWN CLEANUP
    --------------------------------------------------------- */
-html[data-theme="dark"],
-html[data-theme="dark"] body,
-html[data-theme="dark"] section,
-html[data-theme="dark"] main,
-html[data-theme="dark"] .page-body,
-html[data-theme="dark"] .page-wrapper {
-  background-color: #0D1B2A !important;
-  color: #D8E2EE !important;
+
+.home-section h1,
+.home-section h2,
+.article-style h1,
+.article-style h2 {
+  margin-top: 2.2rem !important;
+  margin-bottom: 1rem !important;
 }
 
-/* Navbar dark */
-html[data-theme="dark"] .navbar {
-  background-color: #091524 !important;
-  border-bottom: 1px solid #1A2E42 !important;
+.home-section h1:first-child,
+.home-section h2:first-child,
+.article-style h1:first-child,
+.article-style h2:first-child {
+  margin-top: 0 !important;
 }
 
-html[data-theme="dark"] .navbar .navbar-brand,
-html[data-theme="dark"] .navbar .nav-link {
-  color: #D8E2EE !important;
+.home-section p,
+.article-style p {
+  margin-bottom: 1.05rem !important;
 }
 
-html[data-theme="dark"] .navbar .nav-link:hover {
-  color: #56CFE1 !important;
-}
-
-/* Headings */
-html[data-theme="dark"] h1,
-html[data-theme="dark"] h2,
-html[data-theme="dark"] h3,
-html[data-theme="dark"] h4,
-html[data-theme="dark"] h5 {
-  color: #EAF0F8 !important;
-}
-
-/* Body text */
-html[data-theme="dark"] p,
-html[data-theme="dark"] li {
-  color: #B8C8DC !important;
-}
-
-/* Links */
-html[data-theme="dark"] a {
-  color: #56CFE1 !important;
-}
-
-html[data-theme="dark"] a:hover {
-  color: #ffffff !important;
+/* Make section images look consistent */
+.home-section img,
+.article-style img {
+  max-width: 100% !important;
+  height: auto !important;
 }
 
 /* ---------------------------------------------------------
-   IMAGES — dark mode white-background handling
+   PUBLICATIONS / NEWS LISTS
    --------------------------------------------------------- */
-html[data-theme="dark"] .article-style img,
-html[data-theme="dark"] .home-section img,
-html[data-theme="dark"] .wg-markdown img {
-  border-radius: 8px !important;
-  padding: 6px !important;
-  background-color: #ffffff !important;
-  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.5) !important;
-}
 
-/* Portraits — circular with cyan ring, no white padding */
-html[data-theme="dark"] .avatar img,
-html[data-theme="dark"] .portrait img {
-  padding: 0 !important;
-  background-color: transparent !important;
-  box-shadow: 0 0 0 3px rgba(86, 207, 225, 0.3) !important;
-  border-radius: 50% !important;
-}
-
-/* ---------------------------------------------------------
-   PUBLICATIONS LIST — light mode
-   --------------------------------------------------------- */
 .page-type-publication h2 {
   font-size: 1.6rem !important;
   font-weight: 700 !important;
@@ -232,39 +290,7 @@ html[data-theme="dark"] .portrait img {
   margin-bottom: 1.75rem !important;
 }
 
-/* ---------------------------------------------------------
-   PUBLICATIONS LIST — dark mode
-   --------------------------------------------------------- */
-html[data-theme="dark"] .page-type-publication h2 {
-  color: #EAF0F8 !important;
-  border-bottom-color: #1A2E42 !important;
-}
-
-html[data-theme="dark"] .media-body .article-title,
-html[data-theme="dark"] .media-body .article-title a,
-html[data-theme="dark"] .page-type-publication a {
-  color: #56CFE1 !important;
-}
-
-html[data-theme="dark"] .media-body .article-title a:hover,
-html[data-theme="dark"] .page-type-publication a:hover {
-  color: #ffffff !important;
-}
-
-html[data-theme="dark"] .media-body .article-metadata,
-html[data-theme="dark"] .article-metadata {
-  color: #6A7E94 !important;
-}
-
-html[data-theme="dark"] .media-body .article-style,
-html[data-theme="dark"] .media-body .article-style p,
-html[data-theme="dark"] .article-style {
-  color: #8A9EBA !important;
-}
-
-/* ---------------------------------------------------------
-   INDIVIDUAL PUBLICATION / ARTICLE PAGE
-   --------------------------------------------------------- */
+/* Individual publication / article page */
 .page-type-publication h1,
 .pub-title {
   font-size: 1.7rem !important;
@@ -279,13 +305,10 @@ html[data-theme="dark"] .article-style {
   color: #333;
 }
 
-html[data-theme="dark"] .article-style {
-  color: #B8C8DC !important;
-}
-
 /* ---------------------------------------------------------
    TEAM / PEOPLE PAGE
    --------------------------------------------------------- */
+
 #people .portrait {
   transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
@@ -321,19 +344,10 @@ html[data-theme="dark"] .article-style {
   line-height: 1.35 !important;
 }
 
-html[data-theme="dark"] .portrait-title h2,
-html[data-theme="dark"] .portrait-title h2 a {
-  color: #56CFE1 !important;
-}
-
-html[data-theme="dark"] .portrait-title .people-organizations,
-html[data-theme="dark"] .portrait-title .people-organizations p {
-  color: #6A7E94 !important;
-}
-
 /* ---------------------------------------------------------
    BUTTONS
    --------------------------------------------------------- */
+
 .btn-outline-primary {
   font-size: 0.78rem !important;
   font-weight: 500 !important;
@@ -343,22 +357,129 @@ html[data-theme="dark"] .portrait-title .people-organizations p {
   padding: 0.25rem 0.7rem !important;
 }
 
+/* ---------------------------------------------------------
+   DARK MODE
+   --------------------------------------------------------- */
+
+html[data-theme="dark"],
+html[data-theme="dark"] body,
+html[data-theme="dark"] section,
+html[data-theme="dark"] main,
+html[data-theme="dark"] .page-body,
+html[data-theme="dark"] .page-wrapper {
+  background-color: var(--lens-dark-bg) !important;
+  color: var(--lens-dark-text) !important;
+}
+
+html[data-theme="dark"] .navbar {
+  background-color: var(--lens-dark-nav) !important;
+  border-bottom: 1px solid var(--lens-dark-border) !important;
+}
+
+html[data-theme="dark"] .navbar .navbar-brand,
+html[data-theme="dark"] .navbar .nav-link {
+  color: var(--lens-dark-text) !important;
+}
+
+html[data-theme="dark"] .navbar .nav-link:hover {
+  color: var(--lens-cyan) !important;
+}
+
+html[data-theme="dark"] h1,
+html[data-theme="dark"] h2,
+html[data-theme="dark"] h3,
+html[data-theme="dark"] h4,
+html[data-theme="dark"] h5,
+html[data-theme="dark"] h6 {
+  color: #EAF0F8 !important;
+}
+
+html[data-theme="dark"] p,
+html[data-theme="dark"] li,
+html[data-theme="dark"] .article-style {
+  color: var(--lens-dark-muted) !important;
+}
+
+html[data-theme="dark"] a {
+  color: var(--lens-cyan) !important;
+}
+
+html[data-theme="dark"] a:hover {
+  color: #ffffff !important;
+}
+
+/* Dark mode images */
+html[data-theme="dark"] .article-style img,
+html[data-theme="dark"] .home-section img,
+html[data-theme="dark"] .wg-markdown img {
+  border-radius: 8px !important;
+  padding: 6px !important;
+  background-color: #ffffff !important;
+  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.5) !important;
+}
+
+/* Portraits — no white padding */
+html[data-theme="dark"] .avatar img,
+html[data-theme="dark"] .portrait img {
+  padding: 0 !important;
+  background-color: transparent !important;
+  box-shadow: 0 0 0 3px rgba(86, 207, 225, 0.3) !important;
+  border-radius: 50% !important;
+}
+
+/* Publications dark */
+html[data-theme="dark"] .page-type-publication h2 {
+  color: #EAF0F8 !important;
+  border-bottom-color: var(--lens-dark-border) !important;
+}
+
+html[data-theme="dark"] .media-body .article-title,
+html[data-theme="dark"] .media-body .article-title a,
+html[data-theme="dark"] .page-type-publication a {
+  color: var(--lens-cyan) !important;
+}
+
+html[data-theme="dark"] .media-body .article-title a:hover,
+html[data-theme="dark"] .page-type-publication a:hover {
+  color: #ffffff !important;
+}
+
+html[data-theme="dark"] .media-body .article-metadata,
+html[data-theme="dark"] .article-metadata {
+  color: #6A7E94 !important;
+}
+
+html[data-theme="dark"] .media-body .article-style,
+html[data-theme="dark"] .media-body .article-style p {
+  color: #8A9EBA !important;
+}
+
+/* People dark */
+html[data-theme="dark"] .portrait-title h2,
+html[data-theme="dark"] .portrait-title h2 a {
+  color: var(--lens-cyan) !important;
+}
+
+html[data-theme="dark"] .portrait-title .people-organizations,
+html[data-theme="dark"] .portrait-title .people-organizations p {
+  color: #6A7E94 !important;
+}
+
+/* Buttons dark */
 html[data-theme="dark"] .btn-outline-primary {
-  border-color: #56CFE1 !important;
-  color: #56CFE1 !important;
+  border-color: var(--lens-cyan) !important;
+  color: var(--lens-cyan) !important;
 }
 
 html[data-theme="dark"] .btn-outline-primary:hover {
-  background-color: #56CFE1 !important;
-  color: #0D1B2A !important;
+  background-color: var(--lens-cyan) !important;
+  color: var(--lens-dark-bg) !important;
 }
 
-/* ---------------------------------------------------------
-   NEWS CARDS
-   --------------------------------------------------------- */
+/* Cards dark */
 html[data-theme="dark"] .card {
   background-color: #112236 !important;
-  border-color: #1A2E42 !important;
+  border-color: var(--lens-dark-border) !important;
 }
 
 html[data-theme="dark"] .card-title a {
@@ -372,14 +493,15 @@ html[data-theme="dark"] .card-text {
 /* ---------------------------------------------------------
    FOOTER
    --------------------------------------------------------- */
+
 footer {
   font-size: 0.84rem;
 }
 
 html[data-theme="dark"] footer {
-  background-color: #091524 !important;
+  background-color: var(--lens-dark-nav) !important;
   color: #3A5068 !important;
-  border-top: 1px solid #1A2E42 !important;
+  border-top: 1px solid var(--lens-dark-border) !important;
 }
 
 /* Hide Hugo Blox credit line */
@@ -388,7 +510,6 @@ footer a[href*="hugoblox.com"] {
   display: none !important;
 }
 
-/* Hide Hugo Blox credit line in modern browsers */
 footer p:has(a[href*="hugoblox.com"]) {
   display: none !important;
 }
@@ -396,8 +517,9 @@ footer p:has(a[href*="hugoblox.com"]) {
 /* ---------------------------------------------------------
    SCROLLBAR — subtle in dark mode
    --------------------------------------------------------- */
+
 html[data-theme="dark"] {
-  scrollbar-color: #1A2E42 #0D1B2A;
+  scrollbar-color: var(--lens-dark-border) var(--lens-dark-bg);
   scrollbar-width: thin;
 }
 
@@ -406,144 +528,10 @@ html[data-theme="dark"] ::-webkit-scrollbar {
 }
 
 html[data-theme="dark"] ::-webkit-scrollbar-track {
-  background: #0D1B2A;
+  background: var(--lens-dark-bg);
 }
 
 html[data-theme="dark"] ::-webkit-scrollbar-thumb {
-  background-color: #1A2E42;
+  background-color: var(--lens-dark-border);
   border-radius: 3px;
-}
-
-/* =========================================================
-   FINAL FONT NORMALIZATION — Ark Metrica-like clean sans
-   Keep this at the VERY END of custom.css
-   ========================================================= */
-
-:root {
-  --lens-font-sans: 'Inter', -apple-system, BlinkMacSystemFont,
-    "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-}
-
-/* Force all major Hugo Blox/Wowchemy text wrappers to use one font */
-html,
-body,
-.page-body,
-.page-wrapper,
-.home-section,
-.article-container,
-.article-style,
-.universal-wrapper,
-.container,
-.container-sm,
-.container-md,
-.container-lg,
-.container-xl,
-.container-xxl {
-  font-family: var(--lens-font-sans) !important;
-}
-
-/* Headings across landing pages, markdown blocks, posts, publications */
-h1, h2, h3, h4, h5, h6,
-.home-section h1,
-.home-section h2,
-.home-section h3,
-.home-section h4,
-.home-section h5,
-.article-title,
-.article-title a,
-.pub-title,
-.section-heading,
-.markdown h1,
-.markdown h2,
-.markdown h3,
-.markdown h4,
-.article-style h1,
-.article-style h2,
-.article-style h3,
-.article-style h4,
-.wg-markdown h1,
-.wg-markdown h2,
-.wg-markdown h3,
-.wg-markdown h4,
-.hero-title,
-.hero-lead {
-  font-family: var(--lens-font-sans) !important;
-  letter-spacing: -0.015em;
-}
-
-/* Body text, lists, captions, metadata, buttons, navigation */
-p, li, ul, ol,
-.article-style p,
-.article-style li,
-.home-section p,
-.home-section li,
-.media-body,
-.media-body p,
-.article-metadata,
-.portrait-title,
-.portrait-title h2,
-.portrait-title h2 a,
-.portrait-title p,
-.navbar-brand,
-.nav-link,
-button,
-.btn,
-input,
-textarea,
-select,
-table,
-td,
-th,
-blockquote,
-figcaption {
-  font-family: var(--lens-font-sans) !important;
-}
-
-/* Ark-like heading/body weight balance */
-h1,
-.home-section h1,
-.article-container h1,
-.article-style h1 {
-  font-weight: 700 !important;
-  line-height: 1.15 !important;
-}
-
-h2,
-.home-section h2,
-.article-container h2,
-.article-style h2 {
-  font-weight: 650 !important;
-  line-height: 1.25 !important;
-}
-
-h3,
-.home-section h3,
-.article-container h3,
-.article-style h3 {
-  font-weight: 600 !important;
-  line-height: 1.3 !important;
-}
-
-p,
-li,
-.article-style,
-.article-style p,
-.home-section p {
-  font-weight: 400 !important;
-  line-height: 1.75 !important;
-}
-
-/* Slightly reduce over-heavy publication/news titles */
-.media-body .article-title,
-.media-body .article-title a {
-  font-weight: 600 !important;
-}
-
-/* Keep navbar clean and consistent */
-.navbar-brand {
-  font-weight: 700 !important;
-}
-
-.nav-link {
-  font-weight: 500 !important;
 }
