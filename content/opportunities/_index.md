@@ -21,10 +21,8 @@ sections:
         science, physics, chemistry, electrical engineering,
         optoelectronics, or related fields.
 
-        **All positions are fully funded.** We also provide dedicated
-        support for international academic exchange — including visiting
-        scholarships at partner institutions and funding for conference
-        travel — to help group members build their own international
+        **All positions are fully funded.** We also fully support international academic exchange, including visiting
+        scholarships at partner institutions and funding for conference travels, to help group members build their own international
         networks.
     design:
       columns: '1'
@@ -35,17 +33,28 @@ sections:
       text: |
         **Start date:** Flexible, immediately available.
         **Duration:** Three years, fully funded.
-        **Compensation:** Total annual package up to RMB 570,000,
-        depending on background and eligibility for university and
-        provincial talent programmes.
 
         **Role.** Postdoctoral researchers in the LENS Lab will lead
         independent research within the group's directions — multijunction
         photovoltaics, interface engineering, device stability, solar
-        fuels, or novel multilayer optoelectronic devices. Postdocs are
-        supported in developing their own research ideas, writing
-        proposals, mentoring graduate students, building international
-        collaborations, and preparing for the next stage of their careers.
+        fuels, or novel multilayer optoelectronic devices. The position
+        is structured to support transition toward an independent
+        academic or industrial career.
+
+        **Responsibilities:**
+
+        - Plan and carry out an independent research programme aligned
+          with one or more of the group's research directions.
+        - Design and execute experiments, develop new methodologies, and
+          critically interpret experimental and computational results.
+        - Disseminate research findings through peer-reviewed
+          publications and at international conferences.
+        - Co-supervise and mentor graduate and undergraduate students in
+          the group.
+        - Contribute to scientific discussions across the group and to
+          the writing of proposals, reports, and publications.
+        - Participate in maintaining laboratory infrastructure and
+          contribute to the development of shared experimental capabilities.
 
         **Required qualifications:**
 
@@ -61,16 +70,23 @@ sections:
         - Ability to direct independent research and interpret results
           critically.
 
-        **Benefits.** Eligibility for the National Postdoctoral Innovation
-        Talent Programme, Guangdong Provincial Postdoctoral Programme,
-        and other talent programmes (programme support can be stacked
-        with the group package). Postdoctoral apartment or housing
-        allowance, full health and societal insurance, and equal treatment
-        to SCUT staff, including access to affiliated schools and
-        kindergartens. Dedicated funding for international conferences
-        and research visits to collaborating groups abroad. Strong
-        postdocs are eligible for priority consideration for SCUT
-        research-track and tenure-track positions.
+        **Benefits:**
+
+        - Total annual package up to RMB 570,000, depending on background
+          and eligibility for university and provincial talent programmes.
+        - Eligibility for the National Postdoctoral Innovation Talent
+          Programme, Guangdong Provincial Postdoctoral Programme, and
+          other talent programmes (programme support can be stacked with
+          the group package).
+        - Postdoctoral apartment on campus or housing allowance.
+        - Full medical insurance, social insurance, and housing fund
+          contributions on the same terms as SCUT academic staff.
+        - Children of postdocs are eligible to attend SCUT-affiliated
+          kindergartens and primary/secondary schools.
+        - Dedicated funding for international conference travel and
+          research visits to collaborating groups abroad.
+        - Strong postdocs are eligible for priority consideration for
+          SCUT research-track and tenure-track positions.
     design:
       columns: '1'
 
@@ -84,9 +100,24 @@ sections:
         pursuing a PhD in optoelectronic devices, materials chemistry,
         interface engineering, or related topics.
 
+        **Responsibilities:**
+
+        - Develop and carry out an original research project under the
+          supervision of the PI, leading toward a doctoral thesis.
+        - Design and execute experiments, analyse and interpret data, and
+          present results in group meetings, written reports, and at
+          conferences.
+        - Author and co-author peer-reviewed publications arising from
+          the research.
+        - Participate actively in group meetings, scientific discussions,
+          and the day-to-day life of the laboratory.
+        - Maintain and contribute to shared laboratory infrastructure.
+        - Where appropriate, mentor undergraduate or rotating students.
+
         **Required qualifications:**
 
-        - Meets SCUT's standard requirements for doctoral student admission.
+        - Meets SCUT's standard requirements for doctoral student
+          admission.
         - Background in materials science, physics, chemistry,
           optoelectronics, or a closely related field.
         - Prior experience in optoelectronic device fabrication, device
@@ -97,11 +128,17 @@ sections:
         - Strong commitment to academic integrity, scientific rigour, and
           collaborative work.
 
-        PhD students will receive training in materials processing, device
-        fabrication, characterisation, data analysis, scientific writing,
-        and independent project development. The group actively supports
-        PhD students through international conference attendance and
-        visiting scholarships at partner institutions abroad.
+        **Benefits:**
+
+        - Fully funded PhD position including stipend on SCUT standard
+          terms.
+        - Training in materials processing, device fabrication,
+          characterisation, data analysis, scientific writing, and
+          independent project development.
+        - Active support for international conference attendance and
+          visiting scholarships at partner institutions abroad.
+        - Access to the full shared infrastructure of the State Key
+          Laboratory of Luminescent Materials and Devices.
     design:
       columns: '1'
 
