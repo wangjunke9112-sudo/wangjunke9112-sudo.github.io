@@ -13,7 +13,10 @@ appearance:
 
 plugins_css:
   - css/custom.css
-  
+
+plugins_js:
+  - js/width-fix.js
+
 # SEO
 
 marketing:
