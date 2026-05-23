@@ -1,11 +1,13 @@
 /* =========================================================
    LENS Lab — custom.css
+   Final clean version — May 2026
    Place at: static/css/custom.css
    ========================================================= */
 
 /* ---------------------------------------------------------
-   FONT — Outfit (geometric, modern, slightly rounded)
-   Much cleaner than DM Sans at body sizes
+   FONT — Outfit
+   Loaded first so it's available immediately.
+   Overrides Wowchemy's html-level roboto rule.
    --------------------------------------------------------- */
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap');
 
@@ -14,27 +16,20 @@ html body {
   font-family: 'Outfit', -apple-system, BlinkMacSystemFont,
     "Segoe UI", Roboto, Helvetica, Arial, sans-serif !important;
   font-size: 16px !important;
+  line-height: 1.75 !important;
 }
 
-body,
 h1, h2, h3, h4, h5, h6,
 .navbar-brand, .nav-link,
 .article-title, .pub-title, .section-heading,
 p, li, td, th, blockquote, button, input {
-  font-family: 'Outfit', -apple-system, BlinkMacSystemFont, "Segoe UI",
-    Roboto, Helvetica, Arial, sans-serif !important;
+  font-family: 'Outfit', -apple-system, BlinkMacSystemFont,
+    "Segoe UI", Roboto, Helvetica, Arial, sans-serif !important;
 }
 
 /* ---------------------------------------------------------
-   LIGHT MODE — restore ocean-theme navbar colour
+   NAVBAR — light mode (ocean theme blue restored)
    --------------------------------------------------------- */
-body {
-  font-size: 1.02rem;
-  line-height: 1.78;
-}
-
-/* Restore the blue navbar in light mode (was lost when we
-   overrode the theme). Ocean theme uses #1565c0. */
 .navbar {
   background-color: #1565c0 !important;
 }
@@ -45,12 +40,9 @@ body {
 }
 
 .navbar .nav-link:hover {
-  color: rgba(255,255,255,0.75) !important;
+  color: rgba(255, 255, 255, 0.75) !important;
 }
 
-/* ---------------------------------------------------------
-   NAVBAR — size and spacing (both modes)
-   --------------------------------------------------------- */
 .navbar .nav-link {
   font-size: 0.95rem !important;
   font-weight: 500 !important;
@@ -67,26 +59,46 @@ body {
 }
 
 /* ---------------------------------------------------------
-   DARK MODE — deep blue-grey background
-   #0D1B2A: dark navy-blue, not pure black, similar to
-   high-end scientific dashboards and Arkmetrica palette
+   WIDTH FIX — verified from DOM inspection
+   Container is 960px; constrain it directly.
+   High specificity beats Wowchemy's .container rule.
+   Hero stays full width.
    --------------------------------------------------------- */
-html[data-theme="dark"] body {
+body .page-body .home-section.wg-markdown .container,
+body .page-body .home-section.wg-people .container,
+body .page-body .home-section.wg-contact .container,
+body .page-body .home-section.wg-featurette .container {
+  max-width: 740px !important;
+  width: 740px !important;
+}
+
+body .page-body .home-section.wg-hero .container {
+  max-width: 100% !important;
+  width: 100% !important;
+}
+
+/* Article container — publications, posts, author pages */
+.article-container {
+  max-width: 740px !important;
+  padding-left: 1.5rem !important;
+  padding-right: 1.5rem !important;
+}
+
+/* ---------------------------------------------------------
+   DARK MODE
+   Background: #0D1B2A — deep navy blue, not pure black
+   --------------------------------------------------------- */
+html[data-theme="dark"],
+html[data-theme="dark"] body,
+html[data-theme="dark"] section,
+html[data-theme="dark"] main,
+html[data-theme="dark"] .page-body,
+html[data-theme="dark"] .page-wrapper {
   background-color: #0D1B2A !important;
   color: #D8E2EE !important;
 }
 
-html[data-theme="dark"] {
-  background-color: #0D1B2A !important;
-}
-
-html[data-theme="dark"] section,
-html[data-theme="dark"] main,
-html[data-theme="dark"] .page-body {
-  background-color: #0D1B2A !important;
-}
-
-/* Navbar dark — slightly deeper than page bg */
+/* Navbar dark */
 html[data-theme="dark"] .navbar {
   background-color: #091524 !important;
   border-bottom: 1px solid #1A2E42 !important;
@@ -126,52 +138,8 @@ html[data-theme="dark"] a:hover {
 }
 
 /* ---------------------------------------------------------
-   PAGE WIDTH
-   Using !important on max-width alone is not enough in Hugo
-   Blox — we also need to override Bootstrap's col- classes.
-   These are the actual classes rendered on your pages.
-   --------------------------------------------------------- */
-
-/* Target the Bootstrap column that wraps landing page text */
-.col-12.col-lg-8,
-.col-12.col-xl-8,
-.col-lg-8,
-.col-xl-8 {
-  max-width: 740px !important;
-  flex: 0 0 740px !important;
-}
-
-/* Article container (used on publication, post, author pages) */
-.article-container {
-  max-width: 740px !important;
-  padding-left: 1.5rem !important;
-  padding-right: 1.5rem !important;
-}
-
-/* The universal wrapper used in landing page sections */
-.universal-wrapper {
-  max-width: 1000px !important;
-}
-
-/* Home section inner row — constrain text column */
-.home-section .row > .col-12 {
-  max-width: 740px !important;
-  margin-left: auto !important;
-  margin-right: auto !important;
-}
-
-/* Keep hero full width always */
-.wg-hero .col-12,
-.wg-hero .row > .col-12,
-.wg-hero .universal-wrapper {
-  max-width: 100% !important;
-  flex: unset !important;
-}
-
-/* ---------------------------------------------------------
-   IMAGES WITH WHITE BACKGROUNDS in dark mode
-   Adds a subtle frame so white-bg images don't float
-   harshly against the dark page background
+   IMAGES — white background handling in dark mode
+   Adds a subtle frame so white-bg figures don't clash
    --------------------------------------------------------- */
 html[data-theme="dark"] .article-style img,
 html[data-theme="dark"] .home-section img,
@@ -179,10 +147,10 @@ html[data-theme="dark"] .wg-markdown img {
   border-radius: 8px !important;
   padding: 6px !important;
   background-color: #ffffff !important;
-  box-shadow: 0 2px 16px rgba(0,0,0,0.5) !important;
+  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.5) !important;
 }
 
-/* Portrait / avatar — keep circular, cyan ring */
+/* Portraits — circular with cyan ring, no white padding */
 html[data-theme="dark"] .avatar img,
 html[data-theme="dark"] .portrait img {
   padding: 0 !important;
@@ -241,7 +209,7 @@ html[data-theme="dark"] .portrait img {
 }
 
 /* ---------------------------------------------------------
-   DARK MODE — publications
+   PUBLICATIONS LIST — dark mode
    --------------------------------------------------------- */
 html[data-theme="dark"] .page-type-publication h2 {
   color: #EAF0F8 !important;
@@ -276,7 +244,7 @@ html[data-theme="dark"] .article-style {
 .page-type-publication h1,
 .pub-title {
   font-size: 1.7rem !important;
-  font-weight: 700;
+  font-weight: 700 !important;
   line-height: 1.25;
   margin-bottom: 1.5rem;
 }
@@ -285,6 +253,10 @@ html[data-theme="dark"] .article-style {
   font-size: 1.05rem;
   line-height: 1.8;
   color: #333;
+}
+
+html[data-theme="dark"] .article-style {
+  color: #B8C8DC !important;
 }
 
 /* ---------------------------------------------------------
@@ -296,7 +268,7 @@ html[data-theme="dark"] .article-style {
 
 #people .portrait:hover {
   transform: translateY(-4px);
-  box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
 }
 
 .portrait-title h2,
@@ -394,6 +366,7 @@ html[data-theme="dark"] footer {
   border-top: 1px solid #1A2E42 !important;
 }
 
+/* Hide Hugo Blox credit line */
 footer .powered-by,
 footer a[href*="hugoblox.com"] {
   display: none !important;
@@ -422,35 +395,4 @@ html[data-theme="dark"] ::-webkit-scrollbar-track {
 html[data-theme="dark"] ::-webkit-scrollbar-thumb {
   background-color: #1A2E42;
   border-radius: 3px;
-}
-
-/* =========================================================
-   WIDTH FIX — high specificity, verified working
-   ========================================================= */
-body .page-body .home-section.wg-markdown .container {
-  max-width: 740px !important;
-  width: 740px !important;
-}
-
-body .page-body .home-section.wg-people .container {
-  max-width: 740px !important;
-  width: 740px !important;
-}
-
-body .page-body .home-section.wg-contact .container {
-  max-width: 740px !important;
-  width: 740px !important;
-}
-
-body .page-body .home-section.wg-hero .container {
-  max-width: 100% !important;
-  width: 100% !important;
-}
-
-/* Font — beats wowchemy html-level rule */
-html,
-html body {
-  font-family: 'Outfit', -apple-system, BlinkMacSystemFont,
-    "Segoe UI", Roboto, Helvetica, Arial, sans-serif !important;
-  font-size: 16px !important;
 }
