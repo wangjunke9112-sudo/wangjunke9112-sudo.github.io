@@ -115,12 +115,10 @@ extensions:
     enable: true
 
 # Citation style
-
 publications:
-  date_format: January 2026
+  date_format: January 2006
   citation_style: nature
 
 # Hide Hugo Blox credit
-
 power_ups:
-hide_published_with: true
+  hide_published_with: true
