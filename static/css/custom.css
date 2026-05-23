@@ -59,29 +59,58 @@ p, li, td, th, blockquote, button, input {
 }
 
 /* ---------------------------------------------------------
-   WIDTH FIX — verified from DOM inspection
-   Container is 960px; constrain it directly.
-   High specificity beats Wowchemy's .container rule.
+   WIDTH FIX — consistent narrow content width across tabs
+   Matches the News-style narrow reading width.
    Hero stays full width.
    --------------------------------------------------------- */
+
+:root {
+  --lens-content-width: 740px;
+  --lens-side-padding: 1.5rem;
+}
+
+/* Standard pages and listing pages: News, Publications, etc. */
+.universal-wrapper {
+  max-width: var(--lens-content-width) !important;
+  width: min(var(--lens-content-width), calc(100% - 2rem)) !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  padding-left: var(--lens-side-padding) !important;
+  padding-right: var(--lens-side-padding) !important;
+  box-sizing: border-box !important;
+}
+
+/* Landing-page sections: Research, People, Contact, featurette sections */
 body .page-body .home-section.wg-markdown .container,
 body .page-body .home-section.wg-people .container,
 body .page-body .home-section.wg-contact .container,
 body .page-body .home-section.wg-featurette .container {
-  max-width: 740px !important;
-  width: 740px !important;
+  max-width: var(--lens-content-width) !important;
+  width: min(var(--lens-content-width), calc(100% - 2rem)) !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  padding-left: var(--lens-side-padding) !important;
+  padding-right: var(--lens-side-padding) !important;
+  box-sizing: border-box !important;
 }
 
+/* Individual article, publication, post, and author pages */
+.article-container,
+.page-type-authors .article-container,
+.page-type-authors .universal-wrapper {
+  max-width: var(--lens-content-width) !important;
+  width: min(var(--lens-content-width), calc(100% - 2rem)) !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  padding-left: var(--lens-side-padding) !important;
+  padding-right: var(--lens-side-padding) !important;
+  box-sizing: border-box !important;
+}
+
+/* Keep homepage hero/banner full width */
 body .page-body .home-section.wg-hero .container {
   max-width: 100% !important;
   width: 100% !important;
-}
-
-/* Article container — publications, posts, author pages */
-.article-container {
-  max-width: 740px !important;
-  padding-left: 1.5rem !important;
-  padding-right: 1.5rem !important;
 }
 
 /* ---------------------------------------------------------
@@ -305,14 +334,6 @@ html[data-theme="dark"] .portrait-title h2 a {
 html[data-theme="dark"] .portrait-title .people-organizations,
 html[data-theme="dark"] .portrait-title .people-organizations p {
   color: #6A7E94 !important;
-}
-
-/* ---------------------------------------------------------
-   AUTHOR PROFILE PAGE
-   --------------------------------------------------------- */
-.page-type-authors .article-container,
-.page-type-authors .universal-wrapper {
-  max-width: 1000px !important;
 }
 
 /* ---------------------------------------------------------
