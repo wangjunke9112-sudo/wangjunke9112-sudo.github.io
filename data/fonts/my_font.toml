@@ -1,10 +1,7 @@
-name = "my_font"
+[header_font]
+name = "Roboto"
+sizes = [400, 700]
 
-google_fonts = [
-  {family = "DM Sans", sizes = "300,400,500,600,700"},
-]
-
-heading_font = "DM Sans"
-body_font = "DM Sans"
-nav_font = "DM Sans"
-mono_font = "DM Mono"
+[body_font]
+name = "Roboto"
+sizes = [400, 700]
