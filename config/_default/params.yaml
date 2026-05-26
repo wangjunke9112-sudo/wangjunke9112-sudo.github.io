@@ -8,8 +8,11 @@
 appearance:
   theme_day: ocean
   theme_night: ocean
-  font: native
   font_size: M
+
+hugoblox:
+  typography:
+    pack: "modern"
 
 plugins_css:
   - css/custom.css
