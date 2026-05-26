@@ -13,6 +13,11 @@ appearance:
 theme:
   colors:
     primary: '#005596'
+  # This section brings back the professional dark navbar
+  surfaces:
+    header:
+      background: '#00335c' # A slightly darker blue for the navbar
+      foreground: '#ffffff' # Makes links white so they pop
   day_night: true
 
 typography:
@@ -20,6 +25,10 @@ typography:
     heading: 'Josefin Sans'
     body: 'Karla'
     code: 'Roboto Mono'
+  # Adding this ensures the fonts load with professional weights
+  body_weight: 400
+  heading_weight: 700
+
 
 
 plugins_css:
