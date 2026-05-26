@@ -1,7 +1,7 @@
 [header_font]
-name = "Roboto"
+name = "Inter"
 sizes = [400, 700]
 
 [body_font]
-name = "Roboto"
+name = "Inter"
 sizes = [400, 700]
