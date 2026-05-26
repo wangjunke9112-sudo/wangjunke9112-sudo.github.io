@@ -224,28 +224,111 @@ a:hover {
 }
 
 /* ---------------------------------------------------------
-   PEOPLE PAGE
+   PEOPLE PAGE — CAI4CAI style
+   Names and social icons in accent blue, hover effect
    --------------------------------------------------------- */
-#people .portrait {
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
-}
 
-#people .portrait:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
-}
-
+/* Name colour — strong accent blue */
 .portrait-title h2,
 .portrait-title h2 a {
-  font-size: 1.15rem !important;
-  font-weight: 650 !important;
-  color: #1a49a0 !important;
+  font-size: 1.1rem !important;
+  font-weight: 600 !important;
+  color: #1565c0 !important;
+  margin-top: 0.75rem !important;
+  text-decoration: none !important;
 }
 
-.portrait-title .people-organizations,
-.portrait-title .people-organizations p {
-  font-size: 0.88rem !important;
-  color: #666 !important;
+.portrait-title h2 a:hover {
+  color: #003f88 !important;
+  text-decoration: underline !important;
+}
+
+/* Role text — grey, smaller */
+.portrait-title h3,
+.portrait-title p {
+  font-size: 0.85rem !important;
+  color: #555 !important;
+  font-weight: 400 !important;
+  margin-top: 0.2rem !important;
+}
+
+/* Social icons — same accent blue as name */
+.portrait-links a,
+.portrait-links .fa,
+.portrait-links svg {
+  color: #1565c0 !important;
+  font-size: 1.1rem !important;
+  margin: 0 0.2rem !important;
+  transition: color 0.15s ease !important;
+}
+
+.portrait-links a:hover {
+  color: #003f88 !important;
+}
+
+/* Card lift on hover */
+.portrait {
+  transition: transform 0.2s ease, box-shadow 0.2s ease !important;
+  border-radius: 8px !important;
+  padding: 1rem !important;
+}
+
+.portrait:hover {
+  transform: translateY(-4px) !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12) !important;
+}
+
+/* Avatar — clean circle */
+.portrait img,
+.avatar img {
+  border-radius: 50% !important;
+  border: 3px solid #e8f0fe !important;
+  transition: border-color 0.2s ease !important;
+}
+
+.portrait:hover img {
+  border-color: #1565c0 !important;
+}
+
+/* Dark mode — people page */
+html[data-theme="dark"] .portrait-title h2,
+html[data-theme="dark"] .portrait-title h2 a {
+  color: #56CFE1 !important;
+}
+
+html[data-theme="dark"] .portrait-title h3,
+html[data-theme="dark"] .portrait-title p {
+  color: #7A94AC !important;
+}
+
+html[data-theme="dark"] .portrait-links a {
+  color: #56CFE1 !important;
+}
+
+html[data-theme="dark"] .portrait-links a:hover {
+  color: #ffffff !important;
+}
+
+html[data-theme="dark"] .portrait img,
+html[data-theme="dark"] .avatar img {
+  border-color: #1A2E42 !important;
+}
+
+html[data-theme="dark"] .portrait:hover img {
+  border-color: #56CFE1 !important;
+}
+
+/* ---------------------------------------------------------
+   NAVBAR — slightly darker blue
+   Current: #1565c0, new: #0D47A1 (one shade darker)
+   --------------------------------------------------------- */
+.navbar {
+  background-color: #0D47A1 !important;
+}
+
+html[data-theme="dark"] .navbar {
+  background-color: #071f4a !important;
+  border-bottom: 1px solid #1A2E42 !important;
 }
 
 /* ---------------------------------------------------------
