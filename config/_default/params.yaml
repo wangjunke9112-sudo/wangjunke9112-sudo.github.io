@@ -6,14 +6,21 @@
 # Appearance
 
 appearance:
-  theme_day: ocean
-  theme_night: ocean
-  font: my_font
+  theme_day: minimal
+  theme_night: minimal
   font_size: M
 
-hugoblox:
-  typography:
-    pack: "modern"
+theme:
+  colors:
+    primary: '#005596'
+  day_night: true
+
+typography:
+  families:
+    heading: 'Josefin Sans'
+    body: 'Karla'
+    code: 'Roboto Mono'
+
 
 plugins_css:
   - css/custom.css
