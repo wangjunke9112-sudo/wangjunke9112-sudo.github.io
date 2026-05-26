@@ -359,7 +359,16 @@ html[data-theme="dark"] footer {
 /* Hide Hugo Blox credit line */
 footer .powered-by,
 footer a[href*="hugoblox.com"],
-footer p:has(a[href*="hugoblox.com"]) {
+footer a[href*="wowchemy.com"],
+footer p:has(a[href*="hugoblox.com"]),
+footer p:has(a[href*="wowchemy.com"]),
+footer span:has(a[href*="hugoblox.com"]),
+footer div:has(a[href*="hugoblox.com"]) {
+  display: none !important;
+}
+
+/* Nuclear option — hide any footer paragraph after the copyright */
+footer p + p {
   display: none !important;
 }
 
