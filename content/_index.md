@@ -1,12 +1,12 @@
 ---
 title: ""
-date: 2022-10-24
+date: 2026-05-29
 type: landing
 
 sections:
   - block: hero
     content:
-      title: LENS Lab
+      title: LENS Laboratory
       image:
         filename: welcome.jpg
       cta:
@@ -16,11 +16,14 @@ sections:
         label: Our research
         url: /research/
       text: |
-        **Light–Energy Nanosystems and Semiconductors**
+        **Light · Energy · Nanophotonics · Semiconductors**
 
-        We develop semiconductor optoelectronic devices that convert, control, and use light for energy and future technologies.
+        We develop monolithically stacked multilayer semiconductor devices
+        that push the efficiency and functionality limits of photovoltaics,
+        light emission, and solar-driven energy conversion.
 
-        Based at South China University of Technology · School of Materials Science and Engineering · State Key Laboratory of Luminescent Materials and Devices.
+        Based at the State Key Laboratory of Luminescent Materials and
+        Devices, South China University of Technology, Guangzhou, China.
     design:
       background:
         gradient_start: '#003A6B'
@@ -31,17 +34,26 @@ sections:
     id: research
     content:
       title: Research
-      subtitle: Materials, interfaces, and devices for energy and light
+      subtitle: Multilayer optoelectronics — materials, interfaces, and device platforms
       text: |
-        The LENS Lab works on semiconductor optoelectronic devices for
-        energy and light technologies, combining materials chemistry,
-        thin-film processing, interface engineering, device physics,
-        and stability analysis.
+        Metal-halide perovskites offer broad bandgap tunability and
+        processing versatility, making them compelling building blocks for
+        monolithically stacked multilayer optoelectronic devices that can
+        surpass the performance and functionality of conventional
+        single-junction platforms.
 
-        Current directions include **multijunction perovskite photovoltaics**,
-        **interface engineering and energy losses**, and **stability and
-        scalable fabrication** — with a longer-term vision spanning
-        solar fuels, photodetectors, and integrated optoelectronic platforms.
+        The LENS Laboratory works across this broad device landscape —
+        from ultrahigh-efficiency multijunction solar cells and
+        high-performance light-emitting devices to broadband colour image
+        sensors and solar-driven fuel generation — united by the common
+        challenge of understanding and controlling how individual
+        semiconductor layers interact within a multilayer architecture.
+
+        Core themes include emerging perovskite compositions across the
+        visible and near-infrared spectrum, novel thin-film growth methods,
+        interface energetics and recombination, light management in complex
+        device stacks, and advanced characterisation of integrated
+        multilayer devices under realistic operating conditions.
 
         [Read more about our research →](/research/)
     design:
@@ -73,13 +85,19 @@ sections:
       title: Join us
       subtitle: ''
       text: |
-        The LENS Lab welcomes applications from motivated postdoctoral
-        researchers, graduate students, and research assistants interested
-        in semiconductor optoelectronic devices for energy and light
-        technologies.
+        The LENS Laboratory welcomes applications from motivated
+        postdoctoral researchers, graduate students, and research
+        associates with backgrounds in materials science, physics,
+        chemistry, electrical engineering, or optoelectronics.
 
-        Interested candidates are welcome to contact Junke Wang with a CV
-        and a brief description of research interests.
+        We are building a group around the shared challenge of making
+        multilayer semiconductor devices that are efficient, stable, and
+        scalable — and we are looking for researchers who want to
+        contribute to that mission at any level.
+
+        All positions are fully funded. We support international
+        conference travel and visiting scholarships at partner
+        institutions.
 
         [See open positions →](/opportunities/)
     design:
