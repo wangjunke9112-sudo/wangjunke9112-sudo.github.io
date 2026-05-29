@@ -37,23 +37,8 @@ sections:
       title: Research
       subtitle: Multilayer optoelectronics — materials, interfaces, and device platforms
       text: |
-        The LENS Laboratory develops monolithically stacked multilayer
-optoelectronic devices that push the efficiency and functionality
-limits of conventional single-junction platforms. By engineering
-the spectral response across integrated semiconductor layers, we
-work toward a new generation of technologies — from
-ultrahigh-efficiency solar cells and high-performance
-light-emitting devices to broadband colour image sensors and
-solar-driven fuel generation — that share common materials and
-fabrication challenges yet serve distinct technological purposes.
-
-Our materials focus spans metal-halide perovskites and related
-emerging semiconductors, chosen for their broad bandgap
-tunability and processing versatility. Core research themes
-include novel thin-film growth methods, interface energetics and
-recombination, light management in complex device stacks, and
-advanced characterisation of integrated multilayer devices under
-realistic operating conditions.
+        The LENS Laboratory is passionate about the design and engineering of new-generation materials and device architectures for optoelectronics that unlock the performance and functionality of conventional device platforms.
+        Current directions include **Ultrahigh-efficiency photovoltaics**, **Novel dry and solution-based thin-film growth technologies**, and **Device concepts for enhanced light-matter interactions** — with a longer-term vision spanning solar fuels, photodetectors, and integrated optoelectronic platforms.
 
         [Read more about our research →](/research/)
     design:
