@@ -1,9 +1,8 @@
 # SITE SETUP
 
-# Appearance
 appearance:
-  theme_day: lens
-  theme_night: lens
+  theme_day: ocean
+  theme_night: ocean
   font: minimal
   font_size: M
 
