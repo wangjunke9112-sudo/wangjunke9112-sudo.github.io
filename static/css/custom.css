@@ -1,30 +1,39 @@
 /* =========================================================
    LENS Lab — custom.css
-   Minimal stable version — May 2026
+   Clean stable version — May 2026
    Place at: static/css/custom.css
    ========================================================= */
+
+/* ---------------------------------------------------------
+   FONT — DM Sans
+   --------------------------------------------------------- */
+@import url("https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700;800&display=swap");
+
 /* ---------------------------------------------------------
    GLOBAL VARIABLES
    --------------------------------------------------------- */
 :root {
-  --lens-font: 'DM Sans', -apple-system, BlinkMacSystemFont, "Segoe UI",
+  --lens-font: "DM Sans", -apple-system, BlinkMacSystemFont, "Segoe UI",
     Roboto, Helvetica, Arial, sans-serif;
 
   --lens-readable-width: 740px;
   --lens-readable-padding: 1.5rem;
 
-  --lens-blue: #1565c0;
+  --lens-brand-blue: #06436B;
+  --lens-brand-blue-dark: #043553;
+  --lens-brand-blue-light: #0A5A8A;
+
   --lens-cyan: #56CFE1;
 
   --lens-dark-bg: #0D1B2A;
-  --lens-dark-nav: #091524;
+  --lens-dark-nav: #043553;
   --lens-dark-border: #1A2E42;
   --lens-dark-text: #D8E2EE;
   --lens-dark-muted: #B8C8DC;
 }
 
 /* ---------------------------------------------------------
-   FONT — force one clean system font everywhere
+   FONT NORMALIZATION
    --------------------------------------------------------- */
 html,
 body,
@@ -66,7 +75,7 @@ li,
   font-size: 1rem !important;
   line-height: 1.75 !important;
   font-weight: 400 !important;
-  color: #333;
+  color: #333333;
 }
 
 h1,
@@ -76,11 +85,10 @@ h4,
 h5,
 h6 {
   font-family: var(--lens-font) !important;
-  color: #111;
+  color: #111111;
   letter-spacing: -0.02em;
 }
 
-/* Main page title */
 h1 {
   font-size: 2rem !important;
   font-weight: 700 !important;
@@ -89,18 +97,16 @@ h1 {
   margin-bottom: 1.4rem !important;
 }
 
-/* Section headings */
 h2,
 .home-section h1,
 .article-style h2 {
   font-size: 1.45rem !important;
-  font-weight: 650 !important;
+  font-weight: 600 !important;
   line-height: 1.3 !important;
   margin-top: 2.4rem !important;
   margin-bottom: 1rem !important;
 }
 
-/* Smaller headings */
 h3,
 .article-style h3,
 .home-section h3 {
@@ -111,7 +117,6 @@ h3,
   margin-bottom: 0.75rem !important;
 }
 
-/* Prevent first section heading from adding too much top space */
 .home-section h1:first-child,
 .home-section h2:first-child,
 .article-style h1:first-child,
@@ -120,7 +125,7 @@ h3,
 }
 
 /* ---------------------------------------------------------
-   WIDTH — consistent narrow content width
+   WIDTH — consistent narrow reading width
    --------------------------------------------------------- */
 .universal-wrapper,
 .article-container,
@@ -135,7 +140,7 @@ h3,
   box-sizing: border-box !important;
 }
 
-/* Keep hero/banner full width */
+/* Keep hero full width */
 .page-body .home-section.wg-hero > .container,
 .page-body .home-section.hero > .container,
 .page-body .home-section.wg-hero .container,
@@ -145,10 +150,14 @@ h3,
 }
 
 /* ---------------------------------------------------------
-   NAVBAR
+   NAVBAR — deep blue matching icon
    --------------------------------------------------------- */
-.navbar {
-  background-color: var(--lens-blue) !important;
+.navbar,
+.navbar.navbar-light,
+.navbar.navbar-expand-lg {
+  background-color: var(--lens-brand-blue) !important;
+  box-shadow: none !important;
+  border-bottom: none !important;
 }
 
 .navbar .navbar-brand,
@@ -156,8 +165,9 @@ h3,
   color: #ffffff !important;
 }
 
-.navbar .nav-link:hover {
-  color: rgba(255, 255, 255, 0.75) !important;
+.navbar .nav-link:hover,
+.navbar .nav-link:focus {
+  color: rgba(255, 255, 255, 0.78) !important;
 }
 
 .navbar-brand {
@@ -179,12 +189,100 @@ h3,
    LINKS
    --------------------------------------------------------- */
 a {
-  color: #1565c0;
+  color: var(--lens-brand-blue);
 }
 
 a:hover {
-  color: #003f88;
+  color: var(--lens-brand-blue-dark);
   text-decoration: underline;
+}
+
+/* ---------------------------------------------------------
+   HOMEPAGE HERO — clean white hero, blue title/buttons
+   --------------------------------------------------------- */
+.home-section.wg-hero,
+.home-section.hero {
+  background: #ffffff !important;
+  color: #111111 !important;
+  padding-top: 4.5rem !important;
+  padding-bottom: 4.5rem !important;
+}
+
+.home-section.wg-hero h1,
+.home-section.hero h1,
+.hero-title {
+  color: var(--lens-brand-blue) !important;
+  font-size: 2.7rem !important;
+  font-weight: 800 !important;
+  letter-spacing: -0.04em !important;
+  line-height: 1.05 !important;
+}
+
+.home-section.wg-hero p,
+.home-section.hero p,
+.hero-lead {
+  color: #333333 !important;
+  font-weight: 400 !important;
+  line-height: 1.7 !important;
+}
+
+/* Hero CTA spacing */
+.hero-cta-group,
+.home-section.wg-hero .hero-cta-group,
+.home-section.hero .hero-cta-group {
+  margin-top: 2rem !important;
+}
+
+.home-section.wg-hero a.btn,
+.home-section.hero a.btn {
+  margin-top: 1.5rem !important;
+}
+
+/* Hero buttons */
+.home-section.wg-hero .btn-primary,
+.home-section.hero .btn-primary,
+.hero-cta-group .btn-primary {
+  background-color: var(--lens-brand-blue) !important;
+  border-color: var(--lens-brand-blue) !important;
+  color: #ffffff !important;
+}
+
+.home-section.wg-hero .btn-primary:hover,
+.home-section.hero .btn-primary:hover,
+.hero-cta-group .btn-primary:hover {
+  background-color: var(--lens-brand-blue-dark) !important;
+  border-color: var(--lens-brand-blue-dark) !important;
+  color: #ffffff !important;
+}
+
+.home-section.wg-hero .btn-outline-primary,
+.home-section.hero .btn-outline-primary,
+.hero-cta-group .btn-outline-primary {
+  color: var(--lens-brand-blue) !important;
+  border-color: var(--lens-brand-blue) !important;
+}
+
+.home-section.wg-hero .btn-outline-primary:hover,
+.home-section.hero .btn-outline-primary:hover,
+.hero-cta-group .btn-outline-primary:hover {
+  background-color: var(--lens-brand-blue) !important;
+  border-color: var(--lens-brand-blue) !important;
+  color: #ffffff !important;
+}
+
+/* ---------------------------------------------------------
+   BUTTONS
+   --------------------------------------------------------- */
+.btn,
+.btn-outline-primary,
+.btn-primary {
+  font-family: var(--lens-font) !important;
+  font-size: 0.78rem !important;
+  font-weight: 500 !important;
+  letter-spacing: 0.04em !important;
+  text-transform: uppercase !important;
+  border-radius: 4px !important;
+  padding: 0.35rem 0.85rem !important;
 }
 
 /* ---------------------------------------------------------
@@ -208,65 +306,29 @@ a:hover {
   font-size: 1.05rem !important;
   font-weight: 600 !important;
   line-height: 1.45 !important;
-  color: #1a49a0 !important;
+  color: var(--lens-brand-blue) !important;
+}
+
+.media-body .article-title a:hover {
+  color: var(--lens-brand-blue-dark) !important;
+  text-decoration: underline !important;
 }
 
 .media-body .article-metadata {
   font-size: 0.92rem !important;
-  color: #666 !important;
+  color: #666666 !important;
 }
 
 .media-body .article-style,
 .media-body .article-style p {
   font-size: 0.95rem !important;
   line-height: 1.6 !important;
-  color: #444 !important;
+  color: #444444 !important;
 }
 
 /* ---------------------------------------------------------
-   PEOPLE PAGE — CAI4CAI style
-   Names and social icons in accent blue, hover effect
+   PEOPLE PAGE
    --------------------------------------------------------- */
-
-/* Name colour — strong accent blue */
-.portrait-title h2,
-.portrait-title h2 a {
-  font-size: 1.1rem !important;
-  font-weight: 600 !important;
-  color: #1565c0 !important;
-  margin-top: 0.75rem !important;
-  text-decoration: none !important;
-}
-
-.portrait-title h2 a:hover {
-  color: #003f88 !important;
-  text-decoration: underline !important;
-}
-
-/* Role text — grey, smaller */
-.portrait-title h3,
-.portrait-title p {
-  font-size: 0.85rem !important;
-  color: #555 !important;
-  font-weight: 400 !important;
-  margin-top: 0.2rem !important;
-}
-
-/* Social icons — same accent blue as name */
-.portrait-links a,
-.portrait-links .fa,
-.portrait-links svg {
-  color: #1565c0 !important;
-  font-size: 1.1rem !important;
-  margin: 0 0.2rem !important;
-  transition: color 0.15s ease !important;
-}
-
-.portrait-links a:hover {
-  color: #003f88 !important;
-}
-
-/* Card lift on hover */
 .portrait {
   transition: transform 0.2s ease, box-shadow 0.2s ease !important;
   border-radius: 8px !important;
@@ -278,7 +340,44 @@ a:hover {
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12) !important;
 }
 
-/* Avatar — clean circle */
+.portrait-title h2,
+.portrait-title h2 a {
+  font-size: 1.1rem !important;
+  font-weight: 600 !important;
+  color: var(--lens-brand-blue) !important;
+  margin-top: 0.75rem !important;
+  text-decoration: none !important;
+}
+
+.portrait-title h2 a:hover {
+  color: var(--lens-brand-blue-dark) !important;
+  text-decoration: underline !important;
+}
+
+.portrait-title h3,
+.portrait-title p,
+.portrait-title .people-organizations,
+.portrait-title .people-organizations p {
+  font-size: 0.85rem !important;
+  color: #555555 !important;
+  font-weight: 400 !important;
+  margin-top: 0.2rem !important;
+  line-height: 1.35 !important;
+}
+
+.portrait-links a,
+.portrait-links .fa,
+.portrait-links svg {
+  color: var(--lens-brand-blue) !important;
+  font-size: 1.1rem !important;
+  margin: 0 0.2rem !important;
+  transition: color 0.15s ease !important;
+}
+
+.portrait-links a:hover {
+  color: var(--lens-brand-blue-dark) !important;
+}
+
 .portrait img,
 .avatar img {
   border-radius: 50% !important;
@@ -287,62 +386,7 @@ a:hover {
 }
 
 .portrait:hover img {
-  border-color: #1565c0 !important;
-}
-
-/* Dark mode — people page */
-html[data-theme="dark"] .portrait-title h2,
-html[data-theme="dark"] .portrait-title h2 a {
-  color: #56CFE1 !important;
-}
-
-html[data-theme="dark"] .portrait-title h3,
-html[data-theme="dark"] .portrait-title p {
-  color: #7A94AC !important;
-}
-
-html[data-theme="dark"] .portrait-links a {
-  color: #56CFE1 !important;
-}
-
-html[data-theme="dark"] .portrait-links a:hover {
-  color: #ffffff !important;
-}
-
-html[data-theme="dark"] .portrait img,
-html[data-theme="dark"] .avatar img {
-  border-color: #1A2E42 !important;
-}
-
-html[data-theme="dark"] .portrait:hover img {
-  border-color: #56CFE1 !important;
-}
-
-/* ---------------------------------------------------------
-   NAVBAR — slightly darker blue
-   Current: #1565c0, new: #0D47A1 (one shade darker)
-   --------------------------------------------------------- */
-.navbar {
-  background-color: #0D47A1 !important;
-}
-
-html[data-theme="dark"] .navbar {
-  background-color: #071f4a !important;
-  border-bottom: 1px solid #1A2E42 !important;
-}
-
-/* ---------------------------------------------------------
-   BUTTONS
-   --------------------------------------------------------- */
-.btn,
-.btn-outline-primary {
-  font-family: var(--lens-font) !important;
-  font-size: 0.78rem !important;
-  font-weight: 500 !important;
-  letter-spacing: 0.04em !important;
-  text-transform: uppercase !important;
-  border-radius: 4px !important;
-  padding: 0.25rem 0.7rem !important;
+  border-color: var(--lens-brand-blue) !important;
 }
 
 /* ---------------------------------------------------------
@@ -358,7 +402,9 @@ html[data-theme="dark"] .page-wrapper {
   color: var(--lens-dark-text) !important;
 }
 
-html[data-theme="dark"] .navbar {
+html[data-theme="dark"] .navbar,
+html[data-theme="dark"] .navbar.navbar-light,
+html[data-theme="dark"] .navbar.navbar-expand-lg {
   background-color: var(--lens-dark-nav) !important;
   border-bottom: 1px solid var(--lens-dark-border) !important;
 }
@@ -372,6 +418,15 @@ html[data-theme="dark"] .navbar .nav-link:hover {
   color: var(--lens-cyan) !important;
 }
 
+html[data-theme="dark"] .home-section.wg-hero,
+html[data-theme="dark"] .home-section.hero {
+  background: var(--lens-dark-bg) !important;
+  color: var(--lens-dark-text) !important;
+}
+
+html[data-theme="dark"] .home-section.wg-hero h1,
+html[data-theme="dark"] .home-section.hero h1,
+html[data-theme="dark"] .hero-title,
 html[data-theme="dark"] h1,
 html[data-theme="dark"] h2,
 html[data-theme="dark"] h3,
@@ -385,7 +440,10 @@ html[data-theme="dark"] p,
 html[data-theme="dark"] li,
 html[data-theme="dark"] .article-style,
 html[data-theme="dark"] .article-style p,
-html[data-theme="dark"] .home-section p {
+html[data-theme="dark"] .home-section p,
+html[data-theme="dark"] .home-section.wg-hero p,
+html[data-theme="dark"] .home-section.hero p,
+html[data-theme="dark"] .hero-lead {
   color: var(--lens-dark-muted) !important;
 }
 
@@ -411,6 +469,24 @@ html[data-theme="dark"] .portrait img {
   background-color: transparent !important;
   box-shadow: 0 0 0 3px rgba(86, 207, 225, 0.3) !important;
   border-radius: 50% !important;
+  border-color: var(--lens-dark-border) !important;
+}
+
+html[data-theme="dark"] .portrait:hover img {
+  border-color: var(--lens-cyan) !important;
+}
+
+html[data-theme="dark"] .portrait-title h2,
+html[data-theme="dark"] .portrait-title h2 a,
+html[data-theme="dark"] .portrait-links a {
+  color: var(--lens-cyan) !important;
+}
+
+html[data-theme="dark"] .portrait-title h3,
+html[data-theme="dark"] .portrait-title p,
+html[data-theme="dark"] .portrait-title .people-organizations,
+html[data-theme="dark"] .portrait-title .people-organizations p {
+  color: #7A94AC !important;
 }
 
 html[data-theme="dark"] .card {
@@ -426,6 +502,16 @@ html[data-theme="dark"] .card-text {
   color: #7A94AC !important;
 }
 
+html[data-theme="dark"] .btn-outline-primary {
+  border-color: var(--lens-cyan) !important;
+  color: var(--lens-cyan) !important;
+}
+
+html[data-theme="dark"] .btn-outline-primary:hover {
+  background-color: var(--lens-cyan) !important;
+  color: var(--lens-dark-bg) !important;
+}
+
 /* ---------------------------------------------------------
    FOOTER
    --------------------------------------------------------- */
@@ -439,19 +525,10 @@ html[data-theme="dark"] footer {
   border-top: 1px solid var(--lens-dark-border) !important;
 }
 
-/* Hide Hugo Blox credit line */
+/* Hide Hugo Blox / Wowchemy credit line safely */
 footer .powered-by,
 footer a[href*="hugoblox.com"],
-footer a[href*="wowchemy.com"],
-footer p:has(a[href*="hugoblox.com"]),
-footer p:has(a[href*="wowchemy.com"]),
-footer span:has(a[href*="hugoblox.com"]),
-footer div:has(a[href*="hugoblox.com"]) {
-  display: none !important;
-}
-
-/* Nuclear option — hide any footer paragraph after the copyright */
-footer p + p {
+footer a[href*="wowchemy.com"] {
   display: none !important;
 }
 
@@ -474,140 +551,4 @@ html[data-theme="dark"] ::-webkit-scrollbar-track {
 html[data-theme="dark"] ::-webkit-scrollbar-thumb {
   background-color: var(--lens-dark-border);
   border-radius: 3px;
-}
-
-/* Broader hero CTA spacing override */
-.home-section.wg-hero a.btn,
-.home-section.hero a.btn {
-  margin-top: 2rem !important;
-}
-
-/* =========================================================
-   LENS Lab — Navbar and Hero Color Refinement
-   Use deep blue matching the LENS/W icon
-   ========================================================= */
-
-:root {
-  --lens-brand-blue: #06436B;
-  --lens-brand-blue-dark: #043553;
-  --lens-brand-blue-light: #0A5A8A;
-}
-
-/* Restore clean deep-blue top menu bar */
-.navbar,
-.navbar.navbar-light,
-.navbar.navbar-expand-lg {
-  background-color: var(--lens-brand-blue) !important;
-  box-shadow: none !important;
-  border-bottom: none !important;
-}
-
-.navbar .navbar-brand,
-.navbar .nav-link {
-  color: #ffffff !important;
-}
-
-.navbar .nav-link:hover,
-.navbar .nav-link:focus {
-  color: rgba(255, 255, 255, 0.78) !important;
-}
-
-/* Keep navbar brand strong but not oversized */
-.navbar-brand {
-  font-weight: 700 !important;
-  letter-spacing: -0.01em !important;
-}
-
-/* ---------------------------------------------------------
-   Homepage hero — cleaner, less like a long shaded row
-   --------------------------------------------------------- */
-
-/* Remove heavy shaded/gradient feeling from hero */
-.home-section.wg-hero,
-.home-section.hero {
-  background: #ffffff !important;
-  color: #111111 !important;
-  padding-top: 4.5rem !important;
-  padding-bottom: 4.5rem !important;
-}
-
-/* Hero title */
-.home-section.wg-hero h1,
-.home-section.hero h1,
-.hero-title {
-  color: var(--lens-brand-blue) !important;
-  font-weight: 750 !important;
-  letter-spacing: -0.035em !important;
-  line-height: 1.05 !important;
-}
-
-/* Hero text */
-.home-section.wg-hero p,
-.home-section.hero p,
-.hero-lead {
-  color: #333333 !important;
-  font-weight: 400 !important;
-}
-
-/* Hero buttons */
-.home-section.wg-hero .btn-primary,
-.home-section.hero .btn-primary,
-.hero-cta-group .btn-primary {
-  background-color: var(--lens-brand-blue) !important;
-  border-color: var(--lens-brand-blue) !important;
-  color: #ffffff !important;
-}
-
-.home-section.wg-hero .btn-primary:hover,
-.home-section.hero .btn-primary:hover,
-.hero-cta-group .btn-primary:hover {
-  background-color: var(--lens-brand-blue-dark) !important;
-  border-color: var(--lens-brand-blue-dark) !important;
-}
-
-/* Secondary hero button */
-.home-section.wg-hero .btn-outline-primary,
-.home-section.hero .btn-outline-primary,
-.hero-cta-group .btn-outline-primary {
-  color: var(--lens-brand-blue) !important;
-  border-color: var(--lens-brand-blue) !important;
-}
-
-.home-section.wg-hero .btn-outline-primary:hover,
-.home-section.hero .btn-outline-primary:hover,
-.hero-cta-group .btn-outline-primary:hover {
-  background-color: var(--lens-brand-blue) !important;
-  color: #ffffff !important;
-}
-
-/* Add comfortable spacing between hero text and buttons */
-.hero-cta-group,
-.home-section.wg-hero .hero-cta-group,
-.home-section.hero .hero-cta-group {
-  margin-top: 2rem !important;
-}
-
-/* Dark mode navbar and hero */
-html[data-theme="dark"] .navbar,
-html[data-theme="dark"] .navbar.navbar-light,
-html[data-theme="dark"] .navbar.navbar-expand-lg {
-  background-color: #043553 !important;
-}
-
-html[data-theme="dark"] .home-section.wg-hero,
-html[data-theme="dark"] .home-section.hero {
-  background: #0D1B2A !important;
-  color: #D8E2EE !important;
-}
-
-html[data-theme="dark"] .home-section.wg-hero h1,
-html[data-theme="dark"] .home-section.hero h1,
-html[data-theme="dark"] .hero-title {
-  color: #EAF0F8 !important;
-}
-
-html[data-theme="dark"] .home-section.wg-hero p,
-html[data-theme="dark"] .home-section.hero p,
-html[data-theme="dark"] .hero-lead {
-  color: #B8C8DC !important;
 }
