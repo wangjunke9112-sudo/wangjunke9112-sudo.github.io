@@ -17,14 +17,13 @@ sections:
         url: /research/
       text: |
 
-        We are an academic research group working on **L**ight and **E**nergy **N**anosystems and **S**emiconductors.
+        We are an academic research group working on **L**ight and **E**nergy **N**anophotonics and **S**emiconductors.
 
         Based in the State Key Laboratory of Luminescent Materials and Devices at South China University of Technology in Guangzhou, China, the LENS Laboratory develops advanced semiconductor materials, interfaces, and device platforms for future energy and light technologies.
-    
     design:
-    background:
-    color: '#ffffff'
-    text_color_light: false
+      background:
+        color: '#ffffff'
+        text_color_light: false
 
   - block: markdown
     id: research
@@ -39,6 +38,7 @@ sections:
         [Read more about our research →](/research/)
     design:
       columns: '1'
+      background: {}
 
   - block: collection
     id: news
@@ -59,6 +59,7 @@ sections:
     design:
       view: compact
       columns: '1'
+      background: {}
 
   - block: markdown
     id: join
@@ -70,9 +71,10 @@ sections:
 
         We are building a collaborative group around the shared goal of creating multilayer semiconductor devices that are efficient, stable, scalable, and scientifically well understood. We are especially interested in researchers who are curious, hands-on, open to discussion, and excited to help shape a new laboratory from the beginning.
 
-        All positions are fully funded. We support career development through scientific mentoring, proposal and manuscript training, international collaboration, conference participation, and visiting opportunities at partner institutions.
+        Fully funded positions are available for outstanding candidates. We support career development through scientific mentoring, proposal and manuscript training, international collaboration, conference participation, and visiting opportunities at partner institutions.
 
         [See open positions →](/opportunities/)
     design:
       columns: '1'
+      background: {}
 ---
