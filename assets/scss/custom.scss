@@ -7,7 +7,7 @@
 /* ---------------------------------------------------------
    FONT
    --------------------------------------------------------- */
-@import url("https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700;800&display=swap");
+@import "https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700;800&display=swap";
 
 /* ---------------------------------------------------------
    VARIABLES
@@ -115,7 +115,8 @@ h3,
 .page-body .home-section:not(.wg-hero) > .container,
 .page-body .home-section:not(.wg-hero) .container {
   max-width: var(--lens-readable-width) !important;
-  width: min(var(--lens-readable-width), calc(100vw - 2rem)) !important;
+  width: 740px !important;
+  max-width: calc(100vw - 2rem) !important;  
   margin-left: auto !important;
   margin-right: auto !important;
   padding-left: var(--lens-readable-padding) !important;
