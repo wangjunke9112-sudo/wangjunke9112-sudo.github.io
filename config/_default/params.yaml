@@ -28,7 +28,7 @@ typography:
   body_weight: 400
   heading_weight: 700
 
-plugins_css:
+custom_css:
   - css/custom.css
 
 # SEO
