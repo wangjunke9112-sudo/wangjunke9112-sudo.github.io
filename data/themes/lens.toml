@@ -1,10 +1,15 @@
-# LENS Laboratory colour theme
-# Navbar blue matches icon.png
-
 [light]
-  # Primary colour — used for navbar, links, buttons
   primary = "#174C77"
+  menu_primary = "#174C77"
+  menu_text = "#fff"
+  menu_text_active = "#fff"
+  home_section_odd = "#fff"
+  home_section_even = "#f7f7f7"
 
 [dark]
-  # Dark mode primary
   primary = "#56CFE1"
+  menu_primary = "#0F3858"
+  menu_text = "#fff"
+  menu_text_active = "#fff"
+  home_section_odd = "#0D1B2A"
+  home_section_even = "#112236"
