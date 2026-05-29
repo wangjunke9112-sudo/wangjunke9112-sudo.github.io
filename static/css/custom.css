@@ -476,19 +476,8 @@ html[data-theme="dark"] ::-webkit-scrollbar-thumb {
   border-radius: 3px;
 }
 
-/* =========================================================
-   HERO BUTTON SPACING
-   Increase gap between hero text and CTA buttons
-   ========================================================= */
-
-.wg-hero .hero-cta-group,
-.hero .hero-cta-group,
-.hero-cta-group {
+/* Broader hero CTA spacing override */
+.home-section.wg-hero a.btn,
+.home-section.hero a.btn {
   margin-top: 2rem !important;
-}
-
-/* If your theme uses separate button wrappers */
-.wg-hero .btn,
-.hero .btn {
-  margin-top: 0.5rem !important;
 }
