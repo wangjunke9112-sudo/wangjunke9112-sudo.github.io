@@ -475,3 +475,15 @@ html[data-theme="dark"] ::-webkit-scrollbar-thumb {
   background-color: var(--lens-dark-border);
   border-radius: 3px;
 }
+
+/* Hero — spacing between text and buttons */
+.wg-hero .hero-lead {
+  margin-bottom: 2.5rem !important;
+  padding-bottom: 1rem !important;
+}
+
+.wg-hero .cta-group,
+.wg-hero .cta-btns,
+.wg-hero .hero-cta {
+  margin-top: 2rem !important;
+}
