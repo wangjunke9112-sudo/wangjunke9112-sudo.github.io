@@ -21,11 +21,10 @@ sections:
 
         Based in the State Key Laboratory of Luminescent Materials and Devices at South China University of Technology in Guangzhou, China, the LENS Laboratory develops advanced semiconductor materials, interfaces, and device platforms for future energy and light technologies.
     
-    design:
-      background:
-        gradient_start: '#003A6B'
-        gradient_end: '#0077B6'
-        text_color_light: true
+design:
+  background:
+    color: '#ffffff'
+    text_color_light: false
 
   - block: markdown
     id: research
