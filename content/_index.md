@@ -24,7 +24,6 @@ sections:
 
         Based at the State Key Laboratory of Luminescent Materials and
         Devices, South China University of Technology, Guangzhou, China.
-
         &nbsp;
     
     design:
