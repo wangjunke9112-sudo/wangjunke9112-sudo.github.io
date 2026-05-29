@@ -552,3 +552,88 @@ html[data-theme="dark"] ::-webkit-scrollbar-thumb {
   background-color: var(--lens-dark-border);
   border-radius: 3px;
 }
+
+/* =========================================================
+   FINAL NAVBAR OVERRIDE — force LENS blue menu bar
+   Put this at the VERY END of custom.css
+   ========================================================= */
+
+:root {
+  --lens-brand-blue: #06436B;
+  --lens-brand-blue-dark: #043553;
+}
+
+/* Force navbar background across Hugo Blox / Bootstrap variants */
+header,
+.page-header,
+.navbar,
+.navbar-light,
+.navbar-dark,
+.navbar-expand-lg,
+.navbar.navbar-light,
+.navbar.navbar-dark,
+.navbar.navbar-expand-lg,
+header .navbar,
+.page-header .navbar,
+.navbar-custom,
+.navbar-theme {
+  background: var(--lens-brand-blue) !important;
+  background-color: var(--lens-brand-blue) !important;
+  box-shadow: none !important;
+  border-bottom: none !important;
+}
+
+/* Force navbar text/icons to white */
+.navbar .navbar-brand,
+.navbar .navbar-brand a,
+.navbar .nav-link,
+.navbar .navbar-nav .nav-link,
+.navbar a,
+.navbar button,
+.navbar .navbar-toggler,
+.navbar .navbar-toggler-icon,
+.navbar i,
+.navbar svg {
+  color: #ffffff !important;
+  fill: #ffffff !important;
+}
+
+/* Hover state */
+.navbar .nav-link:hover,
+.navbar .navbar-nav .nav-link:hover,
+.navbar a:hover {
+  color: rgba(255, 255, 255, 0.78) !important;
+}
+
+/* Mobile hamburger border */
+.navbar .navbar-toggler {
+  border-color: rgba(255, 255, 255, 0.45) !important;
+}
+
+/* Bootstrap hamburger icon as white */
+.navbar-light .navbar-toggler-icon,
+.navbar .navbar-toggler-icon {
+  filter: invert(1) grayscale(1) brightness(2) !important;
+}
+
+/* Theme toggle icons */
+.navbar .theme-dropdown,
+.navbar .theme-dropdown *,
+.navbar .dropdown-toggle,
+.navbar .dropdown-toggle * {
+  color: #ffffff !important;
+  fill: #ffffff !important;
+}
+
+/* Dark mode navbar */
+html[data-theme="dark"] header,
+html[data-theme="dark"] .page-header,
+html[data-theme="dark"] .navbar,
+html[data-theme="dark"] .navbar-light,
+html[data-theme="dark"] .navbar-dark,
+html[data-theme="dark"] .navbar-expand-lg,
+html[data-theme="dark"] header .navbar,
+html[data-theme="dark"] .page-header .navbar {
+  background: var(--lens-brand-blue-dark) !important;
+  background-color: var(--lens-brand-blue-dark) !important;
+}
