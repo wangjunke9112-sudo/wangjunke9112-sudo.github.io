@@ -16,14 +16,9 @@ sections:
         label: Our research
         url: /research/
       text: |
-        **Light · Energy · Nanophotonics · Semiconductors**
 
-        We develop monolithically stacked multilayer semiconductor devices
-        that push the efficiency and functionality limits of photovoltaics,
-        light emission, and solar-driven energy conversion.
-
-        Based at the State Key Laboratory of Luminescent Materials and
-        Devices, South China University of Technology, Guangzhou, China.
+        We are an academic group focusing on **L**ight and **E**nergy **N**anosystems and **S**emiconductors.
+        LENS Laboratory is embedded in the State Key Laboratory of Luminescent Materials and Devices at South China University of Technology in Guangzhou, China
     
     design:
       background:
