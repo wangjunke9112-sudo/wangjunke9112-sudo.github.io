@@ -24,6 +24,9 @@ sections:
 
         Based at the State Key Laboratory of Luminescent Materials and
         Devices, South China University of Technology, Guangzhou, China.
+
+        &nbsp;
+    
     design:
       background:
         gradient_start: '#003A6B'
@@ -36,24 +39,23 @@ sections:
       title: Research
       subtitle: Multilayer optoelectronics — materials, interfaces, and device platforms
       text: |
-        Metal-halide perovskites offer broad bandgap tunability and
-        processing versatility, making them compelling building blocks for
-        monolithically stacked multilayer optoelectronic devices that can
-        surpass the performance and functionality of conventional
-        single-junction platforms.
+        The LENS Laboratory develops monolithically stacked multilayer
+optoelectronic devices that push the efficiency and functionality
+limits of conventional single-junction platforms. By engineering
+the spectral response across integrated semiconductor layers, we
+work toward a new generation of technologies — from
+ultrahigh-efficiency solar cells and high-performance
+light-emitting devices to broadband colour image sensors and
+solar-driven fuel generation — that share common materials and
+fabrication challenges yet serve distinct technological purposes.
 
-        The LENS Laboratory works across this broad device landscape —
-        from ultrahigh-efficiency multijunction solar cells and
-        high-performance light-emitting devices to broadband colour image
-        sensors and solar-driven fuel generation — united by the common
-        challenge of understanding and controlling how individual
-        semiconductor layers interact within a multilayer architecture.
-
-        Core themes include emerging perovskite compositions across the
-        visible and near-infrared spectrum, novel thin-film growth methods,
-        interface energetics and recombination, light management in complex
-        device stacks, and advanced characterisation of integrated
-        multilayer devices under realistic operating conditions.
+Our materials focus spans metal-halide perovskites and related
+emerging semiconductors, chosen for their broad bandgap
+tunability and processing versatility. Core research themes
+include novel thin-film growth methods, interface energetics and
+recombination, light management in complex device stacks, and
+advanced characterisation of integrated multilayer devices under
+realistic operating conditions.
 
         [Read more about our research →](/research/)
     design:
