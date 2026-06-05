@@ -5,6 +5,8 @@ authors:
   - admin
 tags:
   - talk
+image:
+  preview_only: true
 summary: "Junke Wang presented his research on perovskite multijunction solar cells at the Solar Energy Seminar Series of Prof. Erkan Aydin's group at LMU Munich."
 draft: false
 ---
