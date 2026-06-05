@@ -101,7 +101,7 @@ sections:
         
         **For Chinese nationals — outgoing exchange, joint supervision, or overseas postdoctoral positions**
         
-        - [CSC Joint PhD / Full PhD Scholarship] (https://bg.csc.edu.cn/ProjectList.aspx) — for current PhD students or
+        - [CSC Joint PhD / Full PhD Scholarship](https://bg.csc.edu.cn/ProjectList.aspx) — for current PhD students or
           graduating Master's students going to partner universities abroad.
           Application typically opens January–March each year. Several leading
           European universities operate bilateral PhD programmes with CSC,
