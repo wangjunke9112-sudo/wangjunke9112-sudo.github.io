@@ -40,7 +40,7 @@ header:
 # Site footer
 footer:
   copyright:
-    notice: '© {year} LENS Lab. All rights reserved.'
+    notice: '© {year} LENS Laboratory. All rights reserved.'
     license:
       enable: false
 
