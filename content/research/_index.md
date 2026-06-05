@@ -1,6 +1,6 @@
 ---
 title: Research
-date: 2026-06-05
+date: 2026-05-22
 type: landing
 
 sections:
@@ -115,4 +115,17 @@ sections:
     design:
       columns: '1'
 
+  - block: markdown
+    content:
+      title: Laboratory Facilities
+      text: |
+        The LENS Lab is being established at SCUT with dedicated
+        infrastructure for multilayer perovskite device research,
+        including a multi-glovebox fabrication suite, vacuum deposition
+        systems, current-voltage and stability testing, and access to
+        the shared characterisation infrastructure of the State Key
+        Laboratory of Luminescent Materials and Devices.
+
+    design:
+      columns: '1'
 ---
