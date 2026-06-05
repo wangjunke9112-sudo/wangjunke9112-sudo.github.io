@@ -34,8 +34,8 @@ sections:
 
         **Postdoctoral Researchers**
 
-        All postdoctoral positions are fully funded. Postdocs will lead
-        independent research within the group's directions, contribute to
+        Fully funded three-year postdoctoral positions. Postdocs will lead
+        independent research within the group's broad interests, contribute to
         publications and proposals, co-supervise students, and be supported
         in developing their own research careers. A PhD in a relevant field
         and a strong publication record are expected. Chinese nationals are
