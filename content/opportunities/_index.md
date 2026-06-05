@@ -9,157 +9,61 @@ sections:
       title: Join the LENS Lab
       subtitle: ''
       text: |
-        The LENS Lab develops monolithically stacked perovskite
-        multijunction devices, combining multimodal characterisation,
-        photonic design, and scalable fabrication to push the efficiency
-        and stability limits of solar cells, solar fuels, and image
-        sensors.
+        The LENS Lab works on semiconductor optoelectronic devices — with a
+        current focus on perovskite-based multijunction photovoltaics,
+        thin-film device physics, interface engineering, and related light
+        and energy technologies. We are based at the State Key Laboratory
+        of Luminescent Materials and Devices, South China University of
+        Technology (SCUT), Guangzhou, China.
 
-        We are recruiting at all levels — postdoctoral researchers, PhD
-        students, and Master's and undergraduate research associates — and
-        welcome applications from candidates with backgrounds in materials
-        science, physics, chemistry, electrical engineering,
-        optoelectronics, or related fields.
-
-        **All positions are fully funded.** We also fully support international academic exchange, including visiting
-        scholarships at partner institutions and funding for conference travels, to help group members build their own international
-        networks.
+        We welcome applications from motivated researchers at all levels.
+        If you have a background in materials science, physics, chemistry,
+        or electrical engineering and an interest in semiconductor devices,
+        we would like to hear from you.
     design:
       columns: '1'
 
   - block: markdown
     content:
-      title: Postdoctoral Researchers
+      title: Open Positions
       text: |
-        **Start date:** Flexible, immediately available.
-        **Duration:** Three years, fully funded.
+        We accept applications on a rolling basis. Specific funded calls
+        will be announced here when available.
 
-        **Role.** Postdoctoral researchers in the LENS Lab will lead
-        independent research within the group's directions — multijunction
-        photovoltaics, interface engineering, device stability, solar
-        fuels, or novel multilayer optoelectronic devices. The position
-        is structured to support transition toward an independent
-        academic or industrial career.
+        ---
 
-        **Responsibilities:**
+        **Postdoctoral Researchers**
 
-        - Plan and carry out an independent research programme aligned
-          with one or more of the group's research directions.
-        - Design and execute experiments, develop new methodologies, and
-          critically interpret experimental and computational results.
-        - Disseminate research findings through peer-reviewed
-          publications and at international conferences.
-        - Co-supervise and mentor graduate and undergraduate students in
-          the group.
-        - Contribute to scientific discussions across the group and to
-          the writing of proposals, reports, and publications.
-        - Participate in maintaining laboratory infrastructure and
-          contribute to the development of shared experimental capabilities.
+        All postdoctoral positions are fully funded. Postdocs will lead
+        independent research within the group's directions, contribute to
+        publications and proposals, co-supervise students, and be supported
+        in developing their own research careers. A PhD in a relevant field
+        and a strong publication record are expected. Chinese nationals are
+        additionally eligible to apply for a range of national and
+        provincial research grants during their stay (see Funding
+        Opportunities below).
 
-        **Required qualifications:**
+        ---
 
-        - PhD (obtained or close to completion) in materials science,
-          physics, chemistry, electrical engineering, optoelectronics, or
-          a closely related discipline.
-        - Strong track record of high-quality publications.
-        - Demonstrated experience in one or more of: optoelectronic device
-          fabrication, semiconductor materials synthesis, thin-film
-          characterisation, device physics, electrochemistry, or
-          simulation and modelling.
-        - Excellent verbal and written communication in English.
-        - Ability to direct independent research and interpret results
-          critically.
+        **PhD and Master's Students**
 
-        **Benefits:**
+        All PhD and Master's positions are fully funded. Students will
+        develop an original research project, receive hands-on training in
+        device fabrication and characterisation, and be supported in
+        scientific writing, conference participation, and international
+        exchange. All programmes officially begin in September. SCUT
+        operates two application rounds per year — please contact us well
+        in advance of your intended start. Details on admission
+        requirements and the application system are available at
+        [yz.scut.edu.cn](https://yz.scut.edu.cn).
 
-        - Total annual package up to RMB 570,000, depending on background
-          and eligibility for university and provincial talent programmes.
-        - Eligibility for the National Postdoctoral Innovation Talent
-          Programme, Guangdong Provincial Postdoctoral Programme, and
-          other talent programmes (programme support can be stacked with
-          the group package).
-        - Postdoctoral apartment on campus or housing allowance.
-        - Full medical insurance, social insurance, and housing fund
-          contributions on the same terms as SCUT academic staff.
-        - Children of postdocs are eligible to attend SCUT-affiliated
-          kindergartens and primary/secondary schools.
-        - Dedicated funding for international conference travel and
-          research visits to collaborating groups abroad.
-        - Strong postdocs are eligible for priority consideration for
-          SCUT research-track and tenure-track positions.
-    design:
-      columns: '1'
+        ---
 
-  - block: markdown
-    content:
-      title: PhD Students
-      text: |
-        **Duration:** Four years, fully funded.
+        **Visiting Scholars and Students**
 
-        We welcome applications from motivated candidates interested in
-        pursuing a PhD in optoelectronic devices, materials chemistry,
-        interface engineering, or related topics.
-
-        **Responsibilities:**
-
-        - Develop and carry out an original research project under the
-          supervision of the PI, leading toward a doctoral thesis.
-        - Design and execute experiments, analyse and interpret data, and
-          present results in group meetings, written reports, and at
-          conferences.
-        - Author and co-author peer-reviewed publications arising from
-          the research.
-        - Participate actively in group meetings, scientific discussions,
-          and the day-to-day life of the laboratory.
-        - Maintain and contribute to shared laboratory infrastructure.
-        - Where appropriate, mentor undergraduate or rotating students.
-
-        **Required qualifications:**
-
-        - Meets SCUT's standard requirements for doctoral student
-          admission.
-        - Background in materials science, physics, chemistry,
-          optoelectronics, or a closely related field.
-        - Prior experience in optoelectronic device fabrication, device
-          physics, or semiconductor materials characterisation is
-          advantageous but not required.
-        - Good reading and writing skills in English, with a clear
-          understanding of the fundamentals and frontiers of the field.
-        - Strong commitment to academic integrity, scientific rigour, and
-          collaborative work.
-
-        **Benefits:**
-
-        - Fully funded PhD position including stipend on SCUT standard
-          terms.
-        - Training in materials processing, device fabrication,
-          characterisation, data analysis, scientific writing, and
-          independent project development.
-        - Active support for international conference attendance and
-          visiting scholarships at partner institutions abroad.
-        - Access to the full shared infrastructure of the State Key
-          Laboratory of Luminescent Materials and Devices.
-    design:
-      columns: '1'
-
-  - block: markdown
-    content:
-      title: Master's and Undergraduate Students
-      text: |
-        Motivated Master's and undergraduate students interested in
-        hands-on research experience are welcome to apply. All research
-        positions are funded, with support for conference travel where
-        appropriate.
-
-        The LENS Lab is committed to providing an open, supportive, and
-        intellectually stimulating environment. We work with each student
-        individually to align research projects with their interests and
-        career goals, and to support both their personal and academic
-        development.
-
-        Interested students should describe their background, available
-        time commitment, and what they hope to learn or accomplish during
-        their time in the group.
+        We welcome short- and long-term visiting researchers. If you are
+        interested in a research exchange in optoelectronics or
+        photovoltaics, please contact us directly to discuss.
     design:
       columns: '1'
 
@@ -167,23 +71,135 @@ sections:
     content:
       title: How to Apply
       text: |
-        Interested candidates should send the following as a single PDF
-        to **wjk090426@scut.edu.cn** (subject line:
-        *Application: [Position] – [Your Name]*):
+        Send a single PDF to **wjk090426@scut.edu.cn** with the subject
+        line: *Application: [Position] — [Your Name]*
 
-        - **Curriculum vitae**, including education background and
-          research experience, research interests, representative
-          publications, and contact details for referees.
-        - **Research statement** (maximum two pages) describing your
-          background, why you are interested in the LENS Lab, and what
-          you would like to work on.
-        - **Names and contact details of two referees** (for postdoctoral
-          applicants).
-        - **Transcripts** (for Master's and Undergraduate applicants).
+        Please include:
+
+        - Curriculum vitae
+        - Brief research statement describing your background and what you
+          would like to work on (maximum two pages)
+        - Names and contact details of two referees (for postdoctoral
+          applicants)
+        - Transcripts (for student applicants)
+        - Representative publications or writing samples, where available
 
         Applications are reviewed on a rolling basis. Only shortlisted
-        candidates will be contacted for interview — we appreciate your
-        understanding. This recruitment notice is open year-round.
+        candidates will be contacted for interview.
+    design:
+      columns: '1'
+
+  - block: markdown
+    content:
+      title: Funding Opportunities
+      text: |
+        We actively support group members and prospective candidates in
+        identifying and applying for external funding. The list below is
+        not exhaustive — please get in touch if you would like to discuss
+        options relevant to your situation.
+
+        ---
+
+        **For Chinese nationals going abroad**
+
+        - **CSC Joint PhD / Full PhD Scholarship** — for current PhD
+          students or graduating Master's students going to partner
+          universities abroad. Application typically opens January–March.
+        - **CSC National Postdoctoral Programme** — for in-post postdocs
+          at SCUT going abroad for 6–24 months. Application typically April.
+        - **CSC Visiting Scholar / Senior Research Scholar** — for staff
+          or senior researchers going abroad for 3–12 months.
+        - **Guangzhou Jingying Study Abroad Programme** — for SCUT PhD
+          students; covers living allowance and travel. Typically opens
+          April–June. Cannot be combined with CSC joint programmes.
+        - **Guangdong Provincial Young Talent International Training
+          Programme** — for outstanding SCUT PhD students. Typically opens
+          June–July. Cannot be combined with CSC or Guangzhou Jingying awards.
+        - **CSC–DAAD Sino-German Postdoctoral Scholarship** — for Chinese
+          postdocs going to Germany. Deadline typically November–December.
+        - **Alexander von Humboldt Research Fellowship** — open to any
+          nationality; for researchers going to Germany. Rolling applications.
+
+        ---
+
+        **For international researchers coming to SCUT**
+
+        - **Chinese Government Scholarship — Type B (High-Level Graduate
+          Programme)** — for non-Chinese nationals applying to SCUT for a
+          Master's or PhD. Full scholarship covering tuition,
+          accommodation, living allowance, and insurance. SCUT selects
+          candidates approximately January–March.
+        - **Chinese Government Scholarship — EU Window Programme** — for
+          citizens of EU member states applying to study in China at any
+          degree level. Full scholarship. Deadline typically early February.
+        - **MSCA Global Postdoctoral Fellowship** — for EU nationals or
+          long-term EU residents, to carry out the outgoing phase in China
+          (12–24 months) before returning to a European host. LENS Lab PI
+          can serve as associated partner. 2026 call deadline: 9 September 2026.
+        - **NWO Rubicon (Netherlands)** — for recent PhD graduates from
+          Dutch universities. Two rounds per year (approx. January and July).
+        - **Swedish VR International Postdoctoral Fellowship** — for recent
+          PhD graduates from Swedish universities. Two calls per year
+          (approx. February and September).
+        - **DAAD PRIME Programme (Germany)** — for postdocs with a German
+          university contract going abroad for 12 months, then returning
+          to Germany for 6 months.
+        - **Royal Society International Exchanges (Global Round)** — for
+          UK-based researchers collaborating with a China-based partner.
+          2026 deadline approx. June.
+        - **Guangdong Foreign Expert Programme (Flexible Talent)** — for
+          international experts working in Guangdong. Requires a minimum
+          of 30 cumulative working days in Guangdong.
+
+        ---
+
+        **For international postdoctoral researchers based at SCUT**
+
+        International postdoctoral researchers in China are eligible for
+        several national and provincial grant schemes on the same terms as
+        Chinese nationals, including:
+
+        - China Postdoctoral Science Foundation — General Grant (RMB 80,000;
+          apply within 18 months of joining)
+        - China Postdoctoral Science Foundation — Special Grant (RMB 180,000;
+          one application per post)
+        - Guangdong Overseas Postdoctoral Talent Programme (RMB 300,000
+          over two years; requires PhD from a world top-200 university
+          outside China; age ≤ 35)
+        - Guangzhou City Postdoctoral Living Allowance — available to
+          international postdocs on equal terms with Chinese nationals
+
+        *Note: The National Postdoctoral Innovation Talent Programme
+        (博新计划) and the National Funded Postdoctoral Researcher Programme
+        (国资计划) are not open to international applicants.*
+    design:
+      columns: '1'
+
+  - block: markdown
+    content:
+      title: University–CSC Joint PhD Partnerships
+      text: |
+        For Chinese nationals at SCUT seeking joint supervision at European
+        partner universities. The general process is two-step: first secure
+        an acceptance letter from the host university, then apply through
+        the CSC portal (typically March).
+
+        | University | Country | Programme type |
+        |---|---|---|
+        | LMU Munich | Germany | Full PhD or Sandwich PhD |
+        | Freie Universität Berlin | Germany | Full PhD |
+        | King's College London | UK | Full PhD |
+        | University of Edinburgh | UK | Full PhD |
+        | University of Groningen | Netherlands | Full PhD or Visiting PhD |
+        | Leiden University | Netherlands | Full PhD or Visiting PhD |
+        | VUB Brussels | Belgium | Full PhD, Joint PhD, or Postdoc |
+        | Erasmus University Rotterdam | Netherlands | Full PhD |
+        | UPC BarcelonaTech | Spain | Full PhD or Joint PhD |
+
+        Please confirm current programme status with the target
+        university's international office before applying. We are happy
+        to assist in facilitating introductions to partner groups at
+        these and other institutions.
     design:
       columns: '1'
 
@@ -191,23 +207,19 @@ sections:
     content:
       title: Why Guangzhou and SCUT
       text: |
-        **A leading materials science institution.** SCUT is one of
-        China's top research universities, and the State Key Laboratory
-        of Luminescent Materials and Devices provides access to advanced
-        materials synthesis and characterisation infrastructure.
+        SCUT is one of China's leading research universities in materials
+        science and engineering. The State Key Laboratory of Luminescent
+        Materials and Devices provides broad infrastructure for
+        semiconductor synthesis, thin-film processing, and optoelectronic
+        device characterisation. Guangzhou is an internationally connected
+        city in the heart of the Greater Bay Area, with strong research
+        and industry links in photovoltaics and optoelectronics, and
+        excellent transport connections across the region and beyond.
 
-        **A vibrant international city.** Guangzhou is one of China's
-        most modern and open cities — a major international hub with
-        excellent connectivity, affordable living, and a strong technology
-        ecosystem. The Greater Bay Area hosts many of the world's leading
-        optoelectronics and energy companies, providing excellent
-        opportunities for industrial collaboration and career mobility.
-
-        **International collaboration.** The LENS Lab maintains active
-        links with leading research groups in Europe, North America, and
-        elsewhere, and actively supports group members in developing
-        their own international networks through joint research,
-        visiting scholarships, and conference travel.
+        The LENS Lab maintains active links with research groups in Europe
+        and North America, and supports group members in building
+        international networks through joint projects, visiting exchanges,
+        and conference participation.
     design:
       columns: '1'
 ---
