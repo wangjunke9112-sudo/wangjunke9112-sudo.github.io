@@ -101,22 +101,19 @@ sections:
         
         **For Chinese nationals — outgoing exchange, joint supervision, or overseas postdoctoral positions**
         
-        - [CSC Joint PhD / Full PhD Scholarship](https://www.csc.edu.cn/chuguo/s/3460) — for current PhD students or
+        - [CSC Joint PhD / Full PhD Scholarship] (https://bg.csc.edu.cn/ProjectList.aspx) — for current PhD students or
           graduating Master's students going to partner universities abroad.
           Application typically opens January–March each year. Several leading
           European universities operate bilateral PhD programmes with CSC,
-          including LMU Munich, Freie Universität Berlin, King's College London,
-          University of Edinburgh, University of Groningen, Leiden University,
-          VUB Brussels, Erasmus University Rotterdam, and UPC BarcelonaTech.
-          We are well placed to facilitate introductions to partner groups at
-          these and other institutions.
-        - [CSC National Postdoctoral Programme](https://www.csc.edu.cn/chuguo/s/3465) — for in-post postdocs at SCUT
-          going abroad for 6–24 months. Application typically April each year.
-        - [CSC Visiting Scholar / Senior Research Scholar](https://www.csc.edu.cn/chuguo/s/3465) — for staff or senior
+          we are well placed to facilitate introductions to partner groups at
+          these institutions.
+        - [CSC National Postdoctoral Programme](https://bg.csc.edu.cn/ProjectList.aspx) — for postdocs at SCUT
+          going abroad for 6–24 months. The application typically opens in April each year.
+        - [CSC Visiting Scholar / Senior Research Scholar](https://bg.csc.edu.cn/ProjectList.aspx) — for staff or senior
           researchers going abroad for 3–12 months.
-        - [Guangzhou Jingying Study Abroad Programme](https://rsj.gz.gov.cn/) — for SCUT PhD students. Typically
+        - [Oversea Study Program of Guangzhou Elite Project](https://rsj.gz.gov.cn/) — for SCUT PhD students. Typically
           opens April–June.
-        - [Guangdong Provincial Young Talent International Training Programme](https://www2.scut.edu.cn/graduate/2025/0703/c14562a596284/page.htm) — for
+        - [Guangdong Provincial Young Talent International Training Programme](https://www2.scut.edu.cn/graduate/2026/0512/c14562a626731/page.htmm) — for
           outstanding SCUT PhD students selected through an internal process.
           Typically opens June–July.
         - [CSC–DAAD Sino-German Postdoctoral Scholarship](https://www2.daad.de/deutschland/stipendium/datenbank/en/21148-scholarship-database/?detail=50015315) — for Chinese postdocs
@@ -125,8 +122,8 @@ sections:
           for researchers going to Germany. Rolling applications year-round.
         - [MSCA Postdoctoral Fellowship](https://marie-sklodowska-curie-actions.ec.europa.eu/actions/postdoctoral-fellowships) — for researchers affiliated with or moving to a
           European host institution. Relevant for group members planning a
-          research stay at one of our European partner groups. Annual deadline
-          typically September.
+          research stay at one of our European partner groups. The annual deadline is 
+          typically in September.
         
         ---
         
@@ -198,11 +195,11 @@ sections:
         SCUT is one of China's leading research universities in materials
         science and engineering. The State Key Laboratory of Luminescent
         Materials and Devices provides broad infrastructure for
-        semiconductor synthesis, thin-film processing, and optoelectronic
+        semiconductor synthesis, thin-film deposition, and optoelectronic
         device characterisation. Guangzhou is an internationally connected
         city in the heart of the Greater Bay Area, with strong research
         and industry links in photovoltaics and optoelectronics, and
-        excellent transport connections across the region and beyond.
+        excellent transport connections globally.
 
         The LENS Lab maintains active links with research groups in Europe
         and North America, and supports group members in building
