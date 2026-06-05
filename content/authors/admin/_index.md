@@ -14,7 +14,7 @@ authors:
 superuser: true
 
 # Role/position
-role: "Principal Investigator"
+role: "Professor of Materials Science and Engineering"
 
 # Organizations/Affiliations
 organizations:
