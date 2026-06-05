@@ -34,13 +34,13 @@ sections:
       show_role: true
       show_social: false
 
-  - block: people
-    content:
-      title: Undergraduate Researchers
-      user_groups:
-        - Undergraduate Students
-    design:
-      show_interests: false
-      show_role: true
-      show_social: false
+  #block: people
+  #  content:
+  #    title: Undergraduate Researchers
+  #    user_groups:
+  #      - Undergraduate Students
+  #  design:
+  #    show_interests: false
+  #    show_role: true
+  #    show_social: false
 ---
