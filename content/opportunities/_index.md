@@ -1,6 +1,6 @@
 ---
 title: Join Us
-date: 2026-05-22
+date: 2026-06-05
 type: landing
 
 sections:
@@ -11,7 +11,7 @@ sections:
       text: |
         The LENS Lab works on semiconductor optoelectronic devices — with a
         current focus on perovskite-based multijunction photovoltaics,
-        thin-film device physics, interface engineering, and related light
+        device physics, interface engineering, and related light
         and energy technologies. We are based at the State Key Laboratory
         of Luminescent Materials and Devices, South China University of
         Technology (SCUT), Guangzhou, China.
@@ -79,10 +79,10 @@ sections:
         - Curriculum vitae
         - Brief research statement describing your background and what you
           would like to work on (maximum two pages)
-        - Names and contact details of two referees (for postdoctoral
+        - Names and contact details of two referees (for postdoctoral and PhD
           applicants)
         - Transcripts (for student applicants)
-        - Representative publications or writing samples, where available
+        - Representative publications, where available
 
         Applications are reviewed on a rolling basis. Only shortlisted
         candidates will be contacted for interview.
@@ -94,114 +94,102 @@ sections:
       title: Funding Opportunities
       text: |
         We actively support group members and prospective candidates in
-        identifying and applying for external funding. The list below is
+        applying for external funding. The list below is
         not exhaustive — please get in touch if you would like to discuss
         options relevant to your situation.
+---
 
-        ---
+**For Chinese nationals — outgoing exchange, joint supervision, or overseas postdoctoral positions**
 
-        **For Chinese nationals going abroad**
+- [CSC Joint PhD / Full PhD Scholarship](https://www.csc.edu.cn/chuguo/s/3460) — for current PhD students or
+  graduating Master's students going to partner universities abroad.
+  Application typically opens January–March each year. Several leading
+  European universities operate bilateral PhD programmes with CSC,
+  including LMU Munich, Freie Universität Berlin, King's College London,
+  University of Edinburgh, University of Groningen, Leiden University,
+  VUB Brussels, Erasmus University Rotterdam, and UPC BarcelonaTech.
+  We are well placed to facilitate introductions to partner groups at
+  these and other institutions.
+- [CSC National Postdoctoral Programme](https://www.csc.edu.cn/chuguo/s/3465) — for in-post postdocs at SCUT
+  going abroad for 6–24 months. Application typically April each year.
+- [CSC Visiting Scholar / Senior Research Scholar](https://www.csc.edu.cn/chuguo/s/3465) — for staff or senior
+  researchers going abroad for 3–12 months.
+- [Guangzhou Jingying Study Abroad Programme](https://rsj.gz.gov.cn/) — for SCUT PhD students. Typically
+  opens April–June.
+- [Guangdong Provincial Young Talent International Training Programme](https://www2.scut.edu.cn/graduate/2025/0703/c14562a596284/page.htm) — for
+  outstanding SCUT PhD students selected through an internal process.
+  Typically opens June–July.
+- [CSC–DAAD Sino-German Postdoctoral Scholarship](https://www2.daad.de/deutschland/stipendium/datenbank/en/21148-scholarship-database/?detail=50015315) — for Chinese postdocs
+  going to Germany. Deadline typically November–December.
+- [Alexander von Humboldt Research Fellowship](https://www.humboldt-foundation.de/en/apply/sponsorship-programmes/humboldt-research-fellowship) — open to any nationality;
+  for researchers going to Germany. Rolling applications year-round.
+- [MSCA Postdoctoral Fellowship](https://marie-sklodowska-curie-actions.ec.europa.eu/actions/postdoctoral-fellowships) — for researchers affiliated with or moving to a
+  European host institution. Relevant for group members planning a
+  research stay at one of our European partner groups. Annual deadline
+  typically September.
 
-        - **CSC Joint PhD / Full PhD Scholarship** — for current PhD
-          students or graduating Master's students going to partner
-          universities abroad. Application typically opens January–March.
-        - **CSC National Postdoctoral Programme** — for in-post postdocs
-          at SCUT going abroad for 6–24 months. Application typically April.
-        - **CSC Visiting Scholar / Senior Research Scholar** — for staff
-          or senior researchers going abroad for 3–12 months.
-        - **Guangzhou Jingying Study Abroad Programme** — for SCUT PhD
-          students; covers living allowance and travel. Typically opens
-          April–June. Cannot be combined with CSC joint programmes.
-        - **Guangdong Provincial Young Talent International Training
-          Programme** — for outstanding SCUT PhD students. Typically opens
-          June–July. Cannot be combined with CSC or Guangzhou Jingying awards.
-        - **CSC–DAAD Sino-German Postdoctoral Scholarship** — for Chinese
-          postdocs going to Germany. Deadline typically November–December.
-        - **Alexander von Humboldt Research Fellowship** — open to any
-          nationality; for researchers going to Germany. Rolling applications.
+---
 
-        ---
+**For Chinese nationals — national and provincial grant programmes**
 
-        **For international researchers coming to SCUT**
+Chinese nationals in post at SCUT are eligible to apply for a range
+of competitive national and provincial programmes, including:
 
-        - **Chinese Government Scholarship — Type B (High-Level Graduate
-          Programme)** — for non-Chinese nationals applying to SCUT for a
-          Master's or PhD. Full scholarship covering tuition,
-          accommodation, living allowance, and insurance. SCUT selects
-          candidates approximately January–March.
-        - **Chinese Government Scholarship — EU Window Programme** — for
-          citizens of EU member states applying to study in China at any
-          degree level. Full scholarship. Deadline typically early February.
-        - **MSCA Global Postdoctoral Fellowship** — for EU nationals or
-          long-term EU residents, to carry out the outgoing phase in China
-          (12–24 months) before returning to a European host. LENS Lab PI
-          can serve as associated partner. 2026 call deadline: 9 September 2026.
-        - **NWO Rubicon (Netherlands)** — for recent PhD graduates from
-          Dutch universities. Two rounds per year (approx. January and July).
-        - **Swedish VR International Postdoctoral Fellowship** — for recent
-          PhD graduates from Swedish universities. Two calls per year
-          (approx. February and September).
-        - **DAAD PRIME Programme (Germany)** — for postdocs with a German
-          university contract going abroad for 12 months, then returning
-          to Germany for 6 months.
-        - **Royal Society International Exchanges (Global Round)** — for
-          UK-based researchers collaborating with a China-based partner.
-          2026 deadline approx. June.
-        - **Guangdong Foreign Expert Programme (Flexible Talent)** — for
-          international experts working in Guangdong. Requires a minimum
-          of 30 cumulative working days in Guangdong.
+- [博士后创新人才支持计划（博新计划）](http://jj.chinapostdoctor.org.cn/) — one of the most prestigious
+  early-career postdoctoral awards in China.
+- [国家资助博士后研究人员计划（A/B/C档）](http://jj.chinapostdoctor.org.cn/) — national funded postdoctoral
+  researcher programme across multiple award levels.
+- [中国博士后科学基金——面上资助](http://jj.chinapostdoctor.org.cn/) — general grant for in-post postdocs;
+  apply within 18 months of joining.
+- [中国博士后科学基金——特别资助（站中）](http://jj.chinapostdoctor.org.cn/) — special grant for in-post
+  postdocs; one application per post.
+- [广东省海外博士后人才支持项目](https://hrss.gd.gov.cn/) — for postdocs with a PhD from a world
+  top-200 university outside China; age ≤ 35; RMB 300,000 over two years.
+- [广州市博士后生活补贴](https://rsj.gz.gov.cn/) — city-level supplementary living allowance
+  for in-post postdocs.
 
-        ---
+We are happy to advise on eligibility and support applications for
+these programmes.
 
-        **For international postdoctoral researchers based at SCUT**
+---
 
-        International postdoctoral researchers in China are eligible for
-        several national and provincial grant schemes on the same terms as
-        Chinese nationals, including:
+**For international researchers coming to SCUT**
 
-        - China Postdoctoral Science Foundation — General Grant (RMB 80,000;
-          apply within 18 months of joining)
-        - China Postdoctoral Science Foundation — Special Grant (RMB 180,000;
-          one application per post)
-        - Guangdong Overseas Postdoctoral Talent Programme (RMB 300,000
-          over two years; requires PhD from a world top-200 university
-          outside China; age ≤ 35)
-        - Guangzhou City Postdoctoral Living Allowance — available to
-          international postdocs on equal terms with Chinese nationals
+- [Chinese Government Scholarship — Type B (High-Level Graduate Programme)](https://www2.scut.edu.cn/sie_cn/29711/list.htm) —
+  for non-Chinese nationals applying to SCUT for a Master's or PhD.
+  Full scholarship covering tuition, accommodation, living allowance,
+  and insurance. The PI can recommend candidates directly to the SCUT
+  International Education Office. SCUT selection typically January–March.
+- [Chinese Government Scholarship — EU Window Programme](https://eu.china-mission.gov.cn/eng/zglx/) — for citizens
+  of EU member states applying to study in China at any degree level.
+  Applications via the Chinese Mission to the EU; deadline typically
+  early February each year.
+- [MSCA Global Postdoctoral Fellowship](https://marie-sklodowska-curie-actions.ec.europa.eu/actions/postdoctoral-fellowships) — for EU nationals or long-term EU
+  residents wishing to carry out the outgoing phase of their fellowship
+  in China (12–24 months) before returning to a European host. The
+  LENS Lab PI can serve as associated partner and co-develop the
+  application. 2026 call deadline: 9 September 2026.
 
-        *Note: The National Postdoctoral Innovation Talent Programme
-        (博新计划) and the National Funded Postdoctoral Researcher Programme
-        (国资计划) are not open to international applicants.*
-    design:
-      columns: '1'
+For international candidates holding fellowships from their home
+country or institution — such as NWO Rubicon (Netherlands), Swedish VR
+International Postdoctoral Fellowship, Royal Society International
+Exchanges (UK), DAAD PRIME (Germany), Swiss Government Excellence
+Scholarships, or equivalent national programmes — we are pleased to
+serve as the receiving host and provide the necessary support. Please
+contact us to discuss your situation.
 
-  - block: markdown
-    content:
-      title: University–CSC Joint PhD Partnerships
-      text: |
-        For Chinese nationals at SCUT seeking joint supervision at European
-        partner universities. The general process is two-step: first secure
-        an acceptance letter from the host university, then apply through
-        the CSC portal (typically March).
+---
 
-        | University | Country | Programme type |
-        |---|---|---|
-        | LMU Munich | Germany | Full PhD or Sandwich PhD |
-        | Freie Universität Berlin | Germany | Full PhD |
-        | King's College London | UK | Full PhD |
-        | University of Edinburgh | UK | Full PhD |
-        | University of Groningen | Netherlands | Full PhD or Visiting PhD |
-        | Leiden University | Netherlands | Full PhD or Visiting PhD |
-        | VUB Brussels | Belgium | Full PhD, Joint PhD, or Postdoc |
-        | Erasmus University Rotterdam | Netherlands | Full PhD |
-        | UPC BarcelonaTech | Spain | Full PhD or Joint PhD |
+**For international postdoctoral researchers in post at SCUT**
 
-        Please confirm current programme status with the target
-        university's international office before applying. We are happy
-        to assist in facilitating introductions to partner groups at
-        these and other institutions.
-    design:
-      columns: '1'
+International postdoctoral researchers are eligible for several
+national and provincial grant schemes on equal terms with Chinese
+nationals, including the
+[China Postdoctoral Science Foundation General Grant](http://jj.chinapostdoctor.org.cn/),
+the [Special Grant (in-post)](http://jj.chinapostdoctor.org.cn/),
+the [Guangdong Overseas Postdoctoral Talent Programme](https://hrss.gd.gov.cn/)
+(for those holding a PhD from a world top-200 university outside China),
+and the [Guangzhou City Postdoctoral Living Allowance](https://rsj.gz.gov.cn/).
 
   - block: markdown
     content:
