@@ -34,13 +34,13 @@ interests:
 education:
   courses:
     - course: PhD in Chemistry
-      institution: Eindhoven University of Technology
+      institution: Eindhoven University of Technology, The Netherlands
       year: 2020
     - course: MSc in Chemical Engineering
-      institution: Eindhoven University of Technology
+      institution: Eindhoven University of Technology, The Netherlands
       year: 2016
     - course: BE in Materials Science and Engineering
-      institution: Central South University
+      institution: Central South University, China
       year: 2013
 
 # Social/Academic Networking
@@ -87,6 +87,12 @@ Junke Wang is a Professor in Materials Science and Engineering at South China Un
 
 He received his PhD in Chemistry from Eindhoven University of Technology (TU/e) in 2020 under the supervision of Prof. René Janssen, where he developed perovskite-based multijunction solar cells and investigated interfacial and morphological control of charge transport. He then carried out postdoctoral research between TU/e and the University of Toronto (2020–2023) with Prof. Edward Sargent, focusing on high-bandgap semiconductors, tandem photovoltaics, and solar-driven fuel generation. From 2023 to 2026, he was a Marie Skłodowska-Curie Fellow at the University of Oxford in the group of Prof. Henry Snaith, working on wide-bandgap perovskites and multijunction device architectures.
 
-His research has contributed to advancing the performance and understanding of perovskite multijunction solar cells, including the development of low-loss interconnecting layers, halide homogenization strategies, and mechanistic insights into film formation and interfacial recombination. His work spans materials chemistry, thin-film processing, and device physics, with a consistent focus on identifying and mitigating the fundamental loss mechanisms in optoelectronic devices.
+His research spans materials chemistry, thin-film processing, and device physics, with a consistent focus on identifying and mitigating fundamental loss mechanisms in optoelectronic devices.
 
-At South China University of Technology, he is developing a research program centered on device acceleration platforms that integrate automated fabrication, multimodal characterization, and data-driven optimization. His goal is to enable systematic exploration of complex material and process spaces and to establish scalable strategies for high-efficiency and stable optoelectronic devices, including photovoltaics, photodetectors, and light-emitting systems.
+Selected Publications
+
+S. Hu†*, J. Wang†, P. Zhao, J. Pascual, J. Wang, F. Rombach, A. Dasgupta, W. Liu, M. A. Truong, H. Zhu, M. Kober-Czerny, J. N. Drysdale, J. A. Smith, Z. Yuan, G. J. W. Aalbers, N. R. M. Schipper, J. Yao, K. Nakano, S.-H. Turren-Cruz, A. Dallmann, M. G. Christoforo, J. M. Ball, D. P. McMeekin, K.-A. Zaininger, Z. Liu, N. K. Noel, K. Tajima, W. Chen, M. Ehara, R. A. J. Janssen, A. Wakamiya*, H. J. Snaith*. Steering perovskite precursor solutions for multijunction photovoltaics. Nature, 2025, 639, 93. →
+J. Wang†, B. Branco†, W. H. M. Remmerswaal, S. Hu, N. R. M. Schipper, V. Zardetto, L. Bellini, N. Daub, M. M. Wienk, A. Wakamiya, H. J. Snaith, R. A. J. Janssen*. Performance and stability analysis of all-perovskite tandem photovoltaics in light-driven electrochemical water splitting. Nature Communications, 2025, 16, 174. →
+J. Wang†*, S. Hu†, Z. Chen†, Z. Yuan, P. Zhao, A. Dasgupta, F. Yang, J. Yao, M. A. Truong, G. Kusch, E. Hung, N. Schipper, L. Bellini, G. Aalbers, Z. Liu, R. Oliver, A. Wakamiya, R. A. J. Janssen, H. J. Snaith*. Exposing binding-favourable facets of perovskites for tandem solar cells. Energy & Environmental Science, 2025. →
+J. Wang†, L. Zeng†, D. Zhang†, A. Maxwell†, H. Chen†, K. Datta, A. Caiazzo, W. H. M. Remmerswaal, N. R. M. Schipper, Z. Chen, K. Ho, A. Dasgupta, G. Kusch, R. Ollearo, L. Bellini, S. Hu, Z. Wang, C. Li, S. Teale, L. Grater, B. Chen, M. M. Wienk, R. A. Oliver, H. J. Snaith, R. A. J. Janssen*, E. H. Sargent*. Halide homogenization for low energy loss in 2-eV-bandgap perovskites and increased efficiency in all-perovskite triple-junction solar cells. Nature Energy, 2024, 9, 70. →
+J. Wang, V. Zardetto, K. Datta, D. Zhang, M. M. Wienk, R. A. J. Janssen*. 16.8% Monolithic all-perovskite triple-junction solar cells via a universal two-step solution process. Nature Communications, 2020, 11, 5254. →
