@@ -58,7 +58,7 @@ sections:
 
   - block: markdown
     content:
-      title: Solar Fuels and Emerging Device Platforms
+      title: Emerging Device Platforms
       text: |
         ![Solar fuels and emerging device platforms](research-solar-fuels.jpg)
 
