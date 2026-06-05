@@ -1,6 +1,6 @@
 ---
 title: Contact
-date: 2026-06-06
+date: 2026-06-05
 type: landing
 sections:
   - block: contact
