@@ -6,7 +6,7 @@ type: landing
 sections:
   - block: markdown
     content:
-      title: Join the LENS Lab
+      title: Join the LENS Laboratory
       subtitle: ''
       text: |
         We welcome motivated researchers at different career stages who are interested in optoelectronics and related device research.
@@ -163,34 +163,11 @@ sections:
         and the [Guangzhou City Postdoctoral Living Allowance](https://rsj.gz.gov.cn/).
 
   - block: markdown
-
     content:
-
       title: Why Guangzhou and SCUT
-
       text: |
-
-        <div class="row align-items-center">
-
-          <div class="col-md-7">
-
-            <p>SCUT is one of China's leading research universities in materials science and engineering. The State Key Laboratory of Luminescent Materials and Devices provides broad infrastructure for semiconductor synthesis, thin-film deposition, and optoelectronic device characterisation. Guangzhou is an internationally connected city in the heart of the Greater Bay Area, with strong research and industry links in photovoltaics and optoelectronics, and excellent transport connections globally.</p>
-
-            <p>The LENS Laboratory maintains active collaborations with top research teams in Europe and North America, and supports group members in building international networks through joint projects, visiting exchanges, and conference participation.</p>
-
-          </div>
-
-          <div class="col-md-5">
-
-            <img src="guangzhou.jpg" alt="Guangzhou skyline" class="img-fluid rounded shadow-sm">
-
-          </div>
-
-        </div>
+        SCUT hosts one of China’s leading national laboratories in optoelectronics and luminescent materials, providing strong infrastructure for semiconductor synthesis, thin-film deposition, and device characterisation. Guangzhou is a beautiful, dynamic city in the Greater Bay Area, known for its international connections, strong research ecosystem, and excellent Cantonese food. The LENS Laboratory maintains active collaborations with leading research teams in Europe and North America, and supports group members in building international networks through joint projects, visiting exchanges, and conference participation.
 
     design:
-
       columns: '1'
-
-      background: {}
 ---
