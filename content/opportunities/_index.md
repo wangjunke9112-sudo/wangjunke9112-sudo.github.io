@@ -11,7 +11,7 @@ sections:
       text: |
         We welcome motivated researchers at different career stages who are interested in optoelectronics and related device research.
 
-        If you have a background in materials science, physics, chemistry, or electrical engineering and would like to , we would be glad to hear from you.
+        If you have a background in materials science, physics, chemistry, or electrical engineering and would like to develop your own research programme in a highly dynamic and intellectually open environment, we would be glad to hear from you.
     design:
       columns: '1'
 
