@@ -21,8 +21,14 @@ sections:
     
     design:
       background:
-        color: '#ffffff'
-        text_color_light: false
+        image:
+          filename: welcome.jpg
+          filters:
+            brightness: 0.85
+          size: cover
+          position: center
+          parallax: false
+        text_color_light: true
 
   - block: markdown
     id: research
