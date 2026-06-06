@@ -36,7 +36,7 @@ sections:
       title: Research
       subtitle: Multilayer optoelectronics — materials, interfaces, and device platforms
       text: |
-        We study how light, charge, and matter interact across thin-film semiconductor interfaces, and use this understanding to design and fabricate high-performance optoelectronic devices. Our work spans ultrahigh-efficiency photovoltaics, thin-film growth and processing, and new device concepts for energy harvesting and lighting applications.
+        We study how light and charge move across thin-film semiconductor interfaces, and use this understanding to build better optoelectronic devices. Our work combines material design, thin-film processing, interface engineering and device physics, with current interests in ultrahigh-efficiency photovoltaics, perovskite and related semiconductors, and emerging light and energy technologies.
 
         [Read more about our research →](/research/)
     design:
@@ -70,7 +70,7 @@ sections:
       title: Join us
       subtitle: ''
       text: |
-        We are looking for motivated researchers who are curious, hands-on, and interested in device physics and optoelectronics. Positions are available for postdoctoral researchers, graduate students, and research assistants with backgrounds in materials science, physics, chemistry, or electrical engineering.
+        We welcome motivated researchers who are curious, hands-on, and interested in semiconductor materials, device physics, and optoelectronics. Positions are available for postdoctoral researchers, graduate students, and research assistants with backgrounds in materials science, physics, chemistry, electrical engineering, or related fields.
 
         [See open positions →](/opportunities/)
     design:
