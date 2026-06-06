@@ -7,13 +7,9 @@ sections:
   - block: hero
     content:
       title: LENS Laboratory
-      cta:
-        label: Join us
-        url: /opportunities/
-      cta_alt:
-        label: Our research
-        url: /research/
+
       text: |
+
 
         We are an academic group focusing on **L**ight–**E**nergy **N**anomaterials and **S**emiconductors.
 
