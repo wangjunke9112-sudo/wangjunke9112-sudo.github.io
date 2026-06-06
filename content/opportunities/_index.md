@@ -9,17 +9,9 @@ sections:
       title: Join the LENS Lab
       subtitle: ''
       text: |
-        The LENS Lab works on semiconductor optoelectronic devices — with a
-        current focus on perovskite-based multijunction photovoltaics,
-        device physics, interface engineering, and related light
-        and energy technologies. We are based at the State Key Laboratory
-        of Luminescent Materials and Devices, South China University of
-        Technology (SCUT), Guangzhou, China.
+        We welcome motivated researchers at different career stages who are interested in optoelectronics and related device research.
 
-        We welcome applications from motivated researchers at all levels.
-        If you have a background in materials science, physics, chemistry,
-        or electrical engineering and an interest in semiconductor devices,
-        we would like to hear from you.
+        If you have a background in materials science, physics, chemistry, or electrical engineering and would like to , we would be glad to hear from you.
     design:
       columns: '1'
 
@@ -27,43 +19,26 @@ sections:
     content:
       title: Open Positions
       text: |
-        We accept applications on a rolling basis. Specific funded calls
-        will be announced here when available.
+        Applications are accepted on a rolling basis. Specific funding positions will be announced here as they become available.
 
         ---
 
         **Postdoctoral Researchers**
 
-        Fully funded three-year postdoctoral positions. Postdocs will lead
-        independent research within the group's broad interests, contribute to
-        publications and proposals, co-supervise students, and be supported
-        in developing their own research careers. A PhD in a relevant field
-        and a strong publication record are expected. Chinese nationals are
-        additionally eligible to apply for a range of national and
-        provincial research grants during their stay (see Funding
-        Opportunities below).
+         We offer fully funded three-year postdoctoral positions. Postdocs will lead an independent research direction, contribute to publications and proposals, and help mentor students. A PhD in a relevant field and a strong publication record are expected.
 
         ---
 
         **PhD and Master's Students**
 
-        All PhD and Master's positions are fully funded. Students will
-        develop an original research project, receive hands-on training in
-        device fabrication and characterisation, and be supported in
-        scientific writing, conference participation, and international
-        exchange. All programmes officially begin in September. SCUT
-        operates two application rounds per year — please contact us well
-        in advance of your intended start. Details on admission
-        requirements and the application system are available at
-        [yz.scut.edu.cn](https://yz.scut.edu.cn).
+          All PhD and Master's positions are fully funded. Students will develop an original research project, receive hands-on training in device fabrication and characterisation, and be supported in scientific writing, conference participation, and international exchange. SCUT normally begins its programmes in September, and there are two application rounds each year.
 
         ---
 
         **Visiting Scholars and Students**
 
-        We welcome short- and long-term visiting researchers. If you are
-        interested in a research exchange in optoelectronics or
-        photovoltaics, please contact us directly to discuss.
+        We welcome short- and long-term visiting researchers. If you are interested in an exchange in optoelectronics or photovoltaics, please contact us directly.
+    
     design:
       columns: '1'
 
@@ -103,7 +78,7 @@ sections:
         
         - [CSC Joint PhD / Full PhD Scholarship](https://bg.csc.edu.cn/ProjectList.aspx) — for current PhD students or
           graduating Master's students going to partner universities abroad.
-          Application typically opens January–March each year. Several leading
+          Application typically opens in January–March each year. Several leading
           European universities operate bilateral PhD programmes with CSC,
           we are well placed to facilitate introductions to partner groups at
           these institutions.
@@ -112,14 +87,14 @@ sections:
         - [CSC Visiting Scholar / Senior Research Scholar](https://bg.csc.edu.cn/ProjectList.aspx) — for staff or senior
           researchers going abroad for 3–12 months.
         - [Oversea Study Program of Guangzhou Elite Project](https://rsj.gz.gov.cn/) — for SCUT PhD students. Typically
-          opens April–June.
+          opens in April–June.
         - [Guangdong Provincial Young Talent International Training Programme](https://www2.scut.edu.cn/graduate/2026/0512/c14562a626731/page.htmm) — for
           outstanding SCUT PhD students selected through an internal process.
-          Typically opens June–July.
+          Typically opens in June–July.
         - [CSC–DAAD Sino-German Postdoctoral Scholarship](https://www2.daad.de/deutschland/stipendium/datenbank/en/21148-scholarship-database/?detail=50015315) — for Chinese postdocs
-          going to Germany. Deadline typically November–December.
+          going to Germany. Deadline typically in November–December.
         - [Alexander von Humboldt Research Fellowship](https://www.humboldt-foundation.de/en/apply/sponsorship-programmes/humboldt-research-fellowship) — open to any nationality;
-          for researchers going to Germany. Rolling applications year-round.
+          for researchers going to Germany. Rolling applications all year-round.
         - [MSCA Postdoctoral Fellowship](https://marie-sklodowska-curie-actions.ec.europa.eu/actions/postdoctoral-fellowships) — for researchers affiliated with or moving to a
           European host institution. Relevant for group members planning a
           research stay at one of our European partner groups. The annual deadline is 
@@ -142,8 +117,7 @@ sections:
           postdocs; one application per post.
         - [广东省海外博士后人才支持项目](https://hrss.gd.gov.cn/) — for postdocs with a PhD from a world
           top-200 university outside China; age ≤ 35; RMB 300,000 over two years.
-        - [广州市博士后生活补贴](https://rsj.gz.gov.cn/) — city-level supplementary living allowance
-          for in-post postdocs.
+    
         
         We are happy to advise on eligibility and support applications for
         these programmes.
@@ -156,19 +130,19 @@ sections:
           for non-Chinese nationals applying to SCUT for a Master's or PhD.
           Full scholarship covering tuition, accommodation, living allowance,
           and insurance. The PI can recommend candidates directly to the SCUT
-          International Education Office. SCUT selection typically January–March.
+          International Education Office. SCUT selection typically occurs in January–March.
         - [Chinese Government Scholarship — EU Window Programme](https://eu.china-mission.gov.cn/eng/zglx/) — for citizens
           of EU member states applying to study in China at any degree level.
-          Applications via the Chinese Mission to the EU; deadline typically
+          Applications via the Chinese Mission to the EU; deadline typically in
           early February each year.
         - [MSCA Global Postdoctoral Fellowship](https://marie-sklodowska-curie-actions.ec.europa.eu/actions/postdoctoral-fellowships) — for EU nationals or long-term EU
           residents wishing to carry out the outgoing phase of their fellowship
           in China (12–24 months) before returning to a European host. The
-          LENS Lab PI can serve as associated partner and co-develop the
-          application. 2026 call deadline: 9 September 2026.
+          LENS Lab PI can serve as an associated partner and co-develop the
+          application. The annual deadline is typically in September.
         
         For international candidates holding fellowships from their home
-        country or institution — such as NWO Rubicon (Netherlands), Swedish VR
+        countries or institutions — such as NWO Rubicon (Netherlands), Swedish VR
         International Postdoctoral Fellowship, Royal Society International
         Exchanges (UK), DAAD PRIME (Germany), Swiss Government Excellence
         Scholarships, or equivalent national programmes — we are pleased to
@@ -189,22 +163,34 @@ sections:
         and the [Guangzhou City Postdoctoral Living Allowance](https://rsj.gz.gov.cn/).
 
   - block: markdown
-    content:
-      title: Why Guangzhou and SCUT
-      text: |
-        SCUT is one of China's leading research universities in materials
-        science and engineering. The State Key Laboratory of Luminescent
-        Materials and Devices provides broad infrastructure for
-        semiconductor synthesis, thin-film deposition, and optoelectronic
-        device characterisation. Guangzhou is an internationally connected
-        city in the heart of the Greater Bay Area, with strong research
-        and industry links in photovoltaics and optoelectronics, and
-        excellent transport connections globally.
 
-        The LENS Lab maintains active links with research groups in Europe
-        and North America, and supports group members in building
-        international networks through joint projects, visiting exchanges,
-        and conference participation.
+    content:
+
+      title: Why Guangzhou and SCUT
+
+      text: |
+
+        <div class="row align-items-center">
+
+          <div class="col-md-7">
+
+            <p>SCUT is one of China's leading research universities in materials science and engineering. The State Key Laboratory of Luminescent Materials and Devices provides broad infrastructure for semiconductor synthesis, thin-film deposition, and optoelectronic device characterisation. Guangzhou is an internationally connected city in the heart of the Greater Bay Area, with strong research and industry links in photovoltaics and optoelectronics, and excellent transport connections globally.</p>
+
+            <p>The LENS Laboratory maintains active collaborations with top research teams in Europe and North America, and supports group members in building international networks through joint projects, visiting exchanges, and conference participation.</p>
+
+          </div>
+
+          <div class="col-md-5">
+
+            <img src="guangzhou.jpg" alt="Guangzhou skyline" class="img-fluid rounded shadow-sm">
+
+          </div>
+
+        </div>
+
     design:
+
       columns: '1'
+
+      background: {}
 ---
