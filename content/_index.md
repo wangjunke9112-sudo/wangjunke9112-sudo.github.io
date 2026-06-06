@@ -23,7 +23,7 @@ sections:
           filename: welcome.jpg
           filters:
             brightness: 0.85
-          size: contain
+          size: cover
           position: center right
           parallax: false
         text_color_light: true
