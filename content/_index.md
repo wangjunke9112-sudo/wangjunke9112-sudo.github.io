@@ -7,8 +7,6 @@ sections:
   - block: hero
     content:
       title: LENS Laboratory
-      image:
-        filename: welcome.jpg
       cta:
         label: Join us
         url: /opportunities/
