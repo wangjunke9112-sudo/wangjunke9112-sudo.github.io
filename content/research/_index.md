@@ -1,6 +1,6 @@
 ---
 title: Research
-date: 2026-06-05
+date: 2026-06-06
 type: landing
 
 sections:
@@ -8,10 +8,7 @@ sections:
     content:
       title: Research
       text: |
-        We make and study semiconductor devices that convert, emit, and
-        detect light. Our work connects materials chemistry, thin-film
-        processing, and device physics — with the goal of understanding
-        what limits performance and how to overcome it.
+        We study semiconductor devices that convert, emit, and detect light. Our work connects materials chemistry, thin-film processing, and device physics, with a focus on understanding what limits performance and how to improve it.
     design:
       columns: '1'
 
@@ -21,19 +18,9 @@ sections:
       text: |
         ![Multilayer optoelectronic devices](research-devices.jpg)
 
-        Solar cells, LEDs, and photodetectors all rely on the same
-        basic idea: controlling how light and electrical charge move
-        through thin layers of semiconductor material. By stacking
-        multiple absorber layers with different bandgaps, a single
-        device can interact with a much broader range of the light
-        spectrum — enabling solar cells that go beyond the efficiency
-        limits of conventional single-junction designs, and detectors
-        or emitters that respond to selected wavelengths precisely.
+        Multilayer semiconductor devices are built on the same underlying ideas of light management, charge transport, and interface control. In photovoltaics, stacking absorbers with different bandgaps can extend spectral coverage beyond single-junction limits. Similar design principles also apply to LEDs, photodetectors, and related devices, where precise control over thin-film morphology and composition enables tailored optical response.
 
-        We are interested in building these multilayer devices and
-        understanding the losses — at interfaces, in the bulk, and
-        under real operating conditions — that prevent them from
-        reaching their theoretical potential.
+        We are interested in the materials and device losses that limit these platforms in practice, including interfacial recombination, compositional disorder, and optical loss in stacked structures.
     design:
       columns: '1'
 
@@ -43,16 +30,9 @@ sections:
       text: |
         ![Fabrication and characterisation platform](research-platforms.jpg)
 
-        Making good devices requires good tools. We are building a
-        fabrication and characterisation platform that combines
-        automated thin-film processing with a range of measurement
-        techniques — optical, structural, and electrical — that can
-        probe materials and devices under different conditions
-        including light, heat, and electrical stress.
+        Good devices depend on good processes. We are building a fabrication and characterizsation platform that combines thin-film processing with optical, structural, and electrical measurements, including the capability of in-situ observation during material synthesis and device operation.
 
-        The goal is to be able to study many variables systematically,
-        understand what each one does, and translate that understanding
-        into reproducible, reliable device processes.
+        This platform will help us understand how processing conditions affect film quality and device performance, identify which steps are difficult to scale, and develop more reproducible device workflows.
     design:
       columns: '1'
 
@@ -62,18 +42,9 @@ sections:
       text: |
         ![Solar fuels and emerging device platforms](research-solar-fuels.jpg)
 
-        A high-efficiency solar cell produces not only electricity but
-        also a voltage — and if that voltage is large enough, it can
-        drive chemical reactions directly. Splitting water into hydrogen,
-        or converting carbon dioxide into useful fuels, using only
-        sunlight is one of the most compelling long-term applications
-        of advanced photovoltaics.
+        A solar cell does not only generate current; it also generates voltage. In sufficiently high-voltage devices, that voltage can drive chemical reactions directly, opening a route toward sunlight-driven hydrogen production and related fuel-conversion reactions.
 
-        We are also interested in applying the same device principles
-        to other areas: detecting high-energy radiation, building
-        flexible optoelectronic systems, and exploring new semiconductor
-        materials whose potential has not yet been fully realised.
-        These are directions we expect to grow into over time.
+        We are also interested in extending the same device concepts to other emerging platforms, including radiation detection, flexible optoelectronics, and new semiconductor systems whose potential is still being explored.
     design:
       columns: '1'
 
@@ -81,12 +52,9 @@ sections:
     content:
       title: Laboratory Facilities
       text: |
-        The LENS Laboratory is being established at SCUT with dedicated
-        infrastructure for multilayer optoelectronics research,
-        including a glovebox fabrication suite, vacuum deposition
-        systems, current-voltage and stability testing, and access to
-        the shared characterisation infrastructure of the State Key
-        Laboratory of Luminescent Materials and Devices.
+        The LENS Laboratory is building dedicated infrastructure for multilayer optoelectronics research, including a glovebox fabrication suite, vacuum deposition systems, current-voltage and stability testing, and access to the shared characterization infrastructure of the State Key Laboratory of Luminescent Materials and Devices.
+
+    design:
     design:
       columns: '1'
 ---
