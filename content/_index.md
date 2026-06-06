@@ -15,7 +15,9 @@ sections:
         url: /research/
       text: |
 
-        The LENS Laboratory develops semiconductor materials, interfaces, and device platforms for optoelectronics and energy harvesting technologies. We are based at the State Key Laboratory of Luminescent Materials and Devices, South China University of Technology, Guangzhou, China.
+        We are an academic group focusing on **L**ight–**E**nergy **N**anomaterials and **S**emiconductors.
+
+        LENS Laboratory is based at the [State Key Laboratory of Luminescent Materials and Devices](https://www2.scut.edu.cn/skllmd/), [South China University of Technology](https://www.scut.edu.cn/new/), Guangzhou, China.
     
     design:
       background:
@@ -34,7 +36,7 @@ sections:
       title: Research
       subtitle: Multilayer optoelectronics — materials, interfaces, and device platforms
       text: |
-       We study how light, charge, and matter interact across thin-film semiconductor interfaces, and use this understanding to design and build high-performance multilayer optoelectronic devices. Our work spans ultrahigh-efficiency photovoltaics, thin-film growth and processing, and new device concepts for energy and light applications.
+        We study how light, charge, and matter interact across thin-film semiconductor interfaces, and use this understanding to design and fabricate high-performance optoelectronic devices. Our work spans ultrahigh-efficiency photovoltaics, thin-film growth and processing, and new device concepts for energy harvesting and lighting applications.
 
         [Read more about our research →](/research/)
     design:
