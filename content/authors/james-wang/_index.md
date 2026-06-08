@@ -1,19 +1,19 @@
 ---
 # Display name
-title: James Wang
+title: Dongqi Wu
 
 # Their role in the lab
-role: PhD Student in Materials Science
+role: PhD Student
 
 # Which group they belong to (MUST match a group from Step 1)
 user_groups:
-  - Graduate Students
+  - PhD Students
 
 # A short bio
 bio: John's research focuses on the stability of wide-bandgap perovskites.
 
 # Social/Academic networking links
-social:
+# social:
   - icon: envelope
     icon_pack: fas
     link: 'mailto:your.email@oxford.ac.uk'
