@@ -172,7 +172,7 @@ sections:
           </div>
 
           <div class="guangzhou-split-image">
-            <img src="guangzhou_night.jpg" alt="Guangzhou skyline at night" class="img-fluid rounded shadow-sm">
+            <img src="/media/guangzhou_night.jpg" alt="Guangzhou skyline at night" class="img-fluid rounded shadow-sm">
           </div>
         </div>
     design:
