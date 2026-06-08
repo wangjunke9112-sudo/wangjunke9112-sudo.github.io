@@ -1,0 +1,36 @@
+.guangzhou-split {
+  display: flex;
+  align-items: center;
+  gap: 2.5rem;
+}
+
+.guangzhou-split-text {
+  flex: 1 1 64%;
+  min-width: 0;
+}
+
+.guangzhou-split-image {
+  flex: 0 0 34%;
+}
+
+.guangzhou-split-image img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.guangzhou-split-text p:last-child {
+  margin-bottom: 0;
+}
+
+@media (max-width: 768px) {
+  .guangzhou-split {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .guangzhou-split-image {
+    flex: 1 1 auto;
+    width: 100%;
+  }
+}
