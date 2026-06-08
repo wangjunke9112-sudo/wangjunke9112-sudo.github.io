@@ -167,13 +167,19 @@ sections:
       title: Why Guangzhou and SCUT
       text: |
         <div class="guangzhou-split">
+
           <div class="guangzhou-split-text">
+
             <p>SCUT hosts one of China's leading national laboratories in optoelectronics and luminescent materials, providing strong infrastructure for semiconductor synthesis, thin-film deposition, and device characterisation. Guangzhou is a beautiful, dynamic city in the Greater Bay Area, known for its international connections, strong research ecosystem, and excellent Cantonese food. The LENS Laboratory maintains active collaborations with leading research teams in Europe and North America, and supports group members in building international networks through joint projects, visiting exchanges, and conference participation.</p>
+
           </div>
 
           <div class="guangzhou-split-image">
+
             <img src="/media/guangzhou_night.jpg" alt="Guangzhou skyline at night" class="img-fluid rounded shadow-sm">
+
           </div>
+
         </div>
     design:
       columns: '1'
