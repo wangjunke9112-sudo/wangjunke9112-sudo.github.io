@@ -162,7 +162,7 @@ sections:
         (for those holding a PhD from a world top-200 university outside China),
         and the [Guangzhou City Postdoctoral Living Allowance](https://rsj.gz.gov.cn/).
 
-    - block: markdown
+- block: markdown
       content:
       title: Why Guangzhou and SCUT
       text: |
