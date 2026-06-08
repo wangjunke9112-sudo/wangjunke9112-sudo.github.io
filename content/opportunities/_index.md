@@ -163,7 +163,7 @@ sections:
         and the [Guangzhou City Postdoctoral Living Allowance](https://rsj.gz.gov.cn/).
 
     - block: markdown
-    content:
+      content:
       title: Why Guangzhou and SCUT
       text: |
         <div class="guangzhou-split">
