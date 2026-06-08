@@ -163,32 +163,19 @@ sections:
         and the [Guangzhou City Postdoctoral Living Allowance](https://rsj.gz.gov.cn/).
 
   - block: markdown
-
     content:
-
       title: Why Guangzhou and SCUT
-
       text: |
-
-        <div style="display:flex; align-items:center; gap:2rem; flex-wrap:wrap;">
-
-          <div style="flex:1 1 62%; min-width:280px;">
-
-            <p>SCUT hosts one of China's leading national laboratories in optoelectronics and luminescent materials, providing strong infrastructure for semiconductor synthesis, thin-film deposition, and device characterisation. Guangzhou is a beautiful, dynamic city in the Greater Bay Area, known for its international connections, strong research ecosystem, and excellent Cantonese food. The LENS Laboratory maintains active collaborations with leading research teams in Europe and North America, and supports group members in building international networks through joint projects, visiting exchanges, and conference participation.</p>
-
-          </div>
-
-          <div style="flex:0 0 34%; min-width:240px;">
-
-            <img src="/media/guangzhou_night.jpg" alt="Guangzhou skyline at night" style="width:100%; height:auto; display:block; border-radius:8px; box-shadow:0 2px 12px rgba(0,0,0,0.12);">
-
-          </div>
-
-        </div>
-
+        <table style="width:100%; border-collapse:collapse;">
+          <tr>
+            <td style="width:64%; vertical-align:top; padding-right:24px;">
+              <p>SCUT hosts one of China's leading national laboratories in optoelectronics and luminescent materials, providing strong infrastructure for semiconductor synthesis, thin-film deposition, and device characterisation. Guangzhou is a beautiful, dynamic city in the Greater Bay Area, known for its international connections, strong research ecosystem, and excellent Cantonese food. The LENS Laboratory maintains active collaborations with leading research teams in Europe and North America, and supports group members in building international networks through joint projects, visiting exchanges, and conference participation.</p>
+            </td>
+            <td style="width:36%; vertical-align:top;">
+              <img src="/media/guangzhou_night.jpg" alt="Guangzhou skyline at night" style="width:100%; height:auto; display:block; border-radius:8px; box-shadow:0 2px 12px rgba(0,0,0,0.12);">
+            </td>
+          </tr>
+        </table>
     design:
-
       columns: '1'
-
       background: {}
----
