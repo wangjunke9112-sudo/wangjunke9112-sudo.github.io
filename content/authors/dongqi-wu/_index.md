@@ -1,8 +1,4 @@
 ---
-build:
-  list: never
-  render: never
-
 # Display name
 title: Dongqi Wu
 
@@ -24,6 +20,10 @@ role: "PhD Student"
 organizations:
   - name: South China University of Technology
     url: 'https://www.scut.edu.cn/'
+
+build:
+  list: never
+  render: never
 
 # Short bio (displayed in user profile at end of posts)
 #bio: Junke Wang leads the LENS Lab at SCUT, working on optoelectronic devices for energy and light technologies.
