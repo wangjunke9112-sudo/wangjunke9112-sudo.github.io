@@ -6,9 +6,9 @@ type: landing
 sections:
   - block: people
     content:
-      title: Principal Investigator
+      title: Principal investigator
       user_groups:
-        - Principal Investigator
+        - Principal investigator
     design:
       show_interests: false
       show_role: true
@@ -24,15 +24,15 @@ sections:
       show_role: true
       show_social: True
 
-  - block: people
-    content:
-      title: Master Students
-      user_groups:
-        - Master Students
-    design:
-      show_interests: false
-      show_role: true
-      show_social: false
+  #- block: people
+  #  content:
+  #    title: Master Students
+  #    user_groups:
+  #      - Master Students
+  #  design:
+  #    show_interests: false
+  #    show_role: true
+  #    show_social: false
 
   #block: people
   #  content:
