@@ -1,6 +1,10 @@
 /* ── Navbar ── */
-.navbar {
+header nav.navbar,
+header .navbar,
+nav.navbar.fixed-top,
+.navbar.navbar-expand-lg {
   background-color: #174C77 !important;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15) !important;
 }
 
 .navbar .nav-link {
@@ -14,6 +18,12 @@
 
 .navbar-brand,
 .navbar-brand:hover {
+  color: #ffffff !important;
+}
+
+/* Icons in navbar (search, dark mode toggle) */
+.navbar .nav-link i,
+.navbar button i {
   color: #ffffff !important;
 }
 
@@ -57,4 +67,26 @@ hr {
   font-size: 1.1rem !important;
   font-weight: 500 !important;
   color: #1a1a2e !important;
+}
+
+/* ── People page: member names ── */
+.portrait-title h2,
+.portrait-title h2 a {
+  font-weight: 700 !important;
+  color: #1a1a2e !important;
+  font-size: 1.1rem !important;
+}
+
+/* ── People page: role/affiliation ── */
+.portrait-title h3 {
+  font-size: 0.95rem !important;
+  color: #666666 !important;
+  font-weight: 400 !important;
+}
+
+/* ── Footer copyright — reduce size ── */
+footer p,
+footer .footer-text {
+  font-size: 0.85rem !important;
+  color: #888888 !important;
 }
