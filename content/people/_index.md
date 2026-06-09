@@ -16,9 +16,9 @@ sections:
 
   - block: people
     content:
-      title: Research team members
+      title: Team members
       user_groups:
-        - Research team members
+        - Team members
     design:
       show_interests: false
       show_role: true
