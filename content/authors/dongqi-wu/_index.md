@@ -1,4 +1,8 @@
 ---
+build:
+  list: never
+  render: never
+
 # Display name
 title: Dongqi Wu
 
