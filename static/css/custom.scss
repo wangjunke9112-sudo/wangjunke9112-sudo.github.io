@@ -46,7 +46,7 @@ strong {
 }
 
 /* ── Links ── */
-a:not(.nav-link):not(.btn) {
+a:not(.nav-link):not(.btn):not(.navbar-brand) {
   color: #2a6496 !important;
   text-decoration: none !important;
 }
