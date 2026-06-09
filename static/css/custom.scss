@@ -51,7 +51,7 @@ a:not(.nav-link):not(.btn):not(.navbar-brand) {
   text-decoration: none !important;
 }
 
-a:not(.nav-link):not(.btn):hover {
+a:not(.nav-link):not(.btn):not(.navbar-brand):hover {
   color: #174C77 !important;
   text-decoration: underline !important;
 }
@@ -89,4 +89,12 @@ footer p,
 footer .footer-text {
   font-size: 0.85rem !important;
   color: #888888 !important;
+}
+
+/* ── Navbar brand name — explicit override ── */
+a.navbar-brand,
+a.navbar-brand:hover,
+a.navbar-brand:visited,
+a.navbar-brand:focus {
+  color: #ffffff !important;
 }
