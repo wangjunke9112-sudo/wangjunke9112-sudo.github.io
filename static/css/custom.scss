@@ -92,9 +92,13 @@ footer .footer-text {
 }
 
 /* ── Navbar brand name — explicit override ── */
-a.navbar-brand,
-a.navbar-brand:hover,
-a.navbar-brand:visited,
-a.navbar-brand:focus {
+nav a.navbar-brand,
+header a.navbar-brand,
+.navbar a.navbar-brand,
+nav a.navbar-brand:hover,
+header a.navbar-brand:hover,
+.navbar a.navbar-brand:hover,
+nav a.navbar-brand:visited,
+nav a.navbar-brand:focus {
   color: #ffffff !important;
 }
