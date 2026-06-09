@@ -3,10 +3,8 @@
   font-size: 0.95rem !important;
 }
 
-/* Body text in markdown blocks */
-.markdown p,
-.markdown li,
-.markdown td {
+/* Body text in content blocks */
+p, li, td, .prose {
   font-size: 1.05rem !important;
   line-height: 1.75 !important;
 }
