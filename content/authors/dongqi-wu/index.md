@@ -16,7 +16,7 @@ bio: John's research focuses on the stability of wide-bandgap perovskites.
 social:
   - icon: envelope
     icon_pack: fas
-    link: 'mailto:your.email@oxford.ac.uk'
+    link: 'mailto:13760968793@163.com'
     
   - icon: linkedin
     icon_pack: fab
