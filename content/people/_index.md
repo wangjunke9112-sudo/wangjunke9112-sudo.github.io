@@ -1,6 +1,6 @@
 ---
 title: Group Members
-date: 2025-01-01
+date: 2026-06-09
 type: landing
 
 sections:
@@ -16,13 +16,13 @@ sections:
 
   - block: people
     content:
-      title: PhD Students
+      title: Research team members
       user_groups:
-        - PhD Students
+        - Research team members
     design:
       show_interests: false
       show_role: true
-      show_social: false
+      show_social: True
 
   - block: people
     content:
