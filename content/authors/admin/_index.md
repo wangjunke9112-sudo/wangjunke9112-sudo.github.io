@@ -80,7 +80,7 @@ highlight_name: false
 # Organizational groups that you belong to (for People widget)
 #   Set this to `[]` or comment out if you are not using People widget.
 user_groups:
-  - Principal Investigator
+  - Principal investigator
 ---
 
 Junke Wang earned his PhD from Eindhoven University of Technology (TU/e) in 2020. Afterward, he conducted postdoctoral research at TU/e under the supervision of Prof. René Janssen, and at the University of Toronto with Prof. Edward Sargent. In 2023, he joined the University of Oxford as a UKRI-funded Marie Curie Fellow in the group led by Prof. Henry Snaith. His research focuses on perovskite optoelectronic semiconductors, emphasizing materials design, interface engineering, and the integration of perovskites into high-performance multijunction solar cells. In July 2026, he will become a tenure-track professor at the State Key Laboratory of Luminescent Materials and Devices at South China University of Technology (SCUT). There, his group will develop scalable methods for fabricating perovskite semiconductors and integrating multijunction devices to advance next-generation photovoltaic and solar fuel technologies.
