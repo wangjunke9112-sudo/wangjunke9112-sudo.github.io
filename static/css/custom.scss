@@ -1,36 +1,60 @@
-.guangzhou-split {
-  display: flex;
-  align-items: center;
-  gap: 2.5rem;
+/* ── Navbar ── */
+.navbar {
+  background-color: #174C77 !important;
 }
 
-.guangzhou-split-text {
-  flex: 1 1 64%;
-  min-width: 0;
+.navbar .nav-link {
+  font-size: 0.95rem !important;
+  color: #ffffff !important;
 }
 
-.guangzhou-split-image {
-  flex: 0 0 34%;
+.navbar .nav-link:hover {
+  color: #a8d0f0 !important;
 }
 
-.guangzhou-split-image img {
-  width: 100%;
-  height: auto;
-  display: block;
+.navbar-brand,
+.navbar-brand:hover {
+  color: #ffffff !important;
 }
 
-.guangzhou-split-text p:last-child {
-  margin-bottom: 0;
+/* ── Body text ── */
+p, li, td, .prose {
+  font-size: 1.05rem !important;
+  line-height: 1.75 !important;
 }
 
-@media (max-width: 768px) {
-  .guangzhou-split {
-    flex-direction: column;
-    gap: 1rem;
-  }
+/* ── Section titles ── */
+.home-section h1,
+.home-section h2 {
+  color: #2a6496 !important;
+}
 
-  .guangzhou-split-image {
-    flex: 1 1 auto;
-    width: 100%;
-  }
+/* ── Bold text ── */
+strong {
+  color: #2a6496 !important;
+  font-weight: 500 !important;
+}
+
+/* ── Links ── */
+a:not(.nav-link):not(.btn) {
+  color: #2a6496 !important;
+  text-decoration: none !important;
+}
+
+a:not(.nav-link):not(.btn):hover {
+  color: #174C77 !important;
+  text-decoration: underline !important;
+}
+
+/* ── Dividers ── */
+hr {
+  border-color: #2a6496 !important;
+  opacity: 0.15 !important;
+}
+
+/* ── Lead paragraph ── */
+.home-section > div > div > div > p:first-of-type {
+  font-size: 1.1rem !important;
+  font-weight: 500 !important;
+  color: #1a1a2e !important;
 }
