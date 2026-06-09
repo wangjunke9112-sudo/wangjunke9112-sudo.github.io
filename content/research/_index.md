@@ -1,6 +1,6 @@
 ---
 title: Research
-date: 2026-06-06
+date: 2026-06-09
 type: landing
 
 sections:
@@ -26,13 +26,13 @@ sections:
 
   - block: markdown
     content:
-      title: Fabrication and Characterisation Platforms
+      title: Fabrication and Characterization Platforms
       text: |
         ![Fabrication and characterisation platform](research-platforms.jpg)
 
-        Good devices depend on good processes. We are building a fabrication and characterizsation platform that combines thin-film processing with optical, structural, and electrical measurements, including the capability of in-situ observation during material synthesis and device operation.
-
-        This platform will help us understand how processing conditions affect film quality and device performance, identify which steps are difficult to scale, and develop more reproducible device workflows.
+        Understanding a material or device properly requires being able to make it reproducibly and measure it precisely. We are building an integrated platform combining solution and vacuum-based thin-film deposition with a range of structural, optical, and electrical characterisation techniques, including in-situ and operando measurements that track how materials evolve during processing and under operating conditions.
+    
+        The goal is not automation for its own sake, but the ability to explore compositional and processing variables systematically and to translate what we learn in the laboratory into reliable, scalable device processes.
     design:
       columns: '1'
 
@@ -42,9 +42,10 @@ sections:
       text: |
         ![Solar fuels and emerging device platforms](research-solar-fuels.jpg)
 
-        A solar cell does not only generate current; it also generates voltage. In sufficiently high-voltage devices, that voltage can drive chemical reactions directly, opening a route toward sunlight-driven hydrogen production and related fuel-conversion reactions.
-
-        We are also interested in extending the same device concepts to other emerging platforms, including radiation detection, flexible optoelectronics, and new semiconductor systems whose potential is still being explored.
+        For multijunction perovskite devices, the operating voltage can be high enough to drive electrochemical reactions directly — splitting water into hydrogen or reducing carbon dioxide to chemical fuels, using sunlight as the sole energy input. We are interested in how tandem photovoltaic devices can be integrated with electrochemical systems and what materials and interface challenges arise at that boundary.
+    
+        Beyond solar fuels, we have a broader interest in applying multilayer semiconductor device principles to other areas — radiation detection, flexible optoelectronics, and new material systems whose properties are not yet fully understood. These are longer-term directions that will develop alongside our core photovoltaics programme.
+    
     design:
       columns: '1'
 
@@ -52,7 +53,7 @@ sections:
     content:
       title: Laboratory Facilities
       text: |
-        The LENS Laboratory is building dedicated infrastructure for multilayer optoelectronics research, including a glovebox fabrication suite, vacuum deposition systems, current-voltage and stability testing, and access to the shared characterization infrastructure of the State Key Laboratory of Luminescent Materials and Devices.
+        The LENS Laboratory is establishing dedicated infrastructure for multilayer optoelectronic device research at SCUT, including a glovebox fabrication suite, vacuum deposition systems, and current–voltage and stability testing. The group also has access to the shared characterisation infrastructure of the State Key Laboratory of Luminescent Materials and Devices.
 
     design:
     design:
