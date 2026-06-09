@@ -36,9 +36,9 @@ p, li, td, .prose {
   line-height: 1.75 !important;
 }
 
-/* ── Section titles ── */
-.home-section h1,
-.home-section h2 {
+/* ── Section titles (exclude hero) ── */
+.home-section:not(.hero) h1,
+.home-section:not(.hero) h2 {
   color: #2a6496 !important;
 }
 
