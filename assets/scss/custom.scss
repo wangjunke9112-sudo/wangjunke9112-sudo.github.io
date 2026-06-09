@@ -67,3 +67,15 @@ footer .footer-text {
   font-size: 0.85rem !important;
   color: #888888 !important;
 }
+
+/* ── Footer copyright — reduce size ── */
+footer p,
+footer .footer-text {
+  font-size: 0.85rem !important;
+  color: #888888 !important;
+}
+
+/* ── Headings — bold ── */
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 600 !important;
+}
