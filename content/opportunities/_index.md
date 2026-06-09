@@ -72,6 +72,7 @@ sections:
         applying for external funding. The list below is
         not exhaustive — please get in touch if you would like to discuss
         options relevant to your situation.
+    
         ---
         
         **For Chinese nationals — outgoing exchange, joint supervision, or overseas postdoctoral positions**
