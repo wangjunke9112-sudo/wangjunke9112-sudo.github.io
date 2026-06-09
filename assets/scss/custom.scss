@@ -101,11 +101,11 @@ footer .footer-text {
   color: #ffffff !important;
 }
 
-/* ── Hero title text ── */
-.hero h1,
-.hero h2,
-.hero p,
-.hero strong {
+/* ── Navbar site title ── */
+.navbar-brand {
   color: #ffffff !important;
-  font-weight: 700 !important;
+}
+
+.navbar-brand:hover {
+  color: #ffffff !important;
 }
