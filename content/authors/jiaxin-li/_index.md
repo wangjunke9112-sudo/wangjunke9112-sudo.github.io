@@ -6,6 +6,7 @@ authors:
   - jiaxin-li
 superuser: false
 role: "Master Student"
+weight: 30
 organizations:
   - name: South China University of Technology
     url: 'https://www.scut.edu.cn/'
