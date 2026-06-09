@@ -3,8 +3,50 @@
   font-size: 0.95rem !important;
 }
 
-/* Body text in content blocks */
+/* Body text */
 p, li, td, .prose {
   font-size: 1.05rem !important;
   line-height: 1.75 !important;
+}
+
+/* Section block titles — navy accent instead of pure black */
+.home-section h1,
+.home-section h2 {
+  color: #174C77 !important;
+}
+
+/* Strong/bold text — navy instead of black */
+strong {
+  color: #174C77 !important;
+  font-weight: 500 !important;
+}
+
+/* Links — navy, no underline by default, underline on hover */
+a:not(.nav-link):not(.btn) {
+  color: #174C77 !important;
+  text-decoration: none !important;
+}
+
+a:not(.nav-link):not(.btn):hover {
+  color: #0d3a5c !important;
+  text-decoration: underline !important;
+}
+
+/* Lead paragraph — slightly larger and medium weight for first 
+   paragraph of each section, gives a natural entry point */
+.home-section > div > div > div > p:first-of-type {
+  font-size: 1.1rem !important;
+  font-weight: 500 !important;
+  color: #1a1a2e !important;
+}
+
+/* Horizontal rules — use navy tint instead of grey */
+hr {
+  border-color: #174C77 !important;
+  opacity: 0.15 !important;
+}
+
+/* Publication list author names — keep dark, slightly muted */
+.pub-authors {
+  color: #444 !important;
 }
