@@ -1,12 +1,10 @@
-/* ── CSS variable overrides (beats theme-level injection) ── */
-:root {
-  --navbar-bg: #174C77;
-  --navbar-text: #ffffff;
-}
-
 /* ── Navbar ── */
-.navbar {
+header nav.navbar,
+header .navbar,
+nav.navbar.fixed-top,
+.navbar.navbar-expand-lg {
   background-color: #174C77 !important;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15) !important;
 }
 
 .navbar .nav-link {
@@ -18,16 +16,18 @@
   color: #a8d0f0 !important;
 }
 
-.navbar-brand,
-.navbar-brand:hover {
+.navbar .nav-link i,
+.navbar button i {
   color: #ffffff !important;
 }
 
-.navbar .nav-link i,
-.navbar button i,
-.navbar button svg {
+nav a.navbar-brand,
+header a.navbar-brand,
+.navbar a.navbar-brand,
+nav a.navbar-brand:hover,
+header a.navbar-brand:hover,
+.navbar a.navbar-brand:hover {
   color: #ffffff !important;
-  fill: #ffffff !important;
 }
 
 /* ── Body text ── */
@@ -36,47 +36,10 @@ p, li, td, .prose {
   line-height: 1.75 !important;
 }
 
-/* ── Section titles (exclude hero) ── */
-.home-section:not(.hero) h1,
-.home-section:not(.hero) h2 {
-  color: #2a6496 !important;
-}
-
-/* ── Bold text ── */
-strong {
-  color: #2a6496 !important;
-  font-weight: 500 !important;
-}
-
-/* ── Links ── */
-a:not(.nav-link):not(.btn) {
-  color: #2a6496 !important;
-  text-decoration: none !important;
-}
-
-a:not(.nav-link):not(.btn):hover {
-  color: #174C77 !important;
-  text-decoration: underline !important;
-}
-
-/* ── Dividers ── */
-hr {
-  border-color: #2a6496 !important;
-  opacity: 0.15 !important;
-}
-
-/* ── Lead paragraph ── */
-.home-section > div > div > div > p:first-of-type {
-  font-size: 1.1rem !important;
-  font-weight: 500 !important;
-  color: #1a1a2e !important;
-}
-
 /* ── People page: member names ── */
 .portrait-title h2,
 .portrait-title h2 a {
   font-weight: 700 !important;
-  color: #1a1a2e !important;
   font-size: 1.1rem !important;
 }
 
@@ -87,25 +50,9 @@ hr {
   font-weight: 400 !important;
 }
 
-/* ── Footer ── */
+/* ── Footer copyright — reduce size ── */
 footer p,
 footer .footer-text {
   font-size: 0.85rem !important;
   color: #888888 !important;
-}
-
-/* ── Navbar brand name ── */
-.navbar-brand span,
-.navbar-brand p,
-.navbar .navbar-brand {
-  color: #ffffff !important;
-}
-
-/* ── Navbar site title ── */
-.navbar-brand {
-  color: #ffffff !important;
-}
-
-.navbar-brand:hover {
-  color: #ffffff !important;
 }
