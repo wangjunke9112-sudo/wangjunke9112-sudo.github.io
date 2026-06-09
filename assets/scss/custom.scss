@@ -1,52 +1,95 @@
-/* Navbar menu links */
-.navbar .nav-link {
-  font-size: 0.95rem !important;
+/* ── CSS variable overrides (beats theme-level injection) ── */
+:root {
+  --navbar-bg: #174C77;
+  --navbar-text: #ffffff;
 }
 
-/* Body text */
+/* ── Navbar ── */
+.navbar {
+  background-color: #174C77 !important;
+}
+
+.navbar .nav-link {
+  font-size: 0.95rem !important;
+  color: #ffffff !important;
+}
+
+.navbar .nav-link:hover {
+  color: #a8d0f0 !important;
+}
+
+.navbar-brand,
+.navbar-brand:hover {
+  color: #ffffff !important;
+}
+
+.navbar .nav-link i,
+.navbar button i,
+.navbar button svg {
+  color: #ffffff !important;
+  fill: #ffffff !important;
+}
+
+/* ── Body text ── */
 p, li, td, .prose {
   font-size: 1.05rem !important;
   line-height: 1.75 !important;
 }
 
-/* Section block titles — navy accent instead of pure black */
+/* ── Section titles ── */
 .home-section h1,
 .home-section h2 {
-  color: #174C77 !important;
+  color: #2a6496 !important;
 }
 
-/* Strong/bold text — navy instead of black */
+/* ── Bold text ── */
 strong {
-  color: #174C77 !important;
+  color: #2a6496 !important;
   font-weight: 500 !important;
 }
 
-/* Links — navy, no underline by default, underline on hover */
+/* ── Links ── */
 a:not(.nav-link):not(.btn) {
-  color: #174C77 !important;
+  color: #2a6496 !important;
   text-decoration: none !important;
 }
 
 a:not(.nav-link):not(.btn):hover {
-  color: #0d3a5c !important;
+  color: #174C77 !important;
   text-decoration: underline !important;
 }
 
-/* Lead paragraph — slightly larger and medium weight for first 
-   paragraph of each section, gives a natural entry point */
+/* ── Dividers ── */
+hr {
+  border-color: #2a6496 !important;
+  opacity: 0.15 !important;
+}
+
+/* ── Lead paragraph ── */
 .home-section > div > div > div > p:first-of-type {
   font-size: 1.1rem !important;
   font-weight: 500 !important;
   color: #1a1a2e !important;
 }
 
-/* Horizontal rules — use navy tint instead of grey */
-hr {
-  border-color: #174C77 !important;
-  opacity: 0.15 !important;
+/* ── People page: member names ── */
+.portrait-title h2,
+.portrait-title h2 a {
+  font-weight: 700 !important;
+  color: #1a1a2e !important;
+  font-size: 1.1rem !important;
 }
 
-/* Publication list author names — keep dark, slightly muted */
-.pub-authors {
-  color: #444 !important;
+/* ── People page: role/affiliation ── */
+.portrait-title h3 {
+  font-size: 0.95rem !important;
+  color: #666666 !important;
+  font-weight: 400 !important;
+}
+
+/* ── Footer ── */
+footer p,
+footer .footer-text {
+  font-size: 0.85rem !important;
+  color: #888888 !important;
 }
