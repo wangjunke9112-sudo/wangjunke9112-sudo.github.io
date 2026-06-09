@@ -6,6 +6,7 @@ authors:
   - dongqi-wu
 superuser: false
 role: "PhD Student"
+weight: 10
 organizations:
   - name: South China University of Technology
     url: 'https://www.scut.edu.cn/'
