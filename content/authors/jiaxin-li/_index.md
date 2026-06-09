@@ -13,5 +13,5 @@ organizations:
 email: ''
 highlight_name: false
 user_groups:
-  - Research team members
+  - Team members
 ---
