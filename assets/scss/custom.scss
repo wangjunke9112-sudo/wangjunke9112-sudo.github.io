@@ -79,3 +79,16 @@ footer .footer-text {
 h1, h2, h3, h4, h5, h6 {
   font-weight: 600 !important;
 }
+
+/* ── Mobile dropdown menu ── */
+@media (max-width: 991px) {
+  .navbar-collapse {
+    background-color: #174C77 !important;
+    padding: 0.5rem 1rem !important;
+    border-radius: 0 0 8px 8px !important;
+  }
+
+  .navbar-collapse .nav-link {
+    color: #ffffff !important;
+  }
+}
