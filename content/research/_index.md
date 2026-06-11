@@ -1,6 +1,6 @@
 ---
 title: Research
-date: 2026-06-09
+date: 2026-06-11
 type: landing
 
 sections:
@@ -30,9 +30,9 @@ sections:
       text: |
         ![Fabrication and characterisation platform](research-platforms.jpg)
 
-        Understanding a material or device properly requires being able to make it reproducibly and measure it precisely. We are building an integrated platform combining solution and vacuum-based thin-film deposition with a range of structural, optical, and electrical characterisation techniques, including in-situ and operando measurements that track how materials evolve during processing and under operating conditions.
-    
-        The goal is not automation for its own sake, but the ability to explore compositional and processing variables systematically and to translate what we learn in the laboratory into reliable, scalable device processes.
+        We are building an integrated platform that combines solution- and vacuum-based deposition, so that material classes usually processed separately — polymers, perovskite and other crystals, quantum dots — can be grown and combined with high film quality.
+The aim is not automation for its own sake, but precise control over the parameters that govern optical and electronic function: layer thickness, composition, and the optical constants that set how efficiently a film harvests or emits light. Structural, optical, and electrical characterisation, including in-situ and operando measurements, tracks how films evolve during growth and operation.
+
     design:
       columns: '1'
 
