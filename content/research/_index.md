@@ -31,7 +31,7 @@ sections:
         ![Fabrication and characterisation platform](research-platforms.jpg)
 
         We are building an integrated platform that combines solution- and vacuum-based deposition, so that material classes usually processed separately — polymers, perovskite and other crystals, quantum dots — can be grown and combined with high film quality.
-The aim is not automation for its own sake, but precise control over the parameters that govern optical and electronic function: layer thickness, composition, and the optical constants that set how efficiently a film harvests or emits light. Structural, optical, and electrical characterisation, including in-situ and operando measurements, tracks how films evolve during growth and operation.
+        The aim is not automation for its own sake, but precise control over the parameters that govern optical and electronic function: layer thickness, composition, and the optical constants that set how efficiently a film harvests or emits light. Structural, optical, and electrical characterisation, including in-situ and operando measurements, tracks how films evolve during growth and operation.
 
     design:
       columns: '1'
