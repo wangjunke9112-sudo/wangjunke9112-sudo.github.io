@@ -30,9 +30,8 @@ sections:
     id: research
     content:
       title: Research
-      subtitle: Multilayer optoelectronics — materials, interfaces, and device platforms
       text: |
-        We study how light and charge move across thin-film semiconductor interfaces, and use this understanding to build better optoelectronic devices. Our work combines material design, thin-film processing, interface engineering and device physics, with current interests in ultrahigh-efficiency photovoltaics, perovskite and related semiconductors, and emerging light and energy technologies.
+        We study how light and charge move across thin-film semiconductors and their interfaces, and translate this understanding into devices that operate closer to their physical efficiency limits. Perovskite semiconductors are central to this work: their tunable bandgaps let us build multijunction solar cells that exceed the single-junction limit, and the physics of their interfaces shapes our materials and device design. We extend the same principles — material design, thin-film processing, interface engineering, and device physics — to other related semiconductors and emerging technologies for light and energy conversion.
 
         [Read more about our research →](/research/)
     design:
