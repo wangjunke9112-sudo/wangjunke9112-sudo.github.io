@@ -25,10 +25,10 @@ organizations:
 bio: Junke Wang leads the LENS Lab at SCUT, working on optoelectronic devices for energy and light technologies.
    
 interests:
-  - Semiconductor optoelectronics
+  - Perovskite optoelectronics
   - Multijunction photovoltaics
-  - Perovskite thin-film devices
-  - Interface engineering
+  - Thin-film processing and fabrication
+  - Interface engineering and device physics
   - Device stability
 
 education:
@@ -83,4 +83,5 @@ user_groups:
   - Principal investigator
 ---
 
-Junke Wang earned his PhD from Eindhoven University of Technology (TU/e) in 2020. Afterward, he conducted postdoctoral research at TU/e under the supervision of Prof. René Janssen, and at the University of Toronto with Prof. Edward Sargent. In 2023, he joined the University of Oxford as a UKRI-funded Marie Curie Fellow in the group led by Prof. Henry Snaith. His research focuses on perovskite optoelectronic semiconductors, emphasizing materials design, interface engineering, and the integration of perovskites into high-performance multijunction solar cells. In July 2026, he will become a tenure-track professor at the State Key Laboratory of Luminescent Materials and Devices at South China University of Technology (SCUT). There, his group will develop scalable methods for fabricating perovskite semiconductors and integrating multijunction devices to advance next-generation photovoltaic and solar fuel technologies.
+Junke Wang earned his PhD from Eindhoven University of Technology (TU/e) in 2020. He then carried out postdoctoral research at Eindhoven University of Technology with Prof. René Janssen and at the University of Toronto with Prof. Edward Sargent, before joining the University of Oxford in 2023 as a UKRI-funded Marie Curie Fellow in Prof. Henry Snaith's group. His research centers on perovskite optoelectronic semiconductors, with an emphasis on materials design, interface engineering, and the integration of perovskites into high-performance multijunction solar cells.
+In July 2026, he will join the State Key Laboratory of Luminescent Materials and Devices at South China University of Technology (SCUT) as a professor. His group will develop scalable routes to high-quality perovskite semiconductors and multijunction devices, advancing next-generation photovoltaic and solar-fuel technologies.
