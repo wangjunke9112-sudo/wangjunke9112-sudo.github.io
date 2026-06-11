@@ -23,14 +23,14 @@ sections:
         latitude: '23.166126'
         longitude: '113.339236'
       contact_links:
-        - icon: google-scholar
-          icon_pack: ai
-          name: Google Scholar
-          link: 'https://scholar.google.com/citations?user=2hYAer8AAAAJ&hl=en'
-        - icon: orcid
-          icon_pack: fab
-          name: ORCID
-          link: 'https://orcid.org/0000-0002-5849-7297'
+#        - icon: google-scholar
+#          icon_pack: ai
+#          name: Google Scholar
+#          link: 'https://scholar.google.com/citations?user=2hYAer8AAAAJ&hl=en'
+#        - icon: orcid
+#          icon_pack: fab
+#          name: ORCID
+#          link: 'https://orcid.org/0000-0002-5849-7297'
         - icon: linkedin
           icon_pack: fab
           name: LinkedIn
