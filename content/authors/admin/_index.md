@@ -50,7 +50,7 @@ education:
 social:
   - icon: envelope
     icon_pack: fas
-    link: 'mailto:junke.wang@hotmail.com'
+    link: 'mailto:wjk090426@scut.edu.cn'
   - icon: linkedin
     icon_pack: fab
     link: https://www.linkedin.com/in/jwangscut
@@ -84,4 +84,5 @@ user_groups:
 ---
 
 Junke Wang earned his PhD from Eindhoven University of Technology (TU/e) in 2020. He then carried out postdoctoral research at Eindhoven University of Technology with Prof. René Janssen and at the University of Toronto with Prof. Edward Sargent, before joining the University of Oxford in 2023 as a UKRI-funded Marie Curie Fellow in Prof. Henry Snaith's group. His research centers on perovskite optoelectronic semiconductors, with an emphasis on materials design, interface engineering, and the integration of perovskites into high-performance multijunction solar cells.
+
 In July 2026, he will join the State Key Laboratory of Luminescent Materials and Devices at South China University of Technology (SCUT) as a professor. His group will develop scalable routes to high-quality perovskite semiconductors and multijunction devices, advancing next-generation photovoltaic and solar-fuel technologies.
