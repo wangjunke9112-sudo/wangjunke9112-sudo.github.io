@@ -31,10 +31,10 @@ sections:
 #          icon_pack: fab
 #          name: ORCID
 #          link: 'https://orcid.org/0000-0002-5849-7297'
-        - icon: linkedin
-          icon_pack: fab
-          name: LinkedIn
-          link: 'https://www.linkedin.com/in/jwangscut'
+#        - icon: linkedin
+#          icon_pack: fab
+#          name: LinkedIn
+#          link: 'https://www.linkedin.com/in/jwangscut'
     design:
       columns: '2'
 ---
