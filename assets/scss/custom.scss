@@ -93,14 +93,3 @@ h1, h2, h3, h4, h5, h6 {
   }
 }
 
-/* ── Hide "Published with Hugo Blox" footer credit ── */
-.powered-by,
-footer .powered-by,
-.site-footer__credit,
-footer a[href*="hugoblox.com"] {
-  display: none !important;
-}
-
-footer a[href*="hugoblox.com"] {
-  font-size: 0 !important;
-}
