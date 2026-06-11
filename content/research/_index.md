@@ -16,7 +16,6 @@ sections:
     content:
       title: Multilayer Optoelectronic Devices
       text: |
-#        ![Multilayer optoelectronic devices](research-devices.jpg)
 
         Metal-halide perovskites are a remarkable class of semiconductors for optoelectronics, combining low-cost, scalable processing with optical bandgaps that can be tuned across the visible and near-infrared. This tunability makes them ideally suited to monolithically stacked multijunction solar cells, which can reach efficiencies beyond the fundamental limit of single-junction devices. Realising this potential, however, requires overcoming energy losses that grow with bandgap and optical losses inherent to stacked architectures, alongside the broader challenges of operational stability and scalable fabrication.
         
