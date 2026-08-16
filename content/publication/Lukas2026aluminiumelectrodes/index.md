@@ -1,0 +1,10 @@
+---
+title: "Beyond the Gold Standard: Towards Industrially Viable Electrodes for Durable Perovskite Solar Cells"
+authors: []
+date: "2026-08-04T00:00:00Z"
+publication_types: ["article-journal"]
+summary: "T. Lukas, M. Kober‐Czerny, A. R. N. Pour, J. McGettrick, G. Loukeris, C. Baretzky, S. Hu, J. Wang, C.‐Y. Chang, S. Teale, B. Li, T. M. Watson, M. Stolterfoht, R. L. Z. Hoye, P. Holzhey, L. Wagner, M. Kohlstädt, H. J. Snaith. *Advanced Energy Materials*, 2026, e71372."
+abstract: ": Perovskite solar cells have achieved high efficiencies but remain limited by instabilities. For the opaque metal rear electrode, Au is commonly used to achieve stable operation but is impractical for scalable photovoltaics due to cost. We investigate the effect of a 5 nm chromium (Cr) interlayer beneath low-cost metals (Al, Ag, Cu) to inhibit metal interdiffusion. Cr/Al electrodes yield devices with high efficiencies (up to 24.7%) and operational stability comparable to reference devices using Au rear electrodes under heat and light stress, with raw material costs reduced by five orders of magnitude. At the front semi-transparent electrode, through which sunlight will be incident, we identify indium diffusion from indium tin oxide (ITO) as a key degradation mechanism, revealed via depth-resolved mass spectrometry. We demonstrate that replacing ITO with fluorine-doped tin oxide (FTO) substantially improves stability. Combining both improvements, FTO with Cr/Al contacts, produces devices retaining >66% of the initial efficiency after >1000 h ageing at 75 °C under simulated sunlight. These results highlight the critical role of electrode selection on perovskite solar cell durability and provide a practical route toward stable and cost-effective perovskite photovoltaics."
+external_link: "https://advanced.onlinelibrary.wiley.com/doi/full/10.1002/aenm.71372"
+url_pdf: "/uploads/Beyond the Gold Standard Towards Industrially Viable Electrodes for Durable Perovskite Solar Cells.pdf"
+---
