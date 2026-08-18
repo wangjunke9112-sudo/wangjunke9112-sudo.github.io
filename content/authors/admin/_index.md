@@ -14,7 +14,7 @@ authors:
 superuser: true
 
 # Role/position
-role: "Professor of Materials Science and Engineering"
+role: "Professor"
 
 # Organizations/Affiliations
 organizations:
@@ -25,11 +25,12 @@ organizations:
 bio: Junke Wang leads the LENS Lab at SCUT, working on optoelectronic devices for energy and light technologies.
    
 interests:
-  - Perovskite optoelectronics
+  - Perovskite and emerging semiconductors
   - Multijunction photovoltaics
   - Thin-film processing and fabrication
   - Interface engineering and device physics
-  - Device stability
+  - Operational stability
+  - Light-energy conversion
 
 education:
   courses:
@@ -83,6 +84,8 @@ user_groups:
   - Principal investigator
 ---
 
-Junke Wang earned his PhD from Eindhoven University of Technology (TU/e) in 2020. He then carried out postdoctoral research at Eindhoven University of Technology with Prof. René Janssen and at the University of Toronto with Prof. Edward Sargent, before joining the University of Oxford in 2023 as a UKRI-funded Marie Curie Fellow in Prof. Henry Snaith's group. His research centers on perovskite optoelectronic semiconductors, with an emphasis on materials design, interface engineering, and the integration of perovskites into high-performance multijunction solar cells.
+Junke Wang is a professor at South China University of Technology (SCUT), where he leads the newly established LENS Laboratory at the State Key Laboratory of Luminescent Materials and Devices. His research focuses on semiconductor materials and devices for light and energy conversion, with particular interests in perovskite optoelectronics, multijunction photovoltaics, thin-film processing, interface engineering, and device stability.
 
-In July 2026, he will join the State Key Laboratory of Luminescent Materials and Devices at South China University of Technology (SCUT) as a professor. His group will develop scalable routes to high-quality perovskite semiconductors and multijunction devices, advancing next-generation photovoltaic and solar-fuel technologies.
+He received his PhD from Eindhoven University of Technology (TU/e) in 2020, working with Prof. René Janssen. He then carried out postdoctoral research at TU/e and the University of Toronto with Prof. Edward Sargent, before joining the University of Oxford in 2023 as a UKRI-funded Marie Curie Fellow in Prof. Henry Snaith's group.
+
+At SCUT, his group develops new materials, interfaces, fabrication strategies, and device concepts for high-performance multilayer optoelectronics. Current research directions include multijunction photovoltaics, scalable solution- and vacuum-based thin-film processing, and emerging device platforms for energy and light technologies.
