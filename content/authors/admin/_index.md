@@ -109,6 +109,6 @@ At SCUT, his group develops new materials, interfaces, fabrication strategies, a
 
 ### Appointments
 
-**2026–present** Professor, South China University of Technology  
-**2023–2026** Postdoc, Marie Curie Fellow, University of Oxford  
-**2020–2023** Postdoc, jointly between Eindhoven University of Technology and University of Toronto  
+**2026–present** – Professor, South China University of Technology  
+**2023–2026** – Postdoc, Marie Curie Fellow, University of Oxford  
+**2020–2023** – Postdoc, jointly between Eindhoven University of Technology and University of Toronto  
