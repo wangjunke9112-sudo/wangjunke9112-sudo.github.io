@@ -14,7 +14,7 @@ authors:
 superuser: true
 
 # Role/position
-role: "Professor"
+role: "Professor of Materials Science and Engineering"
 
 # Organizations/Affiliations
 organizations:
@@ -30,7 +30,24 @@ interests:
   - Thin-film processing and fabrication
   - Interface engineering and device physics
   - Operational stability
-  - Light-energy conversion
+  - Light–energy conversion
+
+work:
+  - position: Professor of Materials Science and Engineering
+    company_name: South China University of Technology
+    company_url: 'https://www.scut.edu.cn/'
+    date_start: '2026-07'
+    date_end: ''
+
+  - position: Postdoc, Marie Curie Fellow
+    company_name: University of Oxford
+    date_start: '2023-06'
+    date_end: '2026-06'
+
+  - position: Postdoc
+    company_name: Jointly between Eindhoven University of Technology and University of Toronto
+    date_start: '2020-10'
+    date_end: '2023-06'
 
 education:
   courses:
@@ -88,4 +105,4 @@ Junke Wang is a professor at South China University of Technology (SCUT), where 
 
 He received his PhD from Eindhoven University of Technology (TU/e) in 2020, working with Prof. René Janssen. He then carried out postdoctoral research at TU/e and the University of Toronto with Prof. Edward Sargent, before joining the University of Oxford in 2023 as a UKRI-funded Marie Curie Fellow in Prof. Henry Snaith's group.
 
-At SCUT, his group develops new materials, interfaces, fabrication strategies, and device concepts for high-performance multilayer optoelectronics. Current research directions include multijunction photovoltaics, scalable solution- and vacuum-based thin-film processing, and emerging device platforms for energy and light technologies.
+At SCUT, his group develops new materials, interfaces, fabrication strategies, and device concepts for high-performance multilayer optoelectronics. Current research directions include multijunction photovoltaics, scalable solution- and vacuum-based thin-film processing, and emerging platforms for light and energy conversion.
