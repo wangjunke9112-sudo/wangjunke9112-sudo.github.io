@@ -17,7 +17,7 @@ Junke Wang visited the Global Institute of Future Technology (GIFT) at Shanghai 
 
 The talk, titled *Perovskite multijunction photovoltaics: materials, interfaces, and device platforms*, presented a broader perspective on the development of high-efficiency perovskite multijunction photovoltaics.
 
-![Reunion](Reunion.png)
+![Reunion](Reunion.jpg)
 
 The seminar was followed by an engaging discussion on shared research interests and future collaboration. The visit was also a reunion with several former colleagues from the Sargent group who are now based at SJTU, and provided a welcome opportunity to reconnect and explore possibilities for future exchange between the two teams.
 
