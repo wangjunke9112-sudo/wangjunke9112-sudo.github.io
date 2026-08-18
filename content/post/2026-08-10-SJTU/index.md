@@ -13,7 +13,7 @@ draft: no
 
 Junke Wang visited the Global Institute of Future Technology (GIFT) at Shanghai Jiao Tong University (SJTU) as an invited speaker, hosted by Prof. Hao Chen.
 
-![Invitation letter](featured.jpg)
+![Invitation letter](featured.png)
 
 The talk, titled *Perovskite multijunction photovoltaics: materials, interfaces, and device platforms*, presented a broader perspective on the development of high-efficiency perovskite multijunction photovoltaics.
 
