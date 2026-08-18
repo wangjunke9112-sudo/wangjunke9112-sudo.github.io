@@ -7,7 +7,7 @@ tags:
   - talk
 image:
   preview_only: true
-summary: "Junke Wang presented his work on perovskite multijunction photovoltaics at the Global Institute of Future Technology, Shanghai Jiao Tong University."
+summary: "Junke Wang gave a talk at the Global Institute of Future Technology, Shanghai Jiao Tong University."
 draft: no
 ---
 
