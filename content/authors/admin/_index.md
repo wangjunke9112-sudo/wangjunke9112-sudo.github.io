@@ -107,8 +107,8 @@ He received his PhD from Eindhoven University of Technology (TU/e) in 2020, work
 
 At SCUT, his group develops new materials, interfaces, fabrication strategies, and device concepts for high-performance multilayer optoelectronics. Current research directions include multijunction photovoltaics, scalable solution- and vacuum-based thin-film processing, and emerging platforms for light and energy conversion.
 
-## Appointments
+### Appointments
 
 **2026–present** — Professor, South China University of Technology  
 **2023–2026** — Postdoc, Marie Curie Fellow, University of Oxford  
-**2020–2023** Postdoc, jointly between Eindhoven University of Technology and University of Toronto  
+**2020–2023** – Postdoc, jointly between Eindhoven University of Technology and University of Toronto  
