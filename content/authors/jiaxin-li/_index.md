@@ -34,12 +34,9 @@ interests:
 # Education
 education:
   courses:
-    - course: MSc in Materials Physics and Chemistry
-      institution: South China University of Technology
-      year: 2027
     - course: BE in Materials Science and Engineering
       institution: Xiangtan University
-      year: 2025
+      year: 2026
 
 # Social/academic links
 social:
@@ -52,6 +49,9 @@ user_groups:
   - Team members
 ---
 
-Jiaxin is a Master student in Materials Physics and Chemistry in the LENS Laboratory at South China University of Technology. His research focuses on multijunction perovskite tandem solar cells, where he works to improve device efficiency and operational stability through bandgap engineering and interface optimisation across subcells.
+Jiaxin is a Master student in Materials Physics and Chemistry at South China University of Technology, under the supervision of Prof. Junke Wang. He has begun his research on multijunction solar cells, focusing on improving device efficiency and operational stability through interface engineering.
 
-Jiaxin received his Bachelor's degree in Materials Science and Engineering from Xiangtan University, where he gained systematic training in materials preparation and characterisation. He is now dedicated to developing high-performance perovskite tandem photovoltaics with enhanced reliability, contributing to the LENS Laboratory's broader effort to push the efficiency and stability limits of next-generation solar cells.
+Jiaxin obtained his Bachelor degree in Materials Science and Engineering from Xiangtan University. During his undergraduate studies,
+he worked on the surface modification of biodegradable zinc alloys and studied titanium- and tantalum-based alloys for orthopaedic implants. This work gave him hands-on experience in materials preparation, surface characterisation, and structure-property analysis.
+
+This foundation in materials science, particularly in understanding how surfaces and interfaces shape material behaviour, carries directly into his current work, where interface design is central to the performance of optoelectronic devices. Jiaxin is now tackling interface-induced energetic losses in perovskite photovoltaics.
