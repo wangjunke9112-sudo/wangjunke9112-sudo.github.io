@@ -26,10 +26,10 @@ bio: Master's candidate working on multijunction perovskite tandem solar cells.
 
 # Interests
 interests:
-  - Multijunction perovskite tandem solar cells
-  - Bandgap engineering
-  - Interface optimisation
-  - Device efficiency and stability
+  - Interface engineering
+  - Energetic and recombination losses
+  - Passivation strategies
+  - Novel device architecture and integration
 
 # Education
 education:
