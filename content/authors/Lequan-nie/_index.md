@@ -28,8 +28,7 @@ bio: Master's candidate working on multijunction perovskite tandem solar cells.
 interests:
   - Thin-film formation kinetics
   - Phase stability
-  - Interface optimization
-  - Microstructure and macroscopic device performance
+  - Microstructure and device performance
 
 # Education
 education:
