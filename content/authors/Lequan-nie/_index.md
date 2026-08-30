@@ -1,20 +1,54 @@
 ---
+# Display name
 title: Lequan Nie
+
+# Full name (for SEO)
 first_name: Lequan
 last_name: Nie
+
+# Username (must match the folder name)
 authors:
   - lequan-nie
+
+# Is this the primary user of the site?
 superuser: false
-role: "Master Student"
-weight: 20
+
+# Role/position
+role: Master Student
+
+# Organizations/Affiliations
 organizations:
   - name: South China University of Technology
     url: 'https://www.scut.edu.cn/'
-email: '202620120581@mail.scut.edu.cn'
-highlight_name: false
+
+# Short bio (displayed in user profile at end of posts)
+bio: Master's candidate working on multijunction perovskite tandem solar cells.
+
+# Interests
+interests:
+  - Thin-film formation kinetics
+  - Phase stability
+  - Interface optimization
+  - Microstructure and macroscopic device performance
+
+# Education
+education:
+  courses:
+    - course: BE in Materials Engineering
+      institution: Anhui University of Technology
+      year: 2026
+
+# Social/academic links
+social:
+  - icon: envelope
+    icon_pack: fas
+    link: 'mailto: 202620120581@mail.scut.edu.cn'
+
+# User groups (matches the People page filter)
 user_groups:
   - Team members
 ---
+
 
 Lequan is a Master student in Materials Physics and Chemistry at South China University of Technology, working in Prof. Junke Wang's group on wide-bandgap perovskites for tandem solar cells. Her research focuses on stability-related challenges of wide-bandgap perovskite sub-cells, which remain one of the main barriers to high-performance, durable tandem photovoltaics.
 
