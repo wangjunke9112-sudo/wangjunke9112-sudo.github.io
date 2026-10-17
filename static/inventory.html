@@ -90,6 +90,8 @@
   .fetchnote{font-size:12px;color:var(--muted);min-height:1.2em}
   .loadhint{font-size:12px;color:var(--accent);min-height:1.1em}
 
+  .addrow{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+  .addhint{font-size:12.5px;color:var(--muted)}
   .toolbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:10px}
   .toolbar .search{flex:1;min-width:180px}
   .toolbar button{font-size:13px;padding:7px 12px}
@@ -206,8 +208,11 @@
 
     <datalist id="vendors"><option>Sigma-Aldrich</option><option>阿拉丁 Aladdin</option><option>麦克林 Macklin</option><option>TCI</option><option>西陇 Xilong</option><option>Alfa Aesar</option></datalist>
 
+    <div class="addrow">
+      <button class="btn-primary" id="addbtn" onclick="toggleAdd()" style="white-space:nowrap">＋ Add chemical 添加化学品</button>
+      <span class="addhint">The search below only filters chemicals already logged.</span>
+    </div>
     <div class="toolbar">
-      <button class="btn-primary" id="addbtn" onclick="toggleAdd()" style="white-space:nowrap">＋ Add chemical</button>
       <input class="search" id="search" placeholder="Search logged chemicals — name, 中文名, CAS, vendor…" oninput="render()">
       <select id="locfilter" onchange="setLocFilter(this.value)" style="width:auto;min-width:150px">
         <option value="all">All locations 位置</option>
@@ -320,8 +325,15 @@
   function dget(name){var k=norm(name);if(DICT[k])return DICT[k];var kk=k.replace(/\s/g,"");for(var x in DICT){var d=DICT[x];if(d.a&&d.a===kk)return d;if(d.abbr&&norm(d.abbr)===k)return d;if(d.zh&&d.zh===name.trim())return d;if(d.cas&&d.cas===name.trim())return d;if(d.aliases&&d.aliases.indexOf(k)>=0)return d;}return null;}
   function findItem(v){v=norm(v);if(!v)return null;return items.find(function(x){if(norm(x.name)===v||norm(x.name_zh)===v||norm(x.cas)===v||norm(x.iupac)===v)return true;return (x.aliases||[]).some(function(a){return norm(a)===v;});});}
 
-  function load(){var raw=null;try{raw=LS.getItem("lens_inv_items");}catch(e){}if(raw){try{items=JSON.parse(raw)||[];}catch(e){items=[];}}else{items=seed();persist();}}
+  function load(){var raw=null;try{raw=LS.getItem("lens_inv_items");}catch(e){}if(raw){try{items=JSON.parse(raw)||[];}catch(e){items=[];}}else{items=seed();persist();}loadCatalog();items.forEach(function(x){if(!catalog[catKey(x)])upsertCatalog(x);});}
   function persist(){try{LS.setItem("lens_inv_items",JSON.stringify(items));}catch(e){}}
+  /* persistent "known chemicals" catalog — identity + short names remembered even when no bottle remains */
+  var catalog={};
+  function loadCatalog(){try{catalog=JSON.parse(LS.getItem("lens_inv_catalog")||"{}")||{};}catch(e){catalog={};}}
+  function saveCatalog(){try{LS.setItem("lens_inv_catalog",JSON.stringify(catalog));}catch(e){}}
+  function catKey(d){var cas=(d.cas||"").trim();return cas?("cas:"+cas):("n:"+norm(d.name||d.n||""));}
+  function upsertCatalog(d){if(!d.name)return;catalog[catKey(d)]={name:d.name,name_zh:d.name_zh||"",iupac:d.iupac||d.name,cas:d.cas||"",formula:d.formula||"",mw:d.mw||"",smiles:d.smiles||"",ghs:(d.ghs||[]).slice(),flags:(d.flags||[]).slice(),aliases:(d.aliases||[]).slice()};saveCatalog();}
+  function catGet(query){var v=norm(query);if(!v)return null;for(var k in catalog){var c=catalog[k];if(norm(c.name)===v||norm(c.name_zh)===v||norm(c.iupac)===v||norm(c.cas)===v)return c;if((c.aliases||[]).some(function(a){return norm(a)===v;}))return c;}return null;}
   function seed(){
     var s=[{n:"Lead(II) iodide",v:"阿拉丁 Aladdin",am:"25 g",lo:"Weighing glovebox",st:"active"},
       {n:"N,N-Dimethylformamide",v:"Sigma-Aldrich",am:"1 L",lo:"Fume hood",st:"active"},
@@ -331,18 +343,20 @@
     return s.map(function(r){var d=dget(r.n)||{};return{id:uid(),_ex:true,name:r.n,name_zh:d.zh||"",iupac:d.n||r.n,aliases:(d.abbr?[d.abbr]:[]),cas:d.cas||"",formula:d.f||"",mw:d.mw||"",smiles:d.smiles||"",ghs:(d.ghs||[]).slice(),flags:autoReg(d.cas),vendor:r.v,purity:"",amount:r.am,location:r.arch?"":r.lo,registered_by:"example",date_added:"2026-10-10",status:r.st,archived:!!r.arch,disposed_by:r.arch?"example":"",disposed_date:r.arch?"2026-10-15":""};});
   }
 
-  function buildDicts(){var dl=$("dict"),seen={};dl.innerHTML="";function add(v){if(!v)return;var key=v.toLowerCase();if(seen[key])return;seen[key]=1;var o=document.createElement("option");o.value=v;dl.appendChild(o);}Object.keys(DICT).forEach(function(k){var d=DICT[k];add(d.n);add(d.zh);if(d.abbr)add(d.abbr);});items.forEach(function(x){add(x.name);add(x.iupac);add(x.name_zh);(x.aliases||[]).forEach(add);});}
+  function buildDicts(){var dl=$("dict"),seen={};dl.innerHTML="";function add(v){if(!v)return;var key=v.toLowerCase();if(seen[key])return;seen[key]=1;var o=document.createElement("option");o.value=v;dl.appendChild(o);}Object.keys(DICT).forEach(function(k){var d=DICT[k];add(d.n);add(d.zh);if(d.abbr)add(d.abbr);});Object.keys(catalog).forEach(function(k){var c=catalog[k];add(c.name);add(c.name_zh);add(c.iupac);(c.aliases||[]).forEach(add);});items.forEach(function(x){add(x.name);add(x.iupac);add(x.name_zh);(x.aliases||[]).forEach(add);});}
   function buildPicker(){$("ghssel").innerHTML=Object.keys(GHS).map(function(code){return '<button type="button" class="ghs-chip" data-code="'+code+'" aria-pressed="false" onclick="toggleGhs(this)">'+ghsIcon(code,40)+'<span class="ghs-cap">'+GHS[code].zh+'<em>'+GHS[code].en+'</em></span></button>';}).join("");}
   function buildFlags(){var fb=$("flags");fb.innerHTML="";ALLFLAGS.forEach(function(fl){var l=document.createElement("label");l.innerHTML='<input type="checkbox" value="'+fl+'"> '+fl;fb.appendChild(l);});}
 
   function onName(){$("formerr").hidden=true;$("fetchnote").textContent="";var it=findItem($("f_name").value);$("loadhint").textContent=it?"Previous entry found — press Look up or pick from the list to reuse it.":"";}
   function onCas(){var r=autoReg($("f_cas").value.trim());if(r.length){setFlags(r);$("autotag").textContent="auto-assigned from CAS: "+r.join(" ");}}
-  function maybeLoad(){if(editId)return;var v=$("f_name").value;var it=findItem(v);if(it){loadFrom(it,true);return;}var d=dget(v);if(d){fillDict(d);$("fetchnote").textContent="Auto-filled from the built-in list. Add purity, amount and location.";}}
+  function maybeLoad(){if(editId)return;var v=$("f_name").value;var it=findItem(v);if(it){loadFrom(it,true);return;}var c=catGet(v);if(c){loadFrom(c,true);$("fetchnote").textContent="Auto-filled from our saved chemicals. Add vendor, amount and location.";return;}var d=dget(v);if(d){fillDict(d);$("fetchnote").textContent="Auto-filled from the built-in list. Add vendor, amount and location.";}}
   function doLookup(){
     var raw=$("f_name").value.trim();var cas=$("f_cas").value.trim();
     var query=raw||cas;if(!query)return;
     var it=findItem(raw)||(cas?findItem(cas):null);
     if(it){loadFrom(it,true);return;}
+    var c=catGet(raw)||(cas?catGet(cas):null);
+    if(c){loadFrom(c,true);$("fetchnote").textContent="Filled from our saved chemicals. Add this bottle's vendor, amount and location.";return;}
     var d=dget(raw)||(cas?dget(cas):null);
     if(d){fillDict(d);$("fetchnote").textContent="Filled from the built-in list. Check the pictograms against the bottle.";return;}
     tryPubChem(query);
@@ -403,7 +417,7 @@
     var wasEdit=!!editId, nm=d.name;
     if(editId){var it=items.find(function(x){return x.id===editId;});if(it){Object.assign(it,d);delete it._ex;}cancelEdit();}
     else{d.id=uid();d.date_added=today();d.status="active";d.archived=false;d.disposed_by="";d.disposed_date="";if(!d.aliases)d.aliases=[];items.unshift(d);}
-    persist();resetForm();render();if(window.requestAnimationFrame)requestAnimationFrame(drawStructures);
+    upsertCatalog(d);persist();resetForm();render();if(window.requestAnimationFrame)requestAnimationFrame(drawStructures);
     tool((wasEdit?"Saved changes to ":"Added ")+nm+".");
   }
   function edit(id){var it=items.find(function(x){return x.id===id;});if(!it)return;editId=id;$("addpanel").hidden=false;$("addbtn").textContent="Close form";loadFrom(it,false);$("formtitle").textContent="Edit chemical";$("savebtn").textContent="Save changes";$("editflag").hidden=false;$("loadhint").textContent="";try{$("addpanel").scrollIntoView({behavior:"smooth",block:"center"});}catch(e){}}
