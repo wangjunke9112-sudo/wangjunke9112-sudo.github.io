@@ -1,4 +1,4 @@
-<title>LENS Chemical Inventory</title>
+<title>Group Chemical Inventory</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
 <style>
@@ -138,7 +138,7 @@
 
 <header>
   <div class="wrap">
-    <div class="brand"><b>LENS</b><span>Chemical inventory · 化学品库</span></div>
+    <div class="brand"><b>LENS</b><span>Group Chemical Inventory · 化学品库</span></div>
     <nav class="hnav">
       <a href="https://lens-laboratory.com/group-lit-feed/" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="5" cy="19" r="1.6"/><path d="M4 11a9 9 0 0 1 9 9M4 5a15 15 0 0 1 15 15"/></svg>Literature feed</a>
       <a href="https://lens-laboratory.com" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a15 15 0 0 1 0 18M12 3a15 15 0 0 0 0 18"/></svg>Group website</a>
@@ -161,8 +161,8 @@
 
     <div class="stats" id="stats"></div>
 
-    <section class="panel">
-      <h2><span id="formtitle">Add a chemical</span><span class="editflag" id="editflag" hidden>editing — <a href="#" onclick="cancelEdit();return false;" style="color:var(--accent)">cancel</a></span></h2>
+    <section class="panel" id="addpanel" hidden>
+      <h2><span id="formtitle">Add a chemical</span><span style="margin-left:auto;display:flex;gap:10px;align-items:center"><span class="editflag" id="editflag" hidden>editing</span><button onclick="closeAdd()" style="font-size:13px;padding:5px 12px">Close</button></span></h2>
       <div class="formgrid">
         <div class="f-wide">
           <label for="f_name">Chemical name 名称 — type English, 中文, abbreviation, or a CAS number *</label>
@@ -176,17 +176,17 @@
         </div>
         <input type="hidden" id="f_name_zh">
         <div class="f-half"><label for="f_iupac">Official / IUPAC name 规范名</label><input id="f_iupac" placeholder="canonical name (auto on lookup)"></div>
-        <div class="f-half"><label for="f_aliases">Our short names 别名 <span style="color:var(--muted)">— optional, e.g. EDAI2, XDA</span></label><input id="f_aliases" placeholder="comma-separated; type any of these later to recall this chemical"></div>
+        <div class="f-half"><label for="f_aliases">Our short names 别名 <span style="color:var(--muted)">— optional, e.g. EDAI2</span></label><input id="f_aliases" placeholder="comma-separated; type any of these later to recall this chemical"></div>
         <div><label for="f_cas">CAS 号 <span style="color:var(--muted)">— unique key</span></label><input id="f_cas" class="mono" placeholder="—" oninput="onCas()"></div>
         <div><label for="f_formula">Formula 分子式</label><input id="f_formula" class="mono" placeholder="—"></div>
         <div><label for="f_mw">Molar mass 摩尔质量</label><input id="f_mw" class="mono" placeholder="g/mol"></div>
         <div class="f-half"><label for="f_smiles">SMILES <span style="color:var(--muted)">— draws the structure (auto on lookup)</span></label><input id="f_smiles" class="mono" placeholder="optional" oninput="previewStruct()"></div>
         <div><label for="f_vendor">Vendor 供应商 *</label><input id="f_vendor" list="vendors" placeholder="e.g. 阿拉丁 Aladdin"></div>
-        <div><label for="f_purity">Purity 纯度</label><input id="f_purity" placeholder="e.g. 99.99%"></div>
-        <div><label for="f_amount">Amount 数量</label><input id="f_amount" placeholder="e.g. 25 g"></div>
+        <div><label for="f_purity">Purity 纯度 (%)</label><div style="display:flex;align-items:center;gap:5px"><input id="f_purity" type="number" min="0" max="100" step="any" placeholder="99.99" style="flex:1"><span style="color:var(--muted)">%</span></div></div>
+        <div><label for="f_amount_val">Amount 数量</label><div style="display:flex;gap:6px"><input id="f_amount_val" type="number" min="0" step="any" placeholder="25" style="flex:1"><select id="f_amount_unit" style="width:auto;min-width:68px"><option value="">unit</option><option>ug</option><option>mg</option><option>g</option><option>kg</option><option>uL</option><option>mL</option><option>L</option></select></div></div>
         <div><label for="f_location">Location 位置 *</label><select id="f_location"><option value="">—</option><option>Weighing glovebox</option><option>Spin-coating glovebox</option><option>Fume hood</option><option>Cabinet</option></select></div>
         <div><label for="f_by">Registered by 注册人 *</label><input id="f_by" placeholder="your name / 姓名"></div>
-        <div style="display:flex;align-items:flex-end"><canvas id="f_struct" class="struct" width="150" height="80" title="structure preview" style="cursor:default"></canvas></div>
+        <div style="display:flex;align-items:flex-end"><canvas id="f_struct" class="struct" data-w="150" data-h="80" title="structure preview" style="width:150px;height:80px;cursor:default"></canvas></div>
 
         <div class="hazblock">
           <span class="hazlabel"><b>GHS pictograms 危害象形图</b> — tap the red diamonds that match the ones printed on the bottle</span>
@@ -207,7 +207,8 @@
     <datalist id="vendors"><option>Sigma-Aldrich</option><option>阿拉丁 Aladdin</option><option>麦克林 Macklin</option><option>TCI</option><option>西陇 Xilong</option><option>Alfa Aesar</option></datalist>
 
     <div class="toolbar">
-      <input class="search" id="search" placeholder="Search name, 中文名, CAS, vendor…" oninput="render()">
+      <button class="btn-primary" id="addbtn" onclick="toggleAdd()" style="white-space:nowrap">＋ Add chemical</button>
+      <input class="search" id="search" placeholder="Search logged chemicals — name, 中文名, CAS, vendor…" oninput="render()">
       <select id="locfilter" onchange="setLocFilter(this.value)" style="width:auto;min-width:150px">
         <option value="all">All locations 位置</option>
         <option>Weighing glovebox</option>
@@ -243,7 +244,7 @@
 <script src="https://unpkg.com/smiles-drawer@1.2.0/dist/smiles-drawer.min.js"></script>
 <script>
   /* dark-blue "W" browser icon, injected so it works both in the preview and on the live site */
-  (function(){try{var svg='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="12" fill="#174C77"/><text x="32" y="46" font-family="Inter,Arial,sans-serif" font-size="42" font-weight="700" text-anchor="middle" fill="#ffffff">W</text></svg>';var l=document.createElement("link");l.rel="icon";l.type="image/svg+xml";l.setAttribute("href","data:image/svg+xml,"+encodeURIComponent(svg));(document.head||document.documentElement).appendChild(l);}catch(e){}})();
+  (function(){try{var svg='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect x="2" y="2" width="60" height="60" rx="12" fill="#ffffff" stroke="#174C77" stroke-width="3"/><text x="32" y="46" font-family="Inter,Arial,sans-serif" font-size="40" font-weight="700" text-anchor="middle" fill="#174C77">W</text></svg>';var l=document.createElement("link");l.rel="icon";l.type="image/svg+xml";l.setAttribute("href","data:image/svg+xml,"+encodeURIComponent(svg));(document.head||document.documentElement).appendChild(l);}catch(e){}})();
   /* ---- GHS pictograms: official UN files from ghs/GHS0x.svg when present; faithful inline stand-ins otherwise ---- */
   var GHS={
     GHS01:{zh:"爆炸物",en:"Explosive",svg:'<g fill="#15181d"><circle cx="22" cy="25" r="3.3"/><g stroke="#15181d" stroke-width="1.5" stroke-linecap="round"><path d="M22 25 18 14"/><path d="M22 25 27 15"/><path d="M22 25 31 20"/><path d="M22 25 31 30"/><path d="M22 25 13 21"/><path d="M22 25 14 29"/></g></g>'},
@@ -262,10 +263,10 @@
   function ghsIcon(code,px){var g=GHS[code];if(!g)return"";if(USE_OFFICIAL)return '<img class="ghs-dia" src="ghs/'+GHSFILE[code]+'" width="'+px+'" height="'+px+'" alt="'+g.en+'" title="'+g.zh+' '+g.en+'">';return '<svg class="ghs-dia" width="'+px+'" height="'+px+'" viewBox="0 0 44 44" role="img" aria-label="'+g.en+'"><rect x="4.8" y="4.8" width="34.4" height="34.4" rx="4" transform="rotate(45 22 22)" fill="#fff" stroke="#E2231A" stroke-width="3.2"/>'+g.svg+'</svg>';}
 
   /* ---- Structure drawing from SMILES (smiles-drawer); always light theme on white, readable in both modes ---- */
-  function drawOne(cv){if(!window.SmilesDrawer)return;var smi=cv.getAttribute("data-smiles");if(!smi)return;try{var d=new SmilesDrawer.Drawer({width:cv.width,height:cv.height,padding:6,compactDrawing:false,bondThickness:1.1});SmilesDrawer.parse(smi,function(t){d.draw(t,cv,"light",false);},function(){});}catch(e){}}
+  function drawOne(cv){var g=cv.getContext&&cv.getContext("2d");var smi=cv.getAttribute("data-smiles");var w=+cv.getAttribute("data-w")||74,h=+cv.getAttribute("data-h")||54;cv.width=w;cv.height=h;if(g)g.clearRect(0,0,w,h);if(!smi||!window.SmilesDrawer)return;try{var d=new SmilesDrawer.Drawer({width:w,height:h,padding:6,compactDrawing:false,bondThickness:1.1});SmilesDrawer.parse(smi,function(t){d.draw(t,cv,"light",false);},function(){});}catch(e){}}
   function drawStructures(){document.querySelectorAll("#rows canvas.struct").forEach(drawOne);}
-  function enlarge(cv){var big=cv.classList.toggle("big");if(big){cv.width=240;cv.height=160;}else{cv.width=74;cv.height=54;}drawOne(cv);}
-  function previewStruct(){var cv=$("f_struct");cv.setAttribute("data-smiles",$("f_smiles").value.trim());var ctx=cv.getContext("2d");ctx&&ctx.clearRect(0,0,cv.width,cv.height);drawOne(cv);}
+  function enlarge(cv){var big=cv.classList.toggle("big");var w=big?240:74,h=big?160:54;cv.setAttribute("data-w",w);cv.setAttribute("data-h",h);cv.style.width=w+"px";cv.style.height=h+"px";drawOne(cv);}
+  function previewStruct(){var cv=$("f_struct");if(!cv)return;cv.setAttribute("data-smiles",$("f_smiles").value.trim());drawOne(cv);}
 
   /* ---- Built-in dictionary (fast path; SMILES included for organics) ---- */
   var DICT={
@@ -350,7 +351,7 @@
     $("f_name").value=it.name;$("f_name_zh").value=it.name_zh||"";$("f_iupac").value=it.iupac||"";
     $("f_cas").value=it.cas||"";$("f_formula").value=it.formula||"";$("f_mw").value=it.mw||"";$("f_smiles").value=it.smiles||"";$("f_aliases").value=(it.aliases||[]).join(", ");
     setGhs(it.ghs||[]);setFlags(it.flags||[]);previewStruct();
-    if(!keepBottleBlank){$("f_vendor").value=it.vendor||"";$("f_purity").value=it.purity||"";$("f_amount").value=it.amount||"";$("f_location").value=it.location||"";}
+    if(!keepBottleBlank){$("f_vendor").value=it.vendor||"";setPurity(it.purity);setAmount(it.amount);$("f_location").value=it.location||"";}
     $("loadhint").textContent="Loaded a previous entry for "+it.name+" — fill in this bottle's vendor, amount and location.";
   }
   function fillDict(d){$("f_name").value=d.n;$("f_name_zh").value=d.zh||"";$("f_iupac").value=d.n;$("f_aliases").value=d.abbr||"";$("f_cas").value=d.cas||"";$("f_formula").value=d.f||"";$("f_mw").value=d.mw||"";$("f_smiles").value=d.smiles||"";setGhs(d.ghs||[]);var r=autoReg(d.cas);setFlags(r);$("autotag").textContent=r.length?("auto-assigned from CAS: "+r.join(" ")):"none matched — add manually if needed";previewStruct();}
@@ -383,14 +384,20 @@
       .finally(function(){clearTimeout(to);});
   }
 
-  function readForm(){return {name:$("f_name").value.trim(),name_zh:$("f_name_zh").value.trim(),iupac:$("f_iupac").value.trim(),aliases:($("f_aliases").value||"").split(/[,，、;；\s]+/).map(function(s){return s.trim();}).filter(Boolean),cas:$("f_cas").value.trim(),formula:$("f_formula").value.trim(),mw:$("f_mw").value.trim(),smiles:$("f_smiles").value.trim(),ghs:getGhs(),flags:getFlags(),vendor:$("f_vendor").value.trim(),purity:$("f_purity").value.trim(),amount:$("f_amount").value.trim(),location:$("f_location").value.trim(),registered_by:$("f_by").value.trim()};}
-  function resetForm(){["f_name","f_name_zh","f_iupac","f_aliases","f_cas","f_formula","f_mw","f_smiles","f_vendor","f_purity","f_amount","f_location","f_by"].forEach(function(id){$(id).value="";});$("f_signal").value="";setGhs([]);setFlags([]);$("fetchnote").textContent="";$("loadhint").textContent="";$("autotag").textContent="auto-assigned from CAS; adjust if needed";previewStruct();}
+  function getPurity(){var p=$("f_purity").value.trim();return p?(/%$/.test(p)?p:p+"%"):"";}
+  function setPurity(s){$("f_purity").value=(s||"").replace(/%/g,"").trim();}
+  function getAmount(){var av=$("f_amount_val").value.trim(),au=$("f_amount_unit").value;return av?(au?av+" "+au:av):"";}
+  var AMT_UNITS=["ug","mg","g","kg","uL","mL","L"];
+  function setAmount(s){var m=(s||"").match(/^\s*([0-9.]+)?\s*([A-Za-zµ]+)?/);$("f_amount_val").value=m&&m[1]?m[1]:"";var u=m&&m[2]?m[2]:"";$("f_amount_unit").value=AMT_UNITS.indexOf(u)>=0?u:"";}
+  function readForm(){return {name:$("f_name").value.trim(),name_zh:$("f_name_zh").value.trim(),iupac:$("f_iupac").value.trim(),aliases:($("f_aliases").value||"").split(/[,，、;；\s]+/).map(function(s){return s.trim();}).filter(Boolean),cas:$("f_cas").value.trim(),formula:$("f_formula").value.trim(),mw:$("f_mw").value.trim(),smiles:$("f_smiles").value.trim(),ghs:getGhs(),flags:getFlags(),vendor:$("f_vendor").value.trim(),purity:getPurity(),amount:getAmount(),location:$("f_location").value.trim(),registered_by:$("f_by").value.trim()};}
+  function resetForm(){["f_name","f_name_zh","f_iupac","f_aliases","f_cas","f_formula","f_mw","f_smiles","f_vendor","f_purity","f_amount_val","f_location","f_by"].forEach(function(id){$(id).value="";});$("f_amount_unit").value="";setGhs([]);setFlags([]);$("fetchnote").textContent="";$("loadhint").textContent="";$("autotag").textContent="auto-assigned from CAS; adjust if needed";previewStruct();}
 
   function save(){
     var d=readForm();
     if(!d.name){$("formerr").textContent="Enter a chemical name first.";$("formerr").hidden=false;return;}
     if(!d.vendor){$("formerr").textContent="Enter the vendor (供应商).";$("formerr").hidden=false;return;}
     if(!d.location){$("formerr").textContent="Enter the location (位置).";$("formerr").hidden=false;return;}
+    if($("f_amount_val").value.trim()&&!$("f_amount_unit").value){$("formerr").textContent="Choose a unit for the amount (ug, mg, g, kg, uL, mL, L).";$("formerr").hidden=false;return;}
     if(!d.registered_by){$("formerr").textContent="Enter the registrant's name (注册人).";$("formerr").hidden=false;return;}
     if(!d.iupac)d.iupac=d.name;
     var wasEdit=!!editId, nm=d.name;
@@ -399,8 +406,11 @@
     persist();resetForm();render();if(window.requestAnimationFrame)requestAnimationFrame(drawStructures);
     tool((wasEdit?"Saved changes to ":"Added ")+nm+".");
   }
-  function edit(id){var it=items.find(function(x){return x.id===id;});if(!it)return;editId=id;loadFrom(it,false);$("formtitle").textContent="Edit chemical";$("savebtn").textContent="Save changes";$("editflag").hidden=false;$("loadhint").textContent="";window.scrollTo({top:0,behavior:"smooth"});}
+  function edit(id){var it=items.find(function(x){return x.id===id;});if(!it)return;editId=id;$("addpanel").hidden=false;$("addbtn").textContent="Close form";loadFrom(it,false);$("formtitle").textContent="Edit chemical";$("savebtn").textContent="Save changes";$("editflag").hidden=false;$("loadhint").textContent="";try{$("addpanel").scrollIntoView({behavior:"smooth",block:"center"});}catch(e){}}
   function cancelEdit(){editId=null;$("formtitle").textContent="Add a chemical";$("savebtn").textContent="Add to inventory";$("editflag").hidden=true;resetForm();}
+  function openAdd(prefill){$("addpanel").hidden=false;$("addbtn").textContent="Close form";if(prefill&&!editId){$("f_name").value=prefill;doLookup();}else{$("f_name").focus();}try{$("addpanel").scrollIntoView({behavior:"smooth",block:"center"});}catch(e){}}
+  function closeAdd(){$("addpanel").hidden=true;$("addbtn").textContent="＋ Add chemical";cancelEdit();}
+  function toggleAdd(){if($("addpanel").hidden)openAdd($("search").value.trim());else closeAdd();}
   function cycle(id){var it=items.find(function(x){return x.id===id;});if(!it||it.archived)return;it.status=it.status==="active"?"empty":"active";persist();render();}
   function askDispose(id){disposeId=id;confirmId=null;render();var inp=$("dispinp");if(inp)inp.focus();}
   function cancelDispose(){disposeId=null;render();}
@@ -457,11 +467,11 @@
     stats();buildFilter();buildVendorFilter();buildDicts();
     var casCount={};items.forEach(function(x){if(x.cas)casCount[x.cas]=(casCount[x.cas]||0)+1;});
     var list=viewList();var tb=$("rows");
-    if(!list.length){tb.innerHTML='<tr><td colspan="11"><div class="empty-state">'+(items.length?"No matches in this view.":"No chemicals yet. Add your first above.")+'</div></td></tr>';return;}
+    if(!list.length){var rawq=$("search").value.trim();var ab='<button onclick="openAdd(document.getElementById(\'search\').value.trim())" style="margin-left:8px">'+(rawq?'Add &quot;'+esc(rawq)+'&quot; as new':'Add a chemical')+'</button>';tb.innerHTML='<tr><td colspan="11"><div class="empty-state">'+(items.length?"No matches in this view.":"No chemicals yet.")+ab+'</div></td></tr>';return;}
     tb.innerHTML=list.map(function(x){
       var haz=(x.ghs&&x.ghs.length)?'<span class="haz-icons">'+x.ghs.map(function(c){return ghsIcon(c,24);}).join("")+'</span>':'<span class="haz-none">—</span>';
       if(x.flags&&x.flags.length)haz+='<span class="haz-flags">'+esc(x.flags.join(" "))+'</span>';
-      var struct=x.smiles?'<canvas class="struct" width="74" height="54" data-smiles="'+esc(x.smiles)+'" onclick="enlarge(this)" title="Click to enlarge"></canvas>':'<span class="nostruct">'+esc(x.formula||"—")+'</span>';
+      var struct=x.smiles?'<canvas class="struct" data-w="74" data-h="54" style="width:74px;height:54px" data-smiles="'+esc(x.smiles)+'" onclick="enlarge(this)" title="Click to enlarge"></canvas>':'<span class="nostruct">'+esc(x.formula||"—")+'</span>';
       var statusCell,actCell;
       if(x.archived){
         statusCell='<span class="pill disposed">disposed 已丢弃</span>';
