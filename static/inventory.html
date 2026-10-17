@@ -1,26 +1,26 @@
 <title>LENS Chemical Inventory</title>
 <meta name="claude:viewport-fit-sides" content="cover">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
 <style>
   /* layout: branded toolbar + bilingual entry form (official GHS, auto compliance, live 2D structures) + filterable inventory; local-first */
   :root{
-    --hero-bg:#0A1B3C; --hero-fg:#F3F7FD; --hero-dim:#9DB1D6; --hero-accent:#3DD0E6;
-    --bg:#F6F8FC; --surface:#FFFFFF; --surface-2:#F0F3F9; --fg:#111B2E; --muted:#58647A;
-    --border:#E3E8F1; --accent:#0C7E92; --accent-soft:#E4F3F6; --gold:#B2821F;
+    --hero-bg:#174C77; --hero-fg:#FFFFFF; --hero-dim:#C6D8E8; --hero-accent:#9FC6E6;
+    --bg:#F7F9FB; --surface:#FFFFFF; --surface-2:#EEF2F6; --fg:#1A2433; --muted:#5B6676;
+    --border:#E2E8F0; --accent:#174C77; --accent-soft:#E6EEF5; --gold:#B2821F;
     --danger:#C0392B; --danger-soft:#FBEBE8;
     --ok:#1C7A4D; --ok-soft:#E2F3EA; --warn:#8A5E12; --warn-soft:#FBF0DB;
-    --font-d:"Archivo","Segoe UI",sans-serif; --font-b:"IBM Plex Sans","Segoe UI",sans-serif; --font-m:"IBM Plex Mono",ui-monospace,monospace;
+    --font-d:"Inter","Segoe UI",sans-serif; --font-b:"Inter","Segoe UI",sans-serif; --font-m:"IBM Plex Mono",ui-monospace,monospace;
     --radius:12px;
   }
   @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
-    --bg:#080F1C; --surface:#101B30; --surface-2:#0C1526; --fg:#E7ECF4; --muted:#93A0B5;
-    --border:#213149; --accent:#36C7DD; --accent-soft:#113038; --gold:#DDB261;
+    --bg:#0C141E; --surface:#141E2B; --surface-2:#0F1823; --fg:#E7ECF4; --muted:#93A0B5;
+    --border:#243141; --accent:#5B9BD5; --accent-soft:#12293B; --gold:#DDB261;
     --danger:#E8766A; --danger-soft:#2A1512; --ok:#4FBF8A; --ok-soft:#10271D; --warn:#E0B55F; --warn-soft:#2A2314;
     color-scheme:dark;
   }}
   :root[data-theme="dark"]{
-    --bg:#080F1C; --surface:#101B30; --surface-2:#0C1526; --fg:#E7ECF4; --muted:#93A0B5;
-    --border:#213149; --accent:#36C7DD; --accent-soft:#113038; --gold:#DDB261;
+    --bg:#0C141E; --surface:#141E2B; --surface-2:#0F1823; --fg:#E7ECF4; --muted:#93A0B5;
+    --border:#243141; --accent:#5B9BD5; --accent-soft:#12293B; --gold:#DDB261;
     --danger:#E8766A; --danger-soft:#2A1512; --ok:#4FBF8A; --ok-soft:#10271D; --warn:#E0B55F; --warn-soft:#2A2314;
     color-scheme:dark;
   }
@@ -140,8 +140,7 @@
   <div class="wrap">
     <div class="brand"><b>LENS</b><span>Chemical inventory · 化学品库</span></div>
     <nav class="hnav">
-      <a href="https://lens-laboratory.com/hub" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>Group hub</a>
-      <a href="https://lens-laboratory.com/feed" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="5" cy="19" r="1.6"/><path d="M4 11a9 9 0 0 1 9 9M4 5a15 15 0 0 1 15 15"/></svg>Literature feed</a>
+      <a href="https://lens-laboratory.com/group-lit-feed/" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="5" cy="19" r="1.6"/><path d="M4 11a9 9 0 0 1 9 9M4 5a15 15 0 0 1 15 15"/></svg>Literature feed</a>
       <a href="https://lens-laboratory.com" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a15 15 0 0 1 0 18M12 3a15 15 0 0 0 0 18"/></svg>Group website</a>
     </nav>
     <div class="hbtns">
@@ -185,7 +184,7 @@
         <div><label for="f_vendor">Vendor 供应商 *</label><input id="f_vendor" list="vendors" placeholder="e.g. 阿拉丁 Aladdin"></div>
         <div><label for="f_purity">Purity 纯度</label><input id="f_purity" placeholder="e.g. 99.99%"></div>
         <div><label for="f_amount">Amount 数量</label><input id="f_amount" placeholder="e.g. 25 g"></div>
-        <div><label for="f_location">Location 位置 *</label><input id="f_location" list="locs" placeholder="e.g. Glovebox A"></div>
+        <div><label for="f_location">Location 位置 *</label><select id="f_location"><option value="">—</option><option>Weighing glovebox</option><option>Spin-coating glovebox</option><option>Fume hood</option><option>Cabinet</option></select></div>
         <div><label for="f_by">Registered by 注册人 *</label><input id="f_by" placeholder="your name / 姓名"></div>
         <div style="display:flex;align-items:flex-end"><canvas id="f_struct" class="struct" width="150" height="80" title="structure preview" style="cursor:default"></canvas></div>
 
@@ -206,15 +205,20 @@
     </section>
 
     <datalist id="vendors"><option>Sigma-Aldrich</option><option>阿拉丁 Aladdin</option><option>麦克林 Macklin</option><option>TCI</option><option>西陇 Xilong</option><option>Alfa Aesar</option></datalist>
-    <datalist id="locs"><option>Glovebox A</option><option>Glovebox B</option><option>Fume hood 1</option><option>Solvent cabinet</option><option>Fridge 4°C</option><option>Dry room shelf</option></datalist>
 
     <div class="toolbar">
-      <input class="search" id="search" placeholder="Search name, 中文名, CAS, vendor, location…" oninput="render()">
-      <select id="sortsel" onchange="setSort(this.value)" style="width:auto;min-width:160px">
+      <input class="search" id="search" placeholder="Search name, 中文名, CAS, vendor…" oninput="render()">
+      <select id="locfilter" onchange="setLocFilter(this.value)" style="width:auto;min-width:150px">
+        <option value="all">All locations 位置</option>
+        <option>Weighing glovebox</option>
+        <option>Spin-coating glovebox</option>
+        <option>Fume hood</option>
+        <option>Cabinet</option>
+      </select>
+      <select id="venfilter" onchange="setVenFilter(this.value)" style="width:auto;min-width:150px"></select>
+      <select id="sortsel" onchange="setSort(this.value)" style="width:auto;min-width:150px">
         <option value="recent">Sort: recently added</option>
         <option value="name">Sort: name A–Z</option>
-        <option value="location">Group by location 位置</option>
-        <option value="vendor">Group by vendor 供应商</option>
         <option value="status">Sort: status</option>
       </select>
       <button onclick="alignNames()" id="alignbtn">Align names by CAS</button>
@@ -234,10 +238,12 @@
   </div>
 </main>
 
-<footer><div class="wrap">LENS Lab · SCUT. Stored in this browser; Export keeps a CSV backup. Disposed bottles are archived with who disposed them, not erased. Structures are drawn from SMILES (no uploads); official UN GHS artwork loads from a local <span class="mono">ghs/</span> folder when present. A shared, multi-user version can sit behind the same page later.</div></footer>
+<footer><div class="wrap">Internal and confidential · 内部保密 · LENS Lab, SCUT.</div></footer>
 
 <script src="https://unpkg.com/smiles-drawer@1.2.0/dist/smiles-drawer.min.js"></script>
 <script>
+  /* dark-blue "W" browser icon, injected so it works both in the preview and on the live site */
+  (function(){try{var svg='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="12" fill="#174C77"/><text x="32" y="46" font-family="Inter,Arial,sans-serif" font-size="42" font-weight="700" text-anchor="middle" fill="#ffffff">W</text></svg>';var l=document.createElement("link");l.rel="icon";l.type="image/svg+xml";l.setAttribute("href","data:image/svg+xml,"+encodeURIComponent(svg));(document.head||document.documentElement).appendChild(l);}catch(e){}})();
   /* ---- GHS pictograms: official UN files from ghs/GHS0x.svg when present; faithful inline stand-ins otherwise ---- */
   var GHS={
     GHS01:{zh:"爆炸物",en:"Explosive",svg:'<g fill="#15181d"><circle cx="22" cy="25" r="3.3"/><g stroke="#15181d" stroke-width="1.5" stroke-linecap="round"><path d="M22 25 18 14"/><path d="M22 25 27 15"/><path d="M22 25 31 20"/><path d="M22 25 31 30"/><path d="M22 25 13 21"/><path d="M22 25 14 29"/></g></g>'},
@@ -300,7 +306,7 @@
 
   var ALLFLAGS=["危化品","易制毒","易制爆","剧毒品"];
   var COLS=["name","name_zh","iupac","aliases","cas","formula","mw","smiles","ghs","flags","vendor","purity","amount","location","registered_by","date_added","status","archived","disposed_by","disposed_date"];
-  var items=[], editId=null, confirmId=null, disposeId=null, filter="current", sortBy="recent", alignArmed=false;
+  var items=[], editId=null, confirmId=null, disposeId=null, filter="current", sortBy="recent", locFilter="all", venFilter="all", alignArmed=false;
   var LS=window.localStorage;
   var CASRE=/^\d{2,7}-\d{2}-\d$/;
 
@@ -316,12 +322,12 @@
   function load(){var raw=null;try{raw=LS.getItem("lens_inv_items");}catch(e){}if(raw){try{items=JSON.parse(raw)||[];}catch(e){items=[];}}else{items=seed();persist();}}
   function persist(){try{LS.setItem("lens_inv_items",JSON.stringify(items));}catch(e){}}
   function seed(){
-    var s=[{n:"Lead(II) iodide",v:"阿拉丁 Aladdin",am:"25 g",lo:"Glovebox A",st:"active"},
-      {n:"N,N-Dimethylformamide",v:"Sigma-Aldrich",am:"1 L",lo:"Solvent cabinet",st:"active"},
-      {n:"Phenethylammonium bromide",v:"西陇 Xilong",am:"5 g",lo:"Dry room shelf",st:"active"},
-      {n:"Cesium iodide",v:"麦克林 Macklin",am:"10 g",lo:"Dry room shelf",st:"empty"},
-      {n:"Chlorobenzene",v:"Sigma-Aldrich",am:"500 mL",lo:"Solvent cabinet",st:"active",arch:true}];
-    return s.map(function(r){var d=dget(r.n)||{};return{id:uid(),_ex:true,name:r.n,name_zh:d.zh||"",iupac:d.n||r.n,aliases:(d.abbr?[d.abbr]:[]),cas:d.cas||"",formula:d.f||"",mw:d.mw||"",smiles:d.smiles||"",ghs:(d.ghs||[]).slice(),flags:autoReg(d.cas),vendor:r.v,purity:"",amount:r.am,location:r.lo,registered_by:"example",date_added:"2026-10-10",status:r.st,archived:!!r.arch,disposed_by:r.arch?"example":"",disposed_date:r.arch?"2026-10-15":""};});
+    var s=[{n:"Lead(II) iodide",v:"阿拉丁 Aladdin",am:"25 g",lo:"Weighing glovebox",st:"active"},
+      {n:"N,N-Dimethylformamide",v:"Sigma-Aldrich",am:"1 L",lo:"Fume hood",st:"active"},
+      {n:"Phenethylammonium bromide",v:"西陇 Xilong",am:"5 g",lo:"Cabinet",st:"active"},
+      {n:"Cesium iodide",v:"麦克林 Macklin",am:"10 g",lo:"Cabinet",st:"empty"},
+      {n:"Chlorobenzene",v:"Sigma-Aldrich",am:"500 mL",lo:"",st:"active",arch:true}];
+    return s.map(function(r){var d=dget(r.n)||{};return{id:uid(),_ex:true,name:r.n,name_zh:d.zh||"",iupac:d.n||r.n,aliases:(d.abbr?[d.abbr]:[]),cas:d.cas||"",formula:d.f||"",mw:d.mw||"",smiles:d.smiles||"",ghs:(d.ghs||[]).slice(),flags:autoReg(d.cas),vendor:r.v,purity:"",amount:r.am,location:r.arch?"":r.lo,registered_by:"example",date_added:"2026-10-10",status:r.st,archived:!!r.arch,disposed_by:r.arch?"example":"",disposed_date:r.arch?"2026-10-15":""};});
   }
 
   function buildDicts(){var dl=$("dict"),seen={};dl.innerHTML="";function add(v){if(!v)return;var key=v.toLowerCase();if(seen[key])return;seen[key]=1;var o=document.createElement("option");o.value=v;dl.appendChild(o);}Object.keys(DICT).forEach(function(k){var d=DICT[k];add(d.n);add(d.zh);if(d.abbr)add(d.abbr);});items.forEach(function(x){add(x.name);add(x.iupac);add(x.name_zh);(x.aliases||[]).forEach(add);});}
@@ -398,7 +404,7 @@
   function cycle(id){var it=items.find(function(x){return x.id===id;});if(!it||it.archived)return;it.status=it.status==="active"?"empty":"active";persist();render();}
   function askDispose(id){disposeId=id;confirmId=null;render();var inp=$("dispinp");if(inp)inp.focus();}
   function cancelDispose(){disposeId=null;render();}
-  function doDispose(id){var it=items.find(function(x){return x.id===id;});if(!it)return;var who=($("dispinp")?$("dispinp").value.trim():"")||"(unnamed)";it.archived=true;it.disposed_by=who;it.disposed_date=today();disposeId=null;persist();render();tool("Disposed "+it.name+" — recorded "+who+".");}
+  function doDispose(id){var it=items.find(function(x){return x.id===id;});if(!it)return;var who=($("dispinp")?$("dispinp").value.trim():"")||"(unnamed)";it.archived=true;it.disposed_by=who;it.disposed_date=today();it.location="";disposeId=null;persist();render();tool("Discarded "+it.name+" — recorded "+who+".");}
   function restore(id){var it=items.find(function(x){return x.id===id;});if(!it)return;it.archived=false;it.disposed_by="";it.disposed_date="";persist();render();}
   function askDel(id){confirmId=id;disposeId=null;render();}
   function cancelDel(){confirmId=null;render();}
@@ -428,7 +434,10 @@
   function counts(){var c={current:0,active:0,empty:0,disposed:0,all:items.length};items.forEach(function(x){if(x.archived){c.disposed++;}else{c.current++;if(x.status==="active")c.active++;else c.empty++;}});return c;}
   function buildFilter(){var c=counts();var defs=[["current","In use"],["active","Active"],["empty","Empty"],["disposed","Disposed 已处置"],["all","All"]];$("filterbar").innerHTML=defs.map(function(d){return '<button class="fchip'+(filter===d[0]?" on":"")+'" onclick="setFilter(\''+d[0]+'\')">'+d[1]+' ('+c[d[0]]+')</button>';}).join("");}
   function inFilter(x){if(filter==="all")return true;if(filter==="disposed")return x.archived;if(filter==="current")return !x.archived;if(filter==="active")return !x.archived&&x.status==="active";if(filter==="empty")return !x.archived&&x.status==="empty";return true;}
-  function viewList(){var q=deSub(norm($("search").value));var list=items.filter(function(x){if(!inFilter(x))return false;if(!q)return true;var hay=deSub((x.name+" "+(x.name_zh||"")+" "+(x.iupac||"")+" "+((x.aliases||[]).join(" "))+" "+x.cas+" "+(x.formula||"")+" "+x.vendor+" "+x.location+" "+(x.registered_by||"")).toLowerCase());return hay.indexOf(q)>=0;});return sortList(list);}
+  function viewList(){var q=deSub(norm($("search").value));var list=items.filter(function(x){if(!inFilter(x))return false;if(locFilter!=="all"&&(x.location||"")!==locFilter)return false;if(venFilter!=="all"&&(x.vendor||"")!==venFilter)return false;if(!q)return true;var hay=deSub((x.name+" "+(x.name_zh||"")+" "+(x.iupac||"")+" "+((x.aliases||[]).join(" "))+" "+x.cas+" "+(x.formula||"")+" "+x.vendor+" "+x.location+" "+(x.registered_by||"")).toLowerCase());return hay.indexOf(q)>=0;});return sortList(list);}
+  function setLocFilter(v){locFilter=v;render();}
+  function setVenFilter(v){venFilter=v;render();}
+  function buildVendorFilter(){var sel=$("venfilter");if(!sel)return;var vend={};items.forEach(function(x){if(x.vendor)vend[x.vendor]=1;});if(venFilter!=="all"&&!vend[venFilter])venFilter="all";sel.innerHTML='<option value="all">All vendors 供应商</option>'+Object.keys(vend).sort().map(function(v){return '<option'+(v===venFilter?" selected":"")+'>'+esc(v)+'</option>';}).join("");sel.value=venFilter;}
   function nkey(s){return (s||"").toLowerCase();}
   function srank(x){return x.archived?2:(x.status==="empty"?1:0);}
   function sortList(list){
@@ -445,7 +454,7 @@
 
   function render(){
     $("exbanner").hidden=!items.some(function(x){return x._ex;});
-    stats();buildFilter();buildDicts();
+    stats();buildFilter();buildVendorFilter();buildDicts();
     var casCount={};items.forEach(function(x){if(x.cas)casCount[x.cas]=(casCount[x.cas]||0)+1;});
     var list=viewList();var tb=$("rows");
     if(!list.length){tb.innerHTML='<tr><td colspan="11"><div class="empty-state">'+(items.length?"No matches in this view.":"No chemicals yet. Add your first above.")+'</div></td></tr>';return;}
