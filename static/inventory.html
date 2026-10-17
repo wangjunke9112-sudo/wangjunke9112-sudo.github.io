@@ -176,7 +176,7 @@
           <div class="loadhint" id="loadhint"></div>
           <div class="fetchnote" id="fetchnote"></div>
         </div>
-        <input type="hidden" id="f_name_zh">
+        <div class="f-half"><label for="f_name_zh">中文名 Chinese name <span style="color:var(--muted)">— optional, searchable &amp; remembered</span></label><input id="f_name_zh" placeholder="例如 苯甲醚 (auto-filled when PubChem has it)"></div>
         <div class="f-half"><label for="f_iupac">Official / IUPAC name 规范名</label><input id="f_iupac" placeholder="canonical name (auto on lookup)"></div>
         <div class="f-half"><label for="f_aliases">Our short names 别名 <span style="color:var(--muted)">— optional, e.g. EDAI2</span></label><input id="f_aliases" placeholder="comma-separated; type any of these later to recall this chemical"></div>
         <div><label for="f_cas">CAS 号 <span style="color:var(--muted)">— unique key</span></label><input id="f_cas" class="mono" placeholder="—" oninput="onCas()"></div>
@@ -349,7 +349,7 @@
 
   function onName(){$("formerr").hidden=true;$("fetchnote").textContent="";var it=findItem($("f_name").value);$("loadhint").textContent=it?"Previous entry found — press Look up or pick from the list to reuse it.":"";}
   function onCas(){var r=autoReg($("f_cas").value.trim());if(r.length){setFlags(r);$("autotag").textContent="auto-assigned from CAS: "+r.join(" ");}}
-  function maybeLoad(){if(editId)return;var v=$("f_name").value;var it=findItem(v);if(it){loadFrom(it,true);return;}var c=catGet(v);if(c){loadFrom(c,true);$("fetchnote").textContent="Auto-filled from our saved chemicals. Add vendor, amount and location.";return;}var d=dget(v);if(d){fillDict(d);$("fetchnote").textContent="Auto-filled from the built-in list. Add vendor, amount and location.";}}
+  function maybeLoad(){if(editId)return;if($("f_cas").value.trim()||$("f_formula").value.trim()||$("f_aliases").value.trim()||$("f_name_zh").value.trim())return;var v=$("f_name").value;var it=findItem(v);if(it){loadFrom(it,true);return;}var c=catGet(v);if(c){loadFrom(c,true);$("fetchnote").textContent="Auto-filled from our saved chemicals. Add vendor, amount and location.";return;}var d=dget(v);if(d){fillDict(d);$("fetchnote").textContent="Auto-filled from the built-in list. Add vendor, amount and location.";}}
   function doLookup(){
     var raw=$("f_name").value.trim();var cas=$("f_cas").value.trim();
     var query=raw||cas;if(!query)return;
@@ -389,9 +389,10 @@
         if(p.CanonicalSMILES){$("f_smiles").value=p.CanonicalSMILES;previewStruct();}
         if(p.Title&&(!$("f_name").value.trim()||CASRE.test($("f_name").value.trim())))$("f_name").value=p.Title;
         return fetch("https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/cid/"+p.CID+"/synonyms/JSON",{signal:ctrl.signal}).then(function(r){return r.ok?r.json():null;}).then(function(sj){
-          var cas="";try{var syn=sj.InformationList.Information[0].Synonym;for(var i=0;i<syn.length;i++){if(CASRE.test(syn[i])){cas=syn[i];break;}}}catch(e){}
+          var cas="",zh="";try{var syn=sj.InformationList.Information[0].Synonym;for(var i=0;i<syn.length;i++){if(!cas&&CASRE.test(syn[i]))cas=syn[i];if(!zh&&/[一-鿿]/.test(syn[i])&&syn[i].length<=16)zh=syn[i];}}catch(e){}
           if(cas){$("f_cas").value=cas;onCas();}
-          note.innerHTML='Filled from PubChem. Tap the GHS diamonds from the bottle — <a href="https://pubchem.ncbi.nlm.nih.gov/compound/'+p.CID+'" style="color:var(--accent)" target="_blank" rel="noopener">safety sheet</a>.';
+          if(zh&&!$("f_name_zh").value.trim())$("f_name_zh").value=zh;
+          note.innerHTML='Filled from PubChem'+(zh?' (incl. 中文名)':'')+'. Tap the GHS diamonds from the bottle — <a href="https://pubchem.ncbi.nlm.nih.gov/compound/'+p.CID+'" style="color:var(--accent)" target="_blank" rel="noopener">safety sheet</a>.';
         });
       })
       .catch(function(){note.textContent="No match reachable here (PubChem is blocked in this preview; it works on your own site). Enter details by hand.";})
