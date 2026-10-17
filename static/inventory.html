@@ -26,7 +26,7 @@
   }
   *{box-sizing:border-box}
   body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--font-b);line-height:1.55;-webkit-font-smoothing:antialiased;font-size:15px}
-  .wrap{max-width:1100px;margin:0 auto;padding-left:max(18px,env(safe-area-inset-left,0px));padding-right:max(18px,env(safe-area-inset-right,0px))}
+  .wrap{max-width:1340px;margin:0 auto;padding-left:max(18px,env(safe-area-inset-left,0px));padding-right:max(18px,env(safe-area-inset-right,0px))}
   h1,h2,h3{font-family:var(--font-d);font-weight:600}
   input,select,button{font-family:inherit;font-size:14px;color:var(--fg)}
   input,select{width:100%;background:var(--surface);border:1px solid var(--border);border-radius:9px;padding:8px 10px}
@@ -182,10 +182,10 @@
         <div><label for="f_formula">Formula 分子式</label><input id="f_formula" class="mono" placeholder="—"></div>
         <div><label for="f_mw">Molar mass 摩尔质量</label><input id="f_mw" class="mono" placeholder="g/mol"></div>
         <div class="f-half"><label for="f_smiles">SMILES <span style="color:var(--muted)">— draws the structure (auto on lookup)</span></label><input id="f_smiles" class="mono" placeholder="optional" oninput="previewStruct()"></div>
-        <div><label for="f_vendor">Vendor 供应商</label><input id="f_vendor" list="vendors" placeholder="e.g. 阿拉丁 Aladdin"></div>
+        <div><label for="f_vendor">Vendor 供应商 *</label><input id="f_vendor" list="vendors" placeholder="e.g. 阿拉丁 Aladdin"></div>
         <div><label for="f_purity">Purity 纯度</label><input id="f_purity" placeholder="e.g. 99.99%"></div>
         <div><label for="f_amount">Amount 数量</label><input id="f_amount" placeholder="e.g. 25 g"></div>
-        <div><label for="f_location">Location 位置</label><input id="f_location" list="locs" placeholder="e.g. Glovebox A"></div>
+        <div><label for="f_location">Location 位置 *</label><input id="f_location" list="locs" placeholder="e.g. Glovebox A"></div>
         <div><label for="f_by">Registered by 注册人 *</label><input id="f_by" placeholder="your name / 姓名"></div>
         <div style="display:flex;align-items:flex-end"><canvas id="f_struct" class="struct" width="150" height="80" title="structure preview" style="cursor:default"></canvas></div>
 
@@ -210,6 +210,13 @@
 
     <div class="toolbar">
       <input class="search" id="search" placeholder="Search name, 中文名, CAS, vendor, location…" oninput="render()">
+      <select id="sortsel" onchange="setSort(this.value)" style="width:auto;min-width:160px">
+        <option value="recent">Sort: recently added</option>
+        <option value="name">Sort: name A–Z</option>
+        <option value="location">Group by location 位置</option>
+        <option value="vendor">Group by vendor 供应商</option>
+        <option value="status">Sort: status</option>
+      </select>
       <button onclick="alignNames()" id="alignbtn">Align names by CAS</button>
       <button onclick="importCSV()">Import CSV</button>
       <button onclick="exportCSV()" id="exportbtn">Export view</button>
@@ -293,7 +300,7 @@
 
   var ALLFLAGS=["危化品","易制毒","易制爆","剧毒品"];
   var COLS=["name","name_zh","iupac","aliases","cas","formula","mw","smiles","ghs","flags","vendor","purity","amount","location","registered_by","date_added","status","archived","disposed_by","disposed_date"];
-  var items=[], editId=null, confirmId=null, disposeId=null, filter="current", alignArmed=false;
+  var items=[], editId=null, confirmId=null, disposeId=null, filter="current", sortBy="recent", alignArmed=false;
   var LS=window.localStorage;
   var CASRE=/^\d{2,7}-\d{2}-\d$/;
 
@@ -302,6 +309,7 @@
   function esc(s){return (s==null?"":String(s)).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];});}
   function $(id){return document.getElementById(id);}
   function today(){return new Date().toISOString().slice(0,10);}
+  function deSub(s){return (s||"").replace(/[₀₁₂₃₄₅₆₇₈₉]/g,function(c){return ""+"₀₁₂₃₄₅₆₇₈₉".indexOf(c);});}
   function dget(name){var k=norm(name);if(DICT[k])return DICT[k];var kk=k.replace(/\s/g,"");for(var x in DICT){var d=DICT[x];if(d.a&&d.a===kk)return d;if(d.abbr&&norm(d.abbr)===k)return d;if(d.zh&&d.zh===name.trim())return d;if(d.cas&&d.cas===name.trim())return d;if(d.aliases&&d.aliases.indexOf(k)>=0)return d;}return null;}
   function findItem(v){v=norm(v);if(!v)return null;return items.find(function(x){if(norm(x.name)===v||norm(x.name_zh)===v||norm(x.cas)===v||norm(x.iupac)===v)return true;return (x.aliases||[]).some(function(a){return norm(a)===v;});});}
 
@@ -313,7 +321,7 @@
       {n:"Phenethylammonium bromide",v:"西陇 Xilong",am:"5 g",lo:"Dry room shelf",st:"active"},
       {n:"Cesium iodide",v:"麦克林 Macklin",am:"10 g",lo:"Dry room shelf",st:"empty"},
       {n:"Chlorobenzene",v:"Sigma-Aldrich",am:"500 mL",lo:"Solvent cabinet",st:"active",arch:true}];
-    return s.map(function(r){var d=dget(r.n)||{};return{id:uid(),_ex:true,name:r.n,name_zh:d.zh||"",iupac:d.n||r.n,cas:d.cas||"",formula:d.f||"",mw:d.mw||"",smiles:d.smiles||"",signal:d.sig||"",ghs:(d.ghs||[]).slice(),flags:autoReg(d.cas),vendor:r.v,purity:"",amount:r.am,location:r.lo,registered_by:"example",date_added:"2026-10-10",status:r.st,archived:!!r.arch,disposed_by:r.arch?"example":"",disposed_date:r.arch?"2026-10-15":""};});
+    return s.map(function(r){var d=dget(r.n)||{};return{id:uid(),_ex:true,name:r.n,name_zh:d.zh||"",iupac:d.n||r.n,aliases:(d.abbr?[d.abbr]:[]),cas:d.cas||"",formula:d.f||"",mw:d.mw||"",smiles:d.smiles||"",ghs:(d.ghs||[]).slice(),flags:autoReg(d.cas),vendor:r.v,purity:"",amount:r.am,location:r.lo,registered_by:"example",date_added:"2026-10-10",status:r.st,archived:!!r.arch,disposed_by:r.arch?"example":"",disposed_date:r.arch?"2026-10-15":""};});
   }
 
   function buildDicts(){var dl=$("dict"),seen={};dl.innerHTML="";function add(v){if(!v)return;var key=v.toLowerCase();if(seen[key])return;seen[key]=1;var o=document.createElement("option");o.value=v;dl.appendChild(o);}Object.keys(DICT).forEach(function(k){var d=DICT[k];add(d.n);add(d.zh);if(d.abbr)add(d.abbr);});items.forEach(function(x){add(x.name);add(x.iupac);add(x.name_zh);(x.aliases||[]).forEach(add);});}
@@ -339,7 +347,7 @@
     if(!keepBottleBlank){$("f_vendor").value=it.vendor||"";$("f_purity").value=it.purity||"";$("f_amount").value=it.amount||"";$("f_location").value=it.location||"";}
     $("loadhint").textContent="Loaded a previous entry for "+it.name+" — fill in this bottle's vendor, amount and location.";
   }
-  function fillDict(d){$("f_name").value=d.n;$("f_name_zh").value=d.zh||"";$("f_iupac").value=d.n;$("f_aliases").value="";$("f_cas").value=d.cas||"";$("f_formula").value=d.f||"";$("f_mw").value=d.mw||"";$("f_smiles").value=d.smiles||"";setGhs(d.ghs||[]);var r=autoReg(d.cas);setFlags(r);$("autotag").textContent=r.length?("auto-assigned from CAS: "+r.join(" ")):"none matched — add manually if needed";previewStruct();}
+  function fillDict(d){$("f_name").value=d.n;$("f_name_zh").value=d.zh||"";$("f_iupac").value=d.n;$("f_aliases").value=d.abbr||"";$("f_cas").value=d.cas||"";$("f_formula").value=d.f||"";$("f_mw").value=d.mw||"";$("f_smiles").value=d.smiles||"";setGhs(d.ghs||[]);var r=autoReg(d.cas);setFlags(r);$("autotag").textContent=r.length?("auto-assigned from CAS: "+r.join(" ")):"none matched — add manually if needed";previewStruct();}
   function toggleGhs(b){var on=b.classList.toggle("on");b.setAttribute("aria-pressed",on?"true":"false");}
   function getGhs(){return [].map.call(document.querySelectorAll("#ghssel .ghs-chip.on"),function(b){return b.dataset.code;});}
   function setGhs(arr){arr=arr||[];document.querySelectorAll("#ghssel .ghs-chip").forEach(function(b){var on=arr.indexOf(b.dataset.code)>=0;b.classList.toggle("on",on);b.setAttribute("aria-pressed",on?"true":"false");});}
@@ -375,11 +383,15 @@
   function save(){
     var d=readForm();
     if(!d.name){$("formerr").textContent="Enter a chemical name first.";$("formerr").hidden=false;return;}
+    if(!d.vendor){$("formerr").textContent="Enter the vendor (供应商).";$("formerr").hidden=false;return;}
+    if(!d.location){$("formerr").textContent="Enter the location (位置).";$("formerr").hidden=false;return;}
     if(!d.registered_by){$("formerr").textContent="Enter the registrant's name (注册人).";$("formerr").hidden=false;return;}
     if(!d.iupac)d.iupac=d.name;
+    var wasEdit=!!editId, nm=d.name;
     if(editId){var it=items.find(function(x){return x.id===editId;});if(it){Object.assign(it,d);delete it._ex;}cancelEdit();}
     else{d.id=uid();d.date_added=today();d.status="active";d.archived=false;d.disposed_by="";d.disposed_date="";if(!d.aliases)d.aliases=[];items.unshift(d);}
-    persist();resetForm();render();
+    persist();resetForm();render();if(window.requestAnimationFrame)requestAnimationFrame(drawStructures);
+    tool((wasEdit?"Saved changes to ":"Added ")+nm+".");
   }
   function edit(id){var it=items.find(function(x){return x.id===id;});if(!it)return;editId=id;loadFrom(it,false);$("formtitle").textContent="Edit chemical";$("savebtn").textContent="Save changes";$("editflag").hidden=false;$("loadhint").textContent="";window.scrollTo({top:0,behavior:"smooth"});}
   function cancelEdit(){editId=null;$("formtitle").textContent="Add a chemical";$("savebtn").textContent="Add to inventory";$("editflag").hidden=true;resetForm();}
@@ -416,7 +428,20 @@
   function counts(){var c={current:0,active:0,empty:0,disposed:0,all:items.length};items.forEach(function(x){if(x.archived){c.disposed++;}else{c.current++;if(x.status==="active")c.active++;else c.empty++;}});return c;}
   function buildFilter(){var c=counts();var defs=[["current","In use"],["active","Active"],["empty","Empty"],["disposed","Disposed 已处置"],["all","All"]];$("filterbar").innerHTML=defs.map(function(d){return '<button class="fchip'+(filter===d[0]?" on":"")+'" onclick="setFilter(\''+d[0]+'\')">'+d[1]+' ('+c[d[0]]+')</button>';}).join("");}
   function inFilter(x){if(filter==="all")return true;if(filter==="disposed")return x.archived;if(filter==="current")return !x.archived;if(filter==="active")return !x.archived&&x.status==="active";if(filter==="empty")return !x.archived&&x.status==="empty";return true;}
-  function viewList(){var q=norm($("search").value);return items.filter(function(x){if(!inFilter(x))return false;if(!q)return true;var hay=(x.name+" "+(x.name_zh||"")+" "+(x.iupac||"")+" "+((x.aliases||[]).join(" "))+" "+x.cas+" "+(x.formula||"")+" "+x.vendor+" "+x.location+" "+(x.registered_by||"")).toLowerCase();return hay.indexOf(q)>=0;});}
+  function viewList(){var q=deSub(norm($("search").value));var list=items.filter(function(x){if(!inFilter(x))return false;if(!q)return true;var hay=deSub((x.name+" "+(x.name_zh||"")+" "+(x.iupac||"")+" "+((x.aliases||[]).join(" "))+" "+x.cas+" "+(x.formula||"")+" "+x.vendor+" "+x.location+" "+(x.registered_by||"")).toLowerCase());return hay.indexOf(q)>=0;});return sortList(list);}
+  function nkey(s){return (s||"").toLowerCase();}
+  function srank(x){return x.archived?2:(x.status==="empty"?1:0);}
+  function sortList(list){
+    if(sortBy==="recent")return list;
+    var c;
+    if(sortBy==="name")c=function(a,b){return nkey(a.name).localeCompare(nkey(b.name));};
+    else if(sortBy==="location")c=function(a,b){return (a.location||"~~").localeCompare(b.location||"~~")||nkey(a.name).localeCompare(nkey(b.name));};
+    else if(sortBy==="vendor")c=function(a,b){return (a.vendor||"~~").localeCompare(b.vendor||"~~")||nkey(a.name).localeCompare(nkey(b.name));};
+    else if(sortBy==="status")c=function(a,b){return srank(a)-srank(b)||nkey(a.name).localeCompare(nkey(b.name));};
+    else return list;
+    return list.slice().sort(c);
+  }
+  function setSort(v){sortBy=v;render();}
 
   function render(){
     $("exbanner").hidden=!items.some(function(x){return x._ex;});
@@ -439,7 +464,7 @@
         else actCell='<span class="rowact"><button class="iconb" title="Edit" onclick="edit(\''+x.id+'\')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4L19 9l-4-4L4 16z"/><path d="M14 6l4 4"/></svg></button><button class="iconb del" title="Discard (records who 丢弃)" onclick="askDispose(\''+x.id+'\')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M5 7h14M10 7V5h4v2M6 7l1 13h10l1-13"/></svg></button></span>';
       }
       var dupe=(x.cas&&casCount[x.cas]>1)?'<span class="dupe" title="Same CAS on more than one record">CAS×'+casCount[x.cas]+'</span>':'';
-      var sub=esc(x.formula||"")+(x.mw?' · '+esc(x.mw)+' g/mol':'')+(x.name_zh?' · <span class="zh">'+esc(x.name_zh)+'</span>':'')+((x.aliases&&x.aliases.length)?' · aka '+esc(x.aliases.join(", ")):'');
+      var sub=esc(x.formula||"")+(x.mw?' · '+esc(x.mw)+' g/mol':'')+(x.name_zh?' · <span class="zh">'+esc(x.name_zh)+'</span>':'');
       var logCell='<div class="logline"><span class="logtag">注册</span>'+esc(x.date_added||"—")+(x.registered_by?' · '+esc(x.registered_by):'')+'</div>'+(x.archived?'<div class="logline disc"><span class="logtag">丢弃</span>'+esc(x.disposed_date||"—")+(x.disposed_by?' · '+esc(x.disposed_by):'')+'</div>':'');
       return '<tr class="'+(x.archived?"gone":"")+'"><td><span class="cn">'+esc(x.name)+(x._ex?'<span class="exrow">example</span>':'')+dupe+'<small>'+sub+'</small></span></td>'
         +'<td class="mono">'+esc(x.cas||"—")+'</td><td>'+esc(x.vendor||"—")+'</td><td>'+esc(x.amount||"—")+'</td><td>'+esc(x.purity||"—")+'</td><td>'+esc(x.location||"—")+'</td>'
