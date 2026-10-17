@@ -37,20 +37,22 @@
   .btn-primary{background:var(--accent);color:#fff;border-color:var(--accent);font-weight:600}
   .btn-primary:hover{filter:brightness(1.07)}
 
-  header{background:var(--hero-bg);color:var(--hero-fg)}
-  header .wrap{padding-block:16px;display:flex;align-items:center;justify-content:space-between;gap:14px 20px;flex-wrap:wrap}
-  .brand{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
-  .brand b{font-family:var(--font-d);font-weight:700;letter-spacing:.14em;font-size:18px}
-  .brand span{font-family:var(--font-m);font-size:12px;color:var(--hero-dim)}
-  .hnav{display:flex;gap:18px;flex-wrap:wrap;flex:1;justify-content:center;min-width:0}
-  .hnav a{color:var(--hero-dim);text-decoration:none;font-size:13.5px;display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
-  .hnav a:hover{color:var(--hero-accent)}
-  .hnav svg{width:15px;height:15px}
-  .hbtns{display:flex;gap:10px;align-items:center}
-  .hbtns button{background:transparent;border-color:rgba(157,177,214,.35);color:var(--hero-dim)}
-  .hbtns button:hover{border-color:var(--hero-accent);color:var(--hero-accent)}
-  .store-tag{font-family:var(--font-m);font-size:10.5px;color:var(--hero-dim);display:flex;align-items:center;gap:6px;white-space:nowrap}
-  .store-tag i{width:6px;height:6px;border-radius:50%;background:var(--hero-accent)}
+  /* header styled to match the LENS Lab website navbar: light, sticky, brand left + site menu */
+  header{background:var(--surface);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:50}
+  @supports (backdrop-filter:blur(6px)){header{background:color-mix(in srgb,var(--surface) 85%,transparent);backdrop-filter:saturate(1.1) blur(8px)}}
+  header .wrap{padding-block:13px;display:flex;align-items:center;gap:8px 22px;flex-wrap:wrap}
+  .brand{font-family:var(--font-d);font-weight:700;font-size:19px;color:var(--fg);text-decoration:none;letter-spacing:-.01em;white-space:nowrap}
+  .brand:hover{color:var(--accent)}
+  .brand .tool{font-weight:400;font-size:12.5px;color:var(--muted);margin-left:9px;letter-spacing:0;border-left:1px solid var(--border);padding-left:9px}
+  .hnav{display:flex;gap:20px;flex-wrap:wrap;flex:1;min-width:0}
+  .hnav a{color:var(--fg);opacity:.82;text-decoration:none;font-size:14px;font-weight:500;white-space:nowrap}
+  .hnav a:hover{color:var(--accent);opacity:1}
+  .hbtns{display:flex;gap:12px;align-items:center;margin-left:auto}
+  .hbtns button{background:transparent;border-color:var(--border);color:var(--muted)}
+  .hbtns button:hover{border-color:var(--accent);color:var(--accent)}
+  .store-tag{font-family:var(--font-m);font-size:10.5px;color:var(--muted);display:flex;align-items:center;gap:6px;white-space:nowrap}
+  .store-tag i{width:6px;height:6px;border-radius:50%;background:var(--ok)}
+  @media (max-width:760px){.brand .tool{display:none}.store-tag{display:none}}
 
   main .wrap{padding-block:20px 40px}
   .exbanner{background:var(--warn-soft);color:var(--warn);border:1px solid var(--border);border-radius:10px;padding:9px 14px;font-size:13px;display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:18px}
@@ -155,10 +157,11 @@
 
 <header>
   <div class="wrap">
-    <div class="brand"><b>LENS</b><span>Group Chemical Inventory · 化学品库</span></div>
+    <a class="brand" href="https://lens-laboratory.com/" target="_blank" rel="noopener">LENS Lab<span class="tool">Chemical Inventory 化学品库</span></a>
     <nav class="hnav">
-      <a href="https://lens-laboratory.com/group-lit-feed/" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="5" cy="19" r="1.6"/><path d="M4 11a9 9 0 0 1 9 9M4 5a15 15 0 0 1 15 15"/></svg>Literature feed</a>
-      <a href="https://lens-laboratory.com" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a15 15 0 0 1 0 18M12 3a15 15 0 0 0 0 18"/></svg>Group website</a>
+      <a href="https://lens-laboratory.com/hub.html" target="_blank" rel="noopener">Group hub</a>
+      <a href="https://lens-laboratory.com/group-lit-feed/" target="_blank" rel="noopener">Literature feed</a>
+      <a href="https://lens-laboratory.com/" target="_blank" rel="noopener">Group website</a>
     </nav>
     <div class="hbtns">
       <span class="store-tag"><i></i>Saved in this browser</span>
@@ -215,7 +218,7 @@
         <div><label for="f_location">Location 位置 *</label><input id="f_location" list="locs" placeholder="pick or type a location"></div>
         <div><label for="f_by">Registered by 注册人 *</label><input id="f_by" placeholder="your name / 姓名"></div>
         <div><label for="f_date">Registration date 注册日期</label><input id="f_date" type="date"></div>
-        <div id="dispedit" hidden><label for="f_disp_date">Disposal date 废弃日期</label><div style="display:flex;gap:6px"><input id="f_disp_date" type="date" style="flex:1"><input id="f_disp_by" placeholder="丢弃人" style="flex:1"></div></div>
+        <div id="dispedit" hidden><label for="f_disp_date">Disposal 废弃 — date &amp; 丢弃人 *</label><div style="display:flex;gap:6px"><input id="f_disp_date" type="date" style="flex:1"><input id="f_disp_by" placeholder="丢弃人 *" style="flex:1"></div></div>
         <div style="display:flex;align-items:flex-end;gap:8px"><canvas id="f_struct" class="struct" data-w="150" data-h="80" title="structure preview" style="width:150px;height:80px;cursor:default"></canvas><img id="f_structimg" class="struct" hidden alt="structure" style="width:150px;height:80px;object-fit:contain;background:#fff"></div>
 
         <div class="hazblock">
@@ -354,7 +357,7 @@
 
   var ALLFLAGS=["危化品","易制毒","易制爆","剧毒品"];
   /* functional category in the device stack (editable per chemical) */
-  var CATS=[{k:"precursor",label:"Essential precursors",zh:"核心前驱体"},{k:"HTL",label:"HTL (hole transport)",zh:"空穴传输"},{k:"ETL",label:"ETL (electron transport)",zh:"电子传输"},{k:"additive",label:"Additives / passivation",zh:"添加剂 / 钝化"},{k:"solvent",label:"Solvents",zh:"溶剂"},{k:"other",label:"Other",zh:"其他"}];
+  var CATS=[{k:"precursor",label:"Essential precursors",zh:"核心前驱体"},{k:"HTL",label:"Hole transport layer",zh:"空穴传输层"},{k:"ETL",label:"Electron transport layer",zh:"电子传输层"},{k:"additive",label:"Additives / passivation",zh:"添加剂 / 钝化"},{k:"solvent",label:"Solvents",zh:"溶剂"},{k:"other",label:"Other",zh:"其他"}];
   function catLabel(k){for(var i=0;i<CATS.length;i++)if(CATS[i].k===k)return CATS[i].label;return "";}
   function catIndex(k){for(var i=0;i<CATS.length;i++)if(CATS[i].k===k)return i;return 99;}
   var COLS=["name","name_zh","iupac","aliases","cas","formula","mw","smiles","ghs","flags","category","vendor","purity","amount","location","registered_by","date_added","status","archived","disposed_by","disposed_date"];
@@ -663,6 +666,7 @@
     if(!editingArch&&!d.location){$("formerr").textContent="Enter the location (位置).";$("formerr").hidden=false;return;}
     if($("f_amount_val").value.trim()&&!$("f_amount_unit").value){$("formerr").textContent="Choose a unit for the amount (ug, mg, g, kg, uL, mL, L).";$("formerr").hidden=false;return;}
     if(!d.registered_by){$("formerr").textContent="Enter the registrant's name (注册人).";$("formerr").hidden=false;return;}
+    if(editingArch&&!($("f_disp_by").value.trim()||(editIt&&editIt.disposed_by))){$("formerr").textContent="Enter who discarded it (丢弃人).";$("formerr").hidden=false;return;}
     if(!d.iupac)d.iupac=d.name;
     var wasEdit=!!editId, nm=d.name;
     if(editId){var it=editIt;if(it){if(!d.date_added)d.date_added=it.date_added||today();Object.assign(it,d);delete it._ex;if(it.archived){it.disposed_date=$("f_disp_date").value.trim()||it.disposed_date||today();it.disposed_by=$("f_disp_by").value.trim()||it.disposed_by||"";}}cancelEdit();}
@@ -678,7 +682,7 @@
   function cycle(id){var it=items.find(function(x){return x.id===id;});if(!it||it.archived)return;it.status=it.status==="active"?"empty":"active";persist();render();}
   function askDispose(id){disposeId=id;confirmId=null;render();var inp=$("dispinp");if(inp)inp.focus();}
   function cancelDispose(){disposeId=null;render();}
-  function doDispose(id){var it=items.find(function(x){return x.id===id;});if(!it)return;var who=($("dispinp")?$("dispinp").value.trim():"")||"(unnamed)";var dt=($("dispdate")&&$("dispdate").value.trim())||today();it.archived=true;it.disposed_by=who;it.disposed_date=dt;it.location="";disposeId=null;persist();render();tool("Discarded "+it.name+" — recorded "+who+".");}
+  function doDispose(id){var it=items.find(function(x){return x.id===id;});if(!it)return;var who=($("dispinp")?$("dispinp").value.trim():"");if(!who){tool("Enter the name of who is discarding it (丢弃人) first.");if($("dispinp")){$("dispinp").focus();$("dispinp").style.borderColor="var(--danger)";}return;}var dt=($("dispdate")&&$("dispdate").value.trim())||today();it.archived=true;it.disposed_by=who;it.disposed_date=dt;it.location="";disposeId=null;persist();render();tool("Discarded "+it.name+" — recorded "+who+".");}
   function restore(id){var it=items.find(function(x){return x.id===id;});if(!it)return;it.archived=false;it.disposed_by="";it.disposed_date="";persist();render();}
   function askDel(id){confirmId=id;disposeId=null;render();}
   function cancelDel(){confirmId=null;render();}
@@ -748,7 +752,7 @@
         else actCell='<span class="rowact"><button class="iconb" title="Edit (incl. 废弃日期)" onclick="edit(\''+x.id+'\')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4L19 9l-4-4L4 16z"/><path d="M14 6l4 4"/></svg></button><button class="iconb" title="Restore to inventory" onclick="restore(\''+x.id+'\')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12a8 8 0 1 0 2.3-5.6M4 4v4h4"/></svg></button><button class="iconb del" title="Delete permanently" onclick="askDel(\''+x.id+'\')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M5 7h14M10 7V5h4v2M6 7l1 13h10l1-13"/></svg></button></span>';
       }else{
         statusCell='<button class="pill '+x.status+'" onclick="cycle(\''+x.id+'\')" title="Click to toggle active / empty">'+x.status+'</button>';
-        if(disposeId===x.id)actCell='<span class="disp-form"><input id="dispinp" placeholder="丢弃人 discarded by" autofocus><input id="dispdate" type="date" value="'+today()+'" title="废弃日期"><button class="btn-primary" onclick="doDispose(\''+x.id+'\')">丢弃 Discard</button><button onclick="cancelDispose()">✕</button></span>';
+        if(disposeId===x.id)actCell='<span class="disp-form"><input id="dispinp" placeholder="丢弃人 discarded by *" autofocus><input id="dispdate" type="date" value="'+today()+'" title="废弃日期"><button class="btn-primary" onclick="doDispose(\''+x.id+'\')">丢弃 Discard</button><button onclick="cancelDispose()">✕</button></span>';
         else actCell='<span class="rowact"><button class="iconb" title="Edit" onclick="edit(\''+x.id+'\')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4L19 9l-4-4L4 16z"/><path d="M14 6l4 4"/></svg></button><button class="iconb del" title="Discard (records who 丢弃)" onclick="askDispose(\''+x.id+'\')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M5 7h14M10 7V5h4v2M6 7l1 13h10l1-13"/></svg></button></span>';
       }
       var dupe=(x.cas&&casCount[x.cas]>1)?'<span class="dupe" title="Same CAS on more than one record">CAS×'+casCount[x.cas]+'</span>':'';
