@@ -1,0 +1,481 @@
+<title>LENS Chemical Inventory</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+  /* layout: branded toolbar with group links + bilingual entry form (official GHS pictograms, auto compliance) + filterable inventory; local-first */
+  :root{
+    --hero-bg:#0A1B3C; --hero-fg:#F3F7FD; --hero-dim:#9DB1D6; --hero-accent:#3DD0E6;
+    --bg:#F6F8FC; --surface:#FFFFFF; --surface-2:#F0F3F9; --fg:#111B2E; --muted:#58647A;
+    --border:#E3E8F1; --accent:#0C7E92; --accent-soft:#E4F3F6; --gold:#B2821F;
+    --danger:#C0392B; --danger-soft:#FBEBE8;
+    --ok:#1C7A4D; --ok-soft:#E2F3EA; --warn:#8A5E12; --warn-soft:#FBF0DB;
+    --font-d:"Archivo","Segoe UI",sans-serif; --font-b:"IBM Plex Sans","Segoe UI",sans-serif; --font-m:"IBM Plex Mono",ui-monospace,monospace;
+    --radius:12px;
+  }
+  @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+    --bg:#080F1C; --surface:#101B30; --surface-2:#0C1526; --fg:#E7ECF4; --muted:#93A0B5;
+    --border:#213149; --accent:#36C7DD; --accent-soft:#113038; --gold:#DDB261;
+    --danger:#E8766A; --danger-soft:#2A1512; --ok:#4FBF8A; --ok-soft:#10271D; --warn:#E0B55F; --warn-soft:#2A2314;
+    color-scheme:dark;
+  }}
+  :root[data-theme="dark"]{
+    --bg:#080F1C; --surface:#101B30; --surface-2:#0C1526; --fg:#E7ECF4; --muted:#93A0B5;
+    --border:#213149; --accent:#36C7DD; --accent-soft:#113038; --gold:#DDB261;
+    --danger:#E8766A; --danger-soft:#2A1512; --ok:#4FBF8A; --ok-soft:#10271D; --warn:#E0B55F; --warn-soft:#2A2314;
+    color-scheme:dark;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--font-b);line-height:1.55;-webkit-font-smoothing:antialiased;font-size:15px}
+  .wrap{max-width:1040px;margin:0 auto;padding-left:max(18px,env(safe-area-inset-left,0px));padding-right:max(18px,env(safe-area-inset-right,0px))}
+  h1,h2,h3{font-family:var(--font-d);font-weight:600}
+  input,select,button{font-family:inherit;font-size:14px;color:var(--fg)}
+  input,select{width:100%;background:var(--surface);border:1px solid var(--border);border-radius:9px;padding:8px 10px}
+  input:focus,select:focus{outline:2px solid var(--accent);outline-offset:0;border-color:var(--accent)}
+  label{display:block;font-size:12px;color:var(--muted);margin-bottom:4px}
+  button{cursor:pointer;background:var(--surface);border:1px solid var(--border);border-radius:9px;padding:8px 14px}
+  button:hover{border-color:var(--accent)}
+  .btn-primary{background:var(--accent);color:#fff;border-color:var(--accent);font-weight:600}
+  .btn-primary:hover{filter:brightness(1.07)}
+
+  header{background:var(--hero-bg);color:var(--hero-fg)}
+  header .wrap{padding-block:16px;display:flex;align-items:center;justify-content:space-between;gap:14px 20px;flex-wrap:wrap}
+  .brand{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+  .brand b{font-family:var(--font-d);font-weight:700;letter-spacing:.14em;font-size:18px}
+  .brand span{font-family:var(--font-m);font-size:12px;color:var(--hero-dim)}
+  .hnav{display:flex;gap:18px;flex-wrap:wrap;flex:1;justify-content:center;min-width:0}
+  .hnav a{color:var(--hero-dim);text-decoration:none;font-size:13.5px;display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
+  .hnav a:hover{color:var(--hero-accent)}
+  .hnav svg{width:15px;height:15px}
+  .hbtns{display:flex;gap:10px;align-items:center}
+  .hbtns button{background:transparent;border-color:rgba(157,177,214,.35);color:var(--hero-dim)}
+  .hbtns button:hover{border-color:var(--hero-accent);color:var(--hero-accent)}
+  .store-tag{font-family:var(--font-m);font-size:10.5px;color:var(--hero-dim);display:flex;align-items:center;gap:6px;white-space:nowrap}
+  .store-tag i{width:6px;height:6px;border-radius:50%;background:var(--hero-accent)}
+
+  main .wrap{padding-block:20px 40px}
+  .exbanner{background:var(--warn-soft);color:var(--warn);border:1px solid var(--border);border-radius:10px;padding:9px 14px;font-size:13px;display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:18px}
+  .exbanner button{font-size:12px;padding:5px 10px;background:transparent;border-color:var(--warn);color:var(--warn)}
+
+  .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(118px,1fr));gap:10px;margin-bottom:20px}
+  .stat{background:var(--surface-2);border-radius:10px;padding:11px 13px}
+  .stat .n{font-family:var(--font-d);font-size:23px;font-weight:600;font-variant-numeric:tabular-nums}
+  .stat .l{font-size:11.5px;color:var(--muted);font-family:var(--font-m);letter-spacing:.03em}
+
+  .panel{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:18px;margin-bottom:22px}
+  .panel h2{margin:0 0 14px;font-size:16px;display:flex;align-items:center;justify-content:space-between;gap:10px}
+  .editflag{font-family:var(--font-m);font-size:11px;color:var(--accent);font-weight:400}
+  .formgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}
+  .f-wide{grid-column:1/-1}
+  .f-half{grid-column:span 2}
+  @media (max-width:640px){.f-half{grid-column:1/-1}}
+  .namewrap{display:flex;gap:8px}.namewrap input{flex:1}
+  .namewrap button{flex:none;white-space:nowrap;font-size:13px}
+  .hazblock{grid-column:1/-1}
+  .hazlabel{display:block;font-size:12px;color:var(--muted);margin-bottom:9px}
+  .hazlabel b{color:var(--fg);font-weight:600}
+  .ghssel{display:flex;flex-wrap:wrap;gap:8px}
+  .ghs-chip{display:flex;flex-direction:column;align-items:center;gap:5px;width:82px;padding:9px 4px 7px;background:var(--surface);border:1px solid var(--border);border-radius:10px;cursor:pointer}
+  .ghs-chip:hover{border-color:var(--accent)}
+  .ghs-chip.on{border-color:var(--accent);background:var(--accent-soft)}
+  .ghs-cap{font-size:10.5px;line-height:1.2;color:var(--fg);text-align:center}
+  .ghs-cap em{display:block;font-style:normal;color:var(--muted);font-family:var(--font-m);font-size:9px;margin-top:1px}
+  .ghs-dia{display:block}
+  .flags{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+  .flags label{display:inline-flex;align-items:center;gap:5px;margin:0;font-size:12.5px;color:var(--fg);background:var(--surface-2);border:1px solid var(--border);border-radius:20px;padding:4px 10px;cursor:pointer}
+  .flags input{width:auto}
+  .flags label:has(input:checked){background:var(--danger-soft);border-color:var(--danger);color:var(--danger)}
+  .autotag{font-family:var(--font-m);font-size:10.5px;color:var(--accent)}
+  .formfoot{grid-column:1/-1;display:flex;align-items:center;gap:12px;margin-top:4px;flex-wrap:wrap}
+  .err{color:var(--danger);font-size:13px}
+  .fetchnote{font-size:12px;color:var(--muted);min-height:1.2em}
+  .loadhint{font-size:12px;color:var(--accent);min-height:1.1em}
+
+  .toolbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:10px}
+  .toolbar .search{flex:1;min-width:180px}
+  .toolbar button{font-size:13px;padding:7px 12px}
+  .filterbar{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-bottom:12px}
+  .fchip{font-family:var(--font-m);font-size:11.5px;padding:5px 11px;border-radius:20px;border:1px solid var(--border);background:var(--surface);cursor:pointer;color:var(--muted)}
+  .fchip.on{border-color:var(--accent);color:var(--accent);background:var(--accent-soft)}
+  .toolmsg{font-size:12px;color:var(--muted);margin-left:auto}
+  .tablewrap{overflow-x:auto;border:1px solid var(--border);border-radius:var(--radius)}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;min-width:820px}
+  th{text-align:left;font-family:var(--font-m);font-size:11px;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);font-weight:400;padding:10px;border-bottom:1px solid var(--border);background:var(--surface-2)}
+  td{padding:10px;border-bottom:1px solid var(--border);vertical-align:middle}
+  tr:last-child td{border-bottom:none}
+  tr.gone td{opacity:.55}
+  .cn{font-weight:500}.cn small{display:block;color:var(--muted);font-family:var(--font-m);font-size:11px;font-weight:400}
+  .cn .zh{color:var(--fg);font-family:var(--font-b)}
+  .mono{font-family:var(--font-m);font-size:12px}
+  .haz-icons{display:inline-flex;gap:3px;flex-wrap:wrap;vertical-align:middle}
+  .haz-flags{display:block;font-family:var(--font-m);font-size:10.5px;color:var(--danger);margin-top:3px}
+  .haz-none{color:var(--muted)}
+  .pill{font-family:var(--font-m);font-size:10.5px;letter-spacing:.03em;text-transform:uppercase;padding:3px 9px;border-radius:20px;border:none;cursor:pointer}
+  .pill.active{background:var(--ok-soft);color:var(--ok)} .pill.empty{background:var(--warn-soft);color:var(--warn)} .pill.disposed{background:var(--surface-2);color:var(--muted)}
+  .rowact{display:flex;gap:4px;justify-content:flex-end}
+  .iconb{background:transparent;border:none;padding:5px;border-radius:7px;color:var(--muted);display:grid;place-items:center}
+  .iconb:hover{background:var(--surface-2);color:var(--fg);border:none}
+  .iconb.del:hover{color:var(--danger)}
+  .iconb svg{width:16px;height:16px}
+  .exrow{font-size:10px;font-family:var(--font-m);color:var(--muted);border:1px solid var(--border);border-radius:5px;padding:1px 5px;margin-left:6px}
+  .dupe{font-size:10px;font-family:var(--font-m);color:var(--warn);margin-left:6px}
+  .confirm{display:inline-flex;gap:6px;align-items:center;font-size:12px}
+  .confirm b{color:var(--danger)} .confirm button{padding:3px 8px;font-size:12px}
+  .empty-state{padding:34px;text-align:center;color:var(--muted);font-size:14px}
+  footer .wrap{padding-block:0 30px;color:var(--muted);font-size:12px}
+</style>
+
+<header>
+  <div class="wrap">
+    <div class="brand"><b>LENS</b><span>Chemical inventory · 化学品库</span></div>
+    <nav class="hnav">
+      <a href="https://lens-laboratory.com/hub" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>Group hub</a>
+      <a href="https://lens-laboratory.com/feed" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="5" cy="19" r="1.6"/><path d="M4 11a9 9 0 0 1 9 9M4 5a15 15 0 0 1 15 15"/></svg>Literature feed</a>
+      <a href="https://lens-laboratory.com" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a15 15 0 0 1 0 18M12 3a15 15 0 0 0 0 18"/></svg>Group website</a>
+    </nav>
+    <div class="hbtns">
+      <span class="store-tag"><i></i>Saved in this browser</span>
+      <button id="tgl" aria-label="Toggle theme" title="Toggle theme">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2M12 19.5v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M2.5 12h2M19.5 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main>
+  <div class="wrap">
+    <div class="exbanner" id="exbanner" hidden>
+      <span>Showing example rows so you can see how it works. Add your own, or clear them to start clean.</span>
+      <button onclick="clearExamples()">Clear examples</button>
+    </div>
+
+    <div class="stats" id="stats"></div>
+
+    <section class="panel">
+      <h2><span id="formtitle">Add a chemical</span><span class="editflag" id="editflag" hidden>editing — <a href="#" onclick="cancelEdit();return false;" style="color:var(--accent)">cancel</a></span></h2>
+      <div class="formgrid">
+        <div class="f-wide">
+          <label for="f_name">Chemical name 名称 (type in English or 中文) *</label>
+          <div class="namewrap">
+            <input id="f_name" list="dict" placeholder="Start typing — past entries appear below the bar" autocomplete="off" oninput="onName()" onchange="maybeLoad()">
+            <button type="button" onclick="doLookup()" id="lookbtn">Look up</button>
+          </div>
+          <datalist id="dict"></datalist>
+          <div class="loadhint" id="loadhint"></div>
+          <div class="fetchnote" id="fetchnote"></div>
+        </div>
+        <div class="f-half"><label for="f_name_zh">中文名 (optional)</label><input id="f_name_zh" list="dictzh" placeholder="例如 碘化铅"></div>
+        <datalist id="dictzh"></datalist>
+        <div class="f-half"><label for="f_iupac">Official / IUPAC name 规范名</label><input id="f_iupac" placeholder="canonical name (auto on lookup)"></div>
+        <div><label for="f_cas">CAS 号 <span style="color:var(--muted)">— unique key</span></label><input id="f_cas" class="mono" placeholder="—" oninput="onCas()"></div>
+        <div><label for="f_formula">Formula 分子式</label><input id="f_formula" class="mono" placeholder="—"></div>
+        <div><label for="f_mw">Molar mass 摩尔质量</label><input id="f_mw" class="mono" placeholder="g/mol"></div>
+        <div><label for="f_signal">GHS signal</label><select id="f_signal"><option value="">—</option><option>Warning 警示</option><option>Danger 危险</option></select></div>
+        <div><label for="f_vendor">Vendor 供应商</label><input id="f_vendor" list="vendors" placeholder="e.g. 阿拉丁 Aladdin"></div>
+        <div><label for="f_purity">Purity 纯度</label><input id="f_purity" placeholder="e.g. 99.99%"></div>
+        <div><label for="f_amount">Amount 数量</label><input id="f_amount" placeholder="e.g. 25 g"></div>
+        <div><label for="f_location">Location 位置</label><input id="f_location" list="locs" placeholder="e.g. Glovebox A"></div>
+        <div><label for="f_by">Registered by 登记人</label><input id="f_by" placeholder="your name / 姓名"></div>
+
+        <div class="hazblock">
+          <span class="hazlabel"><b>GHS pictograms 危害象形图</b> — tap the red diamonds that match the ones printed on the bottle</span>
+          <div class="ghssel" id="ghssel"></div>
+        </div>
+        <div class="hazblock">
+          <span class="hazlabel"><b>China compliance 管控类别</b> — <span class="autotag" id="autotag">auto-assigned from CAS; adjust if needed</span></span>
+          <div class="flags" id="flags"></div>
+        </div>
+
+        <div class="formfoot">
+          <button class="btn-primary" id="savebtn" onclick="save()">Add to inventory</button>
+          <span class="err" id="formerr" hidden>Enter a chemical name first.</span>
+        </div>
+      </div>
+    </section>
+
+    <datalist id="vendors"><option>Sigma-Aldrich</option><option>阿拉丁 Aladdin</option><option>麦克林 Macklin</option><option>TCI</option><option>西陇 Xilong</option><option>Alfa Aesar</option></datalist>
+    <datalist id="locs"><option>Glovebox A</option><option>Glovebox B</option><option>Fume hood 1</option><option>Solvent cabinet</option><option>Fridge 4°C</option><option>Dry room shelf</option><option>Waste storage</option></datalist>
+
+    <div class="toolbar">
+      <input class="search" id="search" placeholder="Search name, 中文名, CAS, vendor, location…" oninput="render()">
+      <button onclick="alignNames()" id="alignbtn">Align names by CAS</button>
+      <button onclick="importCSV()">Import CSV</button>
+      <button onclick="exportCSV()" id="exportbtn">Export view</button>
+      <button onclick="copyCSV()" id="copybtn">Copy view</button>
+      <input type="file" id="fileinput" accept=".csv,text/csv" hidden onchange="onFile(event)">
+    </div>
+    <div class="filterbar" id="filterbar"></div>
+
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>Chemical</th><th>CAS</th><th>Vendor</th><th>Amount</th><th>Location</th><th>Hazard</th><th>Status</th><th></th></tr></thead>
+        <tbody id="rows"></tbody>
+      </table>
+    </div>
+  </div>
+</main>
+
+<footer><div class="wrap">LENS Lab · SCUT. Stored in this browser; Export keeps a CSV backup (all records, including disposed, are retained for traceability). Official UN GHS artwork loads from a local <span class="mono">ghs/</span> folder when present. A shared, multi-user version can sit behind the same page later.</div></footer>
+
+<script>
+  /* ---- GHS pictograms. Official UN files load from ghs/GHS0x.svg when present; faithful inline stand-ins otherwise. ---- */
+  var GHS={
+    GHS01:{zh:"爆炸物",en:"Explosive",svg:'<g fill="#15181d"><circle cx="22" cy="25" r="3.3"/><g stroke="#15181d" stroke-width="1.5" stroke-linecap="round"><path d="M22 25 18 14"/><path d="M22 25 27 15"/><path d="M22 25 31 20"/><path d="M22 25 31 30"/><path d="M22 25 13 21"/><path d="M22 25 14 29"/></g></g>'},
+    GHS02:{zh:"易燃",en:"Flammable",svg:'<path d="M15 33h14" stroke="#15181d" stroke-width="2" stroke-linecap="round"/><path d="M23.5 11c-.5 4 3.5 5.5 3.5 10a5 5 0 0 1-10 0c0-3.2 2-5 3.2-6.2 0 1.6 1 2.2 1.7 2.2-1-2.5.3-5 1.6-6z" fill="#15181d"/>'},
+    GHS03:{zh:"氧化性",en:"Oxidizer",svg:'<path d="M13 27a9 6 0 0 0 18 0" fill="none" stroke="#15181d" stroke-width="2"/><line x1="12" y1="27" x2="32" y2="27" stroke="#15181d" stroke-width="2" stroke-linecap="round"/><path d="M22.5 11c-.4 3 2.6 4 2.6 7a3 3 0 0 1-6 0c0-2 1.3-3 2-3.8 0 1 .7 1.3 1.1 1.3-.7-1.7.2-3.4.3-4.5z" fill="#15181d"/>'},
+    GHS04:{zh:"高压气体",en:"Gas",svg:'<path d="M18.5 16a3.5 3.5 0 0 1 7 0v13.5a1.5 1.5 0 0 1-1.5 1.5h-4a1.5 1.5 0 0 1-1.5-1.5z" fill="#15181d"/><line x1="22" y1="12.5" x2="22" y2="16" stroke="#15181d" stroke-width="2"/>'},
+    GHS05:{zh:"腐蚀性",en:"Corrosive",svg:'<g fill="#15181d"><path d="M10 30l7-1.8v2L10 32z"/><path d="M27 30h5v2h-6z"/><path d="M11.5 14l6 2.2-1.4 3.8-6-2.2z"/><path d="M32.5 14l-6 2.2 1.4 3.8 6-2.2z"/></g><g stroke="#15181d" stroke-width="1.3" stroke-linecap="round"><path d="M14 23v2.5M16 24v2.5M28 23v2.5M30 24v2.5"/></g>'},
+    GHS06:{zh:"剧毒",en:"Toxic",svg:'<g stroke="#15181d" stroke-width="3" stroke-linecap="round"><path d="M15 30l14 7"/><path d="M29 30l-14 7"/></g><path d="M22 11a8 8 0 0 0-5 14c0 1.3.2 2.8 1 2.8h8c.8 0 1-1.5 1-2.8a8 8 0 0 0-5-14z" fill="#15181d"/><circle cx="19" cy="21" r="1.9" fill="#fff"/><circle cx="25" cy="21" r="1.9" fill="#fff"/><path d="M22 24l-1.4 2.6h2.8z" fill="#fff"/>'},
+    GHS07:{zh:"刺激性",en:"Harmful",svg:'<rect x="20.4" y="12" width="3.2" height="12.5" rx="1.6" fill="#15181d"/><circle cx="22" cy="29.5" r="2" fill="#15181d"/>'},
+    GHS08:{zh:"健康危害",en:"Health",svg:'<g fill="#15181d"><circle cx="22" cy="14" r="3"/><path d="M16.5 20.5h11v8a2.5 2.5 0 0 1-2.5 2.5h-6a2.5 2.5 0 0 1-2.5-2.5z"/></g><path d="M22 22.2l1.1 2.6 2.8.2-2.1 1.8.7 2.7-2.5-1.5-2.5 1.5.7-2.7-2.1-1.8 2.8-.2z" fill="#fff"/>'},
+    GHS09:{zh:"环境危害",en:"Environment",svg:'<path d="M12 22h8" stroke="#15181d" stroke-width="1.6" stroke-linecap="round"/><g stroke="#15181d" stroke-width="1.5" fill="none" stroke-linecap="round"><path d="M15 31v-8"/><path d="M15 25l-2.5-2.5M15 25l2.5-2.5M15 28l-2-2M15 28l2-2"/></g><g fill="#15181d"><path d="M21 29c2.5-2 6-2 8.5 0-2.5 2-6 2-8.5 0z"/><path d="M29 27.5l3.5-2v5z"/></g><path d="M24 28.1l1.4 1.4m0-1.4L24 29.5" stroke="#fff" stroke-width="0.8"/>'}
+  };
+  var USE_OFFICIAL=false;
+  function ghsIcon(code,px){
+    var g=GHS[code];if(!g)return"";
+    if(USE_OFFICIAL)return '<img class="ghs-dia" src="ghs/'+code+'.svg" width="'+px+'" height="'+px+'" alt="'+g.en+'" title="'+g.zh+' '+g.en+'">';
+    return '<svg class="ghs-dia" width="'+px+'" height="'+px+'" viewBox="0 0 44 44" role="img" aria-label="'+g.en+'"><rect x="4.8" y="4.8" width="34.4" height="34.4" rx="4" transform="rotate(45 22 22)" fill="#fff" stroke="#E2231A" stroke-width="3.2"/>'+g.svg+'</svg>';
+  }
+
+  /* ---- Built-in chemical dictionary (fast auto-fill for common lab chemicals) ---- */
+  var DICT={
+    "lead(ii) iodide":{n:"Lead(II) iodide",zh:"碘化铅",a:"pbi2",cas:"10101-63-0",f:"PbI₂",mw:"461.01",sig:"Danger 危险",ghs:["GHS08","GHS07"]},
+    "lead(ii) bromide":{n:"Lead(II) bromide",zh:"溴化铅",a:"pbbr2",cas:"10031-22-8",f:"PbBr₂",mw:"367.01",sig:"Danger 危险",ghs:["GHS08","GHS07"]},
+    "cesium iodide":{n:"Cesium iodide",zh:"碘化铯",a:"csi",cas:"7789-17-5",f:"CsI",mw:"259.81",sig:"Warning 警示",ghs:["GHS07"]},
+    "formamidinium iodide":{n:"Formamidinium iodide",zh:"碘化甲脒",a:"fai",cas:"879643-71-7",f:"CH₅IN₂",mw:"171.97",sig:"Warning 警示",ghs:["GHS07"]},
+    "methylammonium iodide":{n:"Methylammonium iodide",zh:"碘化甲胺",a:"mai",cas:"14965-49-2",f:"CH₆IN",mw:"158.97",sig:"Warning 警示",ghs:["GHS07"]},
+    "methylammonium bromide":{n:"Methylammonium bromide",zh:"溴化甲胺",a:"mabr",cas:"6876-37-5",f:"CH₆BrN",mw:"111.97",sig:"Warning 警示",ghs:["GHS07"]},
+    "n,n-dimethylformamide":{n:"N,N-Dimethylformamide",zh:"N,N-二甲基甲酰胺",a:"dmf",cas:"68-12-2",f:"C₃H₇NO",mw:"73.09",sig:"Danger 危险",ghs:["GHS02","GHS08","GHS07"]},
+    "dimethyl sulfoxide":{n:"Dimethyl sulfoxide",zh:"二甲基亚砜",a:"dmso",cas:"67-68-5",f:"C₂H₆OS",mw:"78.13",sig:"Warning 警示",ghs:[]},
+    "chlorobenzene":{n:"Chlorobenzene",zh:"氯苯",a:"cb",cas:"108-90-7",f:"C₆H₅Cl",mw:"112.56",sig:"Danger 危险",ghs:["GHS02","GHS07","GHS09"]},
+    "tin(ii) iodide":{n:"Tin(II) iodide",zh:"碘化亚锡",a:"sni2",cas:"10294-70-9",f:"SnI₂",mw:"372.52",sig:"Warning 警示",ghs:["GHS07"]},
+    "isopropanol":{n:"Isopropanol",zh:"异丙醇",a:"ipa",cas:"67-63-0",f:"C₃H₈O",mw:"60.10",sig:"Danger 危险",ghs:["GHS02","GHS07"]},
+    "spiro-ometad":{n:"Spiro-OMeTAD",zh:"",a:"",cas:"207739-72-8",f:"C₈₁H₆₈N₄O₈",mw:"1225.43",sig:"Warning 警示",ghs:[]},
+    "acetonitrile":{n:"Acetonitrile",zh:"乙腈",a:"acn",cas:"75-05-8",f:"C₂H₃N",mw:"41.05",sig:"Danger 危险",ghs:["GHS02","GHS07"]},
+    "acetone":{n:"Acetone",zh:"丙酮",a:"",cas:"67-64-1",f:"C₃H₆O",mw:"58.08",sig:"Danger 危险",ghs:["GHS02","GHS07"]},
+    "toluene":{n:"Toluene",zh:"甲苯",a:"",cas:"108-88-3",f:"C₇H₈",mw:"92.14",sig:"Danger 危险",ghs:["GHS02","GHS08","GHS07"]},
+    "chloroform":{n:"Chloroform",zh:"三氯甲烷",a:"",cas:"67-66-3",f:"CHCl₃",mw:"119.38",sig:"Danger 危险",ghs:["GHS08","GHS07"]}
+  };
+
+  /* ---- China regulatory classification by CAS (common lab chemicals; not the full national catalogue) ---- */
+  var REG={
+    "68-12-2":["危化品"],"108-90-7":["危化品"],"75-05-8":["危化品"],"67-63-0":["危化品"],
+    "10101-63-0":["危化品"],"10031-22-8":["危化品"],"67-56-1":["危化品"],
+    "67-64-1":["危化品","易制毒"],"108-88-3":["危化品","易制毒"],"67-66-3":["危化品"],
+    "60-29-7":["危化品","易制毒"],"78-93-3":["危化品","易制毒"],"108-24-7":["危化品","易制毒"],
+    "7664-93-9":["危化品","易制毒"],"7647-01-0":["危化品","易制毒"],"7722-64-7":["危化品","易制毒","易制爆"],
+    "7697-37-2":["危化品","易制爆"],"7722-84-1":["危化品","易制爆"],"3811-04-9":["危化品","易制爆"],
+    "7757-79-1":["危化品","易制爆"],"6484-52-2":["危化品","易制爆"],"7631-99-4":["危化品","易制爆"],
+    "75-52-5":["危化品","易制爆"],"7429-90-5":["易制爆"],
+    "143-33-9":["危化品","剧毒品"],"151-50-8":["危化品","剧毒品"],"1327-53-3":["危化品","剧毒品"],
+    "26628-22-8":["危化品","剧毒品"],"7487-94-7":["危化品","剧毒品"]
+  };
+  function autoReg(cas){return (REG[cas]||[]).slice();}
+
+  var ALLFLAGS=["危化品","易制毒","易制爆","剧毒品"];
+  var COLS=["name","name_zh","iupac","cas","formula","mw","signal","ghs","flags","vendor","purity","amount","location","registered_by","date_added","status"];
+  var items=[], editId=null, confirmId=null, filter="all", alignArmed=false;
+  var LS=window.localStorage;
+
+  function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,6);}
+  function norm(s){return (s||"").trim().toLowerCase();}
+  function esc(s){return (s==null?"":String(s)).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];});}
+  function $(id){return document.getElementById(id);}
+  function dget(name){var k=norm(name);if(DICT[k])return DICT[k];var kk=k.replace(/\s/g,"");for(var x in DICT){if(DICT[x].a&&DICT[x].a===kk)return DICT[x];if(DICT[x].zh&&DICT[x].zh===name.trim())return DICT[x];}return null;}
+  function findItem(v){v=norm(v);if(!v)return null;return items.find(function(x){return norm(x.name)===v||norm(x.name_zh)===v||norm(x.cas)===v||norm(x.iupac)===v;});}
+
+  function load(){var raw=null;try{raw=LS.getItem("lens_inv_items");}catch(e){}if(raw){try{items=JSON.parse(raw)||[];}catch(e){items=[];}}else{items=seed();persist();}}
+  function persist(){try{LS.setItem("lens_inv_items",JSON.stringify(items));}catch(e){}}
+  function seed(){
+    var s=[{n:"Lead(II) iodide",v:"阿拉丁 Aladdin",am:"25 g",lo:"Glovebox A"},
+      {n:"N,N-Dimethylformamide",v:"Sigma-Aldrich",am:"1 L",lo:"Solvent cabinet"},
+      {n:"Cesium iodide",v:"麦克林 Macklin",am:"10 g",lo:"Dry room shelf"},
+      {n:"Chlorobenzene",v:"Sigma-Aldrich",am:"500 mL",lo:"Solvent cabinet",st:"disposed"}];
+    return s.map(function(r){var d=dget(r.n)||{};return{id:uid(),_ex:true,name:r.n,name_zh:d.zh||"",iupac:d.n||r.n,cas:d.cas||"",formula:d.f||"",mw:d.mw||"",signal:d.sig||"",ghs:(d.ghs||[]).slice(),flags:autoReg(d.cas),vendor:r.v,purity:"",amount:r.am,location:r.st==="disposed"?"Waste storage":r.lo,registered_by:"example",date_added:"2026-10-10",status:r.st||"active"};});
+  }
+
+  function buildDicts(){
+    var dl=$("dict"),dz=$("dictzh"),seen={},seenz={};
+    dl.innerHTML="";dz.innerHTML="";
+    function addEn(v){if(!v||seen[v])return;seen[v]=1;var o=document.createElement("option");o.value=v;dl.appendChild(o);}
+    function addZh(v){if(!v||seenz[v])return;seenz[v]=1;var o=document.createElement("option");o.value=v;dz.appendChild(o);}
+    Object.keys(DICT).forEach(function(k){addEn(DICT[k].n);addZh(DICT[k].zh);});
+    items.forEach(function(x){addEn(x.name);addEn(x.iupac);addZh(x.name_zh);});
+  }
+  function buildPicker(){
+    $("ghssel").innerHTML=Object.keys(GHS).map(function(code){
+      return '<button type="button" class="ghs-chip" data-code="'+code+'" aria-pressed="false" onclick="toggleGhs(this)">'+ghsIcon(code,40)+'<span class="ghs-cap">'+GHS[code].zh+'<em>'+GHS[code].en+'</em></span></button>';
+    }).join("");
+  }
+  function buildFlags(){
+    var fb=$("flags");fb.innerHTML="";
+    ALLFLAGS.forEach(function(fl){var l=document.createElement("label");l.innerHTML='<input type="checkbox" value="'+fl+'"> '+fl;fb.appendChild(l);});
+  }
+
+  function onName(){$("formerr").hidden=true;$("fetchnote").textContent="";var it=findItem($("f_name").value);$("loadhint").textContent=it?('Previous entry found — press Look up or pick from the list to reuse it.'):"";}
+  function onCas(){var r=autoReg($("f_cas").value.trim());if(r.length){setFlags(r);$("autotag").textContent="auto-assigned from CAS: "+r.join(" ");}}
+  function maybeLoad(){var it=findItem($("f_name").value);if(it&&!editId)loadFrom(it,true);}
+  function doLookup(){
+    var name=$("f_name").value.trim()||$("f_name_zh").value.trim();if(!name)return;
+    var it=findItem($("f_name").value)||findItem($("f_name_zh").value);
+    if(it){loadFrom(it,true);return;}
+    var d=dget(name);
+    if(d){fillDict(d);$("fetchnote").textContent="Filled from the built-in list. Check the pictograms against the bottle.";return;}
+    tryPubChem(name);
+  }
+  function loadFrom(it,keepBottleBlank){
+    $("f_name").value=it.name;$("f_name_zh").value=it.name_zh||"";$("f_iupac").value=it.iupac||"";
+    $("f_cas").value=it.cas||"";$("f_formula").value=it.formula||"";$("f_mw").value=it.mw||"";
+    setSignal(it.signal||"");setGhs(it.ghs||[]);setFlags(it.flags||[]);
+    if(!keepBottleBlank){$("f_vendor").value=it.vendor||"";$("f_purity").value=it.purity||"";$("f_amount").value=it.amount||"";$("f_location").value=it.location||"";}
+    $("loadhint").textContent="Loaded a previous entry for "+it.name+" — fill in this bottle's vendor, amount and location.";
+  }
+  function fillDict(d){
+    $("f_name").value=d.n;$("f_name_zh").value=d.zh||"";$("f_iupac").value=d.n;
+    $("f_cas").value=d.cas||"";$("f_formula").value=d.f||"";$("f_mw").value=d.mw||"";
+    setSignal(d.sig||"");setGhs(d.ghs||[]);var r=autoReg(d.cas);setFlags(r);$("autotag").textContent=r.length?("auto-assigned from CAS: "+r.join(" ")):"none matched — add manually if needed";
+  }
+  function setSignal(v){$("f_signal").value=/danger/i.test(v)?"Danger 危险":/warning/i.test(v)?"Warning 警示":"";}
+  function toggleGhs(b){var on=b.classList.toggle("on");b.setAttribute("aria-pressed",on?"true":"false");}
+  function getGhs(){return [].map.call(document.querySelectorAll("#ghssel .ghs-chip.on"),function(b){return b.dataset.code;});}
+  function setGhs(arr){arr=arr||[];document.querySelectorAll("#ghssel .ghs-chip").forEach(function(b){var on=arr.indexOf(b.dataset.code)>=0;b.classList.toggle("on",on);b.setAttribute("aria-pressed",on?"true":"false");});}
+  function setFlags(arr){arr=arr||[];document.querySelectorAll("#flags input").forEach(function(c){c.checked=arr.indexOf(c.value)>=0;});}
+  function getFlags(){return [].map.call(document.querySelectorAll("#flags input:checked"),function(c){return c.value;});}
+
+  function tryPubChem(name){
+    var note=$("fetchnote");note.textContent="Looking up "+name+" on PubChem…";
+    var ctrl=new AbortController(),to=setTimeout(function(){ctrl.abort();},6000);
+    var base="https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/"+encodeURIComponent(name);
+    fetch(base+"/property/IUPACName,MolecularFormula,MolecularWeight,Title/JSON",{signal:ctrl.signal})
+      .then(function(r){if(!r.ok)throw 0;return r.json();})
+      .then(function(j){
+        var p=j.PropertyTable.Properties[0];
+        $("f_formula").value=p.MolecularFormula||"";
+        $("f_mw").value=p.MolecularWeight?Number(p.MolecularWeight).toFixed(2):"";
+        if(p.IUPACName)$("f_iupac").value=p.IUPACName;
+        if(p.Title&&!$("f_name").value.trim())$("f_name").value=p.Title;
+        return fetch("https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/cid/"+p.CID+"/synonyms/JSON",{signal:ctrl.signal}).then(function(r){return r.ok?r.json():null;}).then(function(sj){
+          var cas="";try{var syn=sj.InformationList.Information[0].Synonym;for(var i=0;i<syn.length;i++){if(/^\d{2,7}-\d{2}-\d$/.test(syn[i])){cas=syn[i];break;}}}catch(e){}
+          if(cas){$("f_cas").value=cas;onCas();}
+          note.innerHTML='Filled official name, formula and CAS from PubChem. Now tap the GHS diamonds from the bottle — <a href="https://pubchem.ncbi.nlm.nih.gov/compound/'+p.CID+'" style="color:var(--accent)" target="_blank" rel="noopener">safety sheet</a>.';
+        });
+      })
+      .catch(function(){note.textContent="Couldn't reach PubChem here (works once the page is on your own site). Enter details by hand and tap the pictograms from the bottle.";})
+      .finally(function(){clearTimeout(to);});
+  }
+
+  function readForm(){return {name:$("f_name").value.trim(),name_zh:$("f_name_zh").value.trim(),iupac:$("f_iupac").value.trim(),cas:$("f_cas").value.trim(),formula:$("f_formula").value.trim(),mw:$("f_mw").value.trim(),signal:$("f_signal").value,ghs:getGhs(),flags:getFlags(),vendor:$("f_vendor").value.trim(),purity:$("f_purity").value.trim(),amount:$("f_amount").value.trim(),location:$("f_location").value.trim(),registered_by:$("f_by").value.trim()};}
+  function resetForm(){["f_name","f_name_zh","f_iupac","f_cas","f_formula","f_mw","f_vendor","f_purity","f_amount","f_location","f_by"].forEach(function(id){$(id).value="";});$("f_signal").value="";setGhs([]);setFlags([]);$("fetchnote").textContent="";$("loadhint").textContent="";$("autotag").textContent="auto-assigned from CAS; adjust if needed";}
+
+  function save(){
+    var d=readForm();
+    if(!d.name){$("formerr").hidden=false;return;}
+    if(!d.iupac)d.iupac=d.name;
+    if(editId){var it=items.find(function(x){return x.id===editId;});if(it){Object.assign(it,d);delete it._ex;}cancelEdit();}
+    else{d.id=uid();d.date_added=new Date().toISOString().slice(0,10);d.status="active";items.unshift(d);}
+    persist();resetForm();render();
+  }
+  function edit(id){
+    var it=items.find(function(x){return x.id===id;});if(!it)return;editId=id;
+    loadFrom(it,false);
+    $("formtitle").textContent="Edit chemical";$("savebtn").textContent="Save changes";$("editflag").hidden=false;$("loadhint").textContent="";
+    window.scrollTo({top:0,behavior:"smooth"});
+  }
+  function cancelEdit(){editId=null;$("formtitle").textContent="Add a chemical";$("savebtn").textContent="Add to inventory";$("editflag").hidden=true;resetForm();}
+  function cycle(id){var it=items.find(function(x){return x.id===id;});if(!it)return;var o=["active","empty","disposed"];it.status=o[(o.indexOf(it.status)+1)%3];if(it.status==="disposed"&&it.location!=="Waste storage")it.location="Waste storage";persist();render();}
+  function askDel(id){confirmId=id;render();}
+  function cancelDel(){confirmId=null;render();}
+  function del(id){items=items.filter(function(x){return x.id!==id;});confirmId=null;persist();render();}
+  function clearExamples(){items=items.filter(function(x){return !x._ex;});persist();render();}
+  function setFilter(f){filter=f;render();}
+
+  function alignNames(){
+    var groups={};items.forEach(function(x){if(x.cas)(groups[x.cas]=groups[x.cas]||[]).push(x);});
+    var dups=Object.keys(groups).filter(function(c){var names={};groups[c].forEach(function(x){names[x.name]=1;});return Object.keys(names).length>1;});
+    if(!dups.length){tool("All names are already consistent by CAS.");return;}
+    if(!alignArmed){alignArmed=true;$("alignbtn").textContent="Confirm: align "+dups.length+" CAS group"+(dups.length>1?"s":"")+"?";setTimeout(function(){alignArmed=false;$("alignbtn").textContent="Align names by CAS";},4000);return;}
+    var changed=0;
+    dups.forEach(function(cas){var canon=canonFor(cas,groups[cas]);groups[cas].forEach(function(x){if(x.name!==canon){x.name=canon;if(!x.iupac)x.iupac=canon;changed++;}});});
+    alignArmed=false;$("alignbtn").textContent="Align names by CAS";persist();render();tool("Aligned "+changed+" record"+(changed===1?"":"s")+" to one official name per CAS.");
+  }
+  function canonFor(cas,g){for(var k in DICT){if(DICT[k].cas===cas)return DICT[k].n;}var wi=g.find(function(x){return x.iupac;});if(wi&&wi.iupac)return wi.iupac;var cnt={};g.forEach(function(x){cnt[x.name]=(cnt[x.name]||0)+1;});return Object.keys(cnt).sort(function(a,b){return cnt[b]-cnt[a];})[0];}
+  function tool(msg){$("toolmsg").textContent=msg||"";if(msg)setTimeout(function(){$("toolmsg").textContent="";},5000);}
+
+  function stats(){
+    var a=items.filter(function(x){return x.status==="active";}).length;
+    var hz=items.filter(function(x){return x.status==="active"&&((x.ghs&&x.ghs.length)||(x.flags&&x.flags.length)||/danger/i.test(x.signal));}).length;
+    var retired=items.filter(function(x){return x.status!=="active";}).length;
+    $("stats").innerHTML=tile(items.length,"Total records")+tile(a,"Active")+tile(hz,"Hazardous · active")+tile(retired,"Empty / disposed");
+  }
+  function tile(n,l){return '<div class="stat"><div class="n">'+n+'</div><div class="l">'+l+'</div></div>';}
+
+  function counts(){var c={all:items.length,active:0,empty:0,disposed:0};items.forEach(function(x){if(c[x.status]!=null)c[x.status]++;});return c;}
+  function buildFilter(){
+    var c=counts();var defs=[["all","All 全部"],["active","Active"],["empty","Empty"],["disposed","Disposed 已处置"]];
+    $("filterbar").innerHTML=defs.map(function(d){return '<button class="fchip'+(filter===d[0]?" on":"")+'" onclick="setFilter(\''+d[0]+'\')">'+d[1]+' ('+c[d[0]]+')</button>';}).join("");
+  }
+  function viewList(){
+    var q=norm($("search").value);
+    return items.filter(function(x){
+      if(filter!=="all"&&x.status!==filter)return false;
+      return !q||((x.name+" "+(x.name_zh||"")+" "+(x.iupac||"")+" "+x.cas+" "+x.vendor+" "+x.location).toLowerCase().indexOf(q)>=0);
+    });
+  }
+  function render(){
+    $("exbanner").hidden=!items.some(function(x){return x._ex;});
+    stats();buildFilter();buildDicts();
+    var casCount={};items.forEach(function(x){if(x.cas)casCount[x.cas]=(casCount[x.cas]||0)+1;});
+    var list=viewList();var tb=$("rows");
+    if(!list.length){tb.innerHTML='<tr><td colspan="8"><div class="empty-state">'+(items.length?"No matches in this view.":"No chemicals yet. Add your first above.")+'</div></td></tr>';return;}
+    tb.innerHTML=list.map(function(x){
+      var haz=(x.ghs&&x.ghs.length)?'<span class="haz-icons">'+x.ghs.map(function(c){return ghsIcon(c,24);}).join("")+'</span>':'<span class="haz-none">—</span>';
+      if(x.flags&&x.flags.length)haz+='<span class="haz-flags">'+esc(x.flags.join(" "))+'</span>';
+      var st='<button class="pill '+x.status+'" onclick="cycle(\''+x.id+'\')" title="Click to change">'+x.status+'</button>';
+      var dupe=(x.cas&&casCount[x.cas]>1)?'<span class="dupe" title="Same CAS appears on more than one record">CAS×'+casCount[x.cas]+'</span>':'';
+      var sub=esc(x.formula||"")+(x.mw?' · '+esc(x.mw)+' g/mol':'')+(x.name_zh?' · <span class="zh">'+esc(x.name_zh)+'</span>':'');
+      var act=confirmId===x.id
+        ? '<span class="confirm"><b>Remove?</b><button onclick="del(\''+x.id+'\')">Yes</button><button onclick="cancelDel()">No</button></span>'
+        : '<span class="rowact"><button class="iconb" title="Edit" onclick="edit(\''+x.id+'\')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4L19 9l-4-4L4 16z"/><path d="M14 6l4 4"/></svg></button>'
+          +'<button class="iconb del" title="Remove permanently" onclick="askDel(\''+x.id+'\')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M5 7h14M10 7V5h4v2M6 7l1 13h10l1-13"/></svg></button></span>';
+      return '<tr class="'+(x.status==="disposed"?"gone":"")+'"><td><span class="cn">'+esc(x.name)+(x._ex?'<span class="exrow">example</span>':'')+dupe+'<small>'+sub+'</small></span></td>'
+        +'<td class="mono">'+esc(x.cas||"—")+'</td><td>'+esc(x.vendor||"—")+'</td><td>'+esc(x.amount||"—")+'</td><td>'+esc(x.location||"—")+'</td>'
+        +'<td>'+haz+'</td><td>'+st+'</td><td>'+act+'</td></tr>';
+    }).join("");
+  }
+
+  function rowsForExport(){return viewList().filter(function(x){return !x._ex;});}
+  function toCSV(rows){
+    var head=COLS.join(",");
+    var lines=rows.map(function(x){return COLS.map(function(c){var v=(c==="flags"||c==="ghs")?(x[c]||[]).join(";"):(x[c]==null?"":x[c]);v=String(v);return /[",\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v;}).join(",");});
+    return [head].concat(lines).join("\n");
+  }
+  function exportCSV(){
+    var rows=rowsForExport();if(!rows.length){tool("Nothing to export in this view.");return;}
+    var csv=toCSV(rows),blob=new Blob([csv],{type:"text/csv"}),url=URL.createObjectURL(blob);
+    var a=document.createElement("a");a.href=url;a.download="lens-inventory-"+filter+"-"+new Date().toISOString().slice(0,10)+".csv";document.body.appendChild(a);a.click();a.remove();
+    setTimeout(function(){URL.revokeObjectURL(url);},1000);tool("Exported "+rows.length+" record"+(rows.length===1?"":"s")+" ("+filter+").");
+  }
+  function copyCSV(){
+    var rows=rowsForExport();var csv=toCSV(rows),btn=$("copybtn");
+    function ok(){btn.textContent="Copied ✓";tool("Copied "+rows.length+" record"+(rows.length===1?"":"s")+" ("+filter+").");setTimeout(function(){btn.textContent="Copy view";},1500);}
+    if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(csv).then(ok).catch(fb);}else fb();
+    function fb(){var ta=document.createElement("textarea");ta.value=csv;ta.style.position="fixed";ta.style.left="-9999px";document.body.appendChild(ta);ta.select();try{document.execCommand("copy");ok();}catch(e){}ta.remove();}
+  }
+  function importCSV(){$("fileinput").click();}
+  function onFile(e){var f=e.target.files[0];if(!f)return;var rd=new FileReader();rd.onload=function(){parseCSV(rd.result);e.target.value="";};rd.readAsText(f);}
+  function parseCSV(text){
+    var rows=splitCSV(text);if(!rows.length)return;var head=rows[0].map(function(h){return h.trim().toLowerCase();});var added=0;
+    function sl(v){return v?v.split(";").map(function(s){return s.trim();}).filter(Boolean):[];}
+    for(var i=1;i<rows.length;i++){var r=rows[i];if(r.length===1&&r[0]==="")continue;var o={};head.forEach(function(h,j){o[h]=r[j]!=null?r[j]:"";});if(!o.name&&!o.name_zh)continue;
+      items.unshift({id:uid(),name:o.name||o.name_zh,name_zh:o.name_zh||"",iupac:o.iupac||o.name||"",cas:o.cas||"",formula:o.formula||"",mw:o.mw||"",signal:o.signal||"",ghs:sl(o.ghs),flags:sl(o.flags),vendor:o.vendor||"",purity:o.purity||"",amount:o.amount||"",location:o.location||"",registered_by:o.registered_by||"",date_added:o.date_added||new Date().toISOString().slice(0,10),status:o.status||"active"});added++;}
+    persist();render();tool("Imported "+added+" row"+(added===1?"":"s")+" from CSV.");
+  }
+  function splitCSV(text){var rows=[],row=[],cur="",q=false,i=0,ch;text=text.replace(/\r\n?/g,"\n");for(;i<text.length;i++){ch=text[i];if(q){if(ch==='"'){if(text[i+1]==='"'){cur+='"';i++;}else q=false;}else cur+=ch;}else{if(ch==='"')q=true;else if(ch===","){row.push(cur);cur="";}else if(ch==="\n"){row.push(cur);rows.push(row);row=[];cur="";}else cur+=ch;}}if(cur!==""||row.length){row.push(cur);rows.push(row);}return rows;}
+
+  (function(){
+    var root=document.documentElement,saved;try{saved=LS.getItem("lens-theme");}catch(e){}
+    if(saved==="dark"||saved==="light")root.setAttribute("data-theme",saved);
+    $("tgl").addEventListener("click",function(){var dark=matchMedia("(prefers-color-scheme:dark)").matches;var cur=root.getAttribute("data-theme")||(dark?"dark":"light");var next=cur==="dark"?"light":"dark";root.setAttribute("data-theme",next);try{LS.setItem("lens-theme",next);}catch(e){}});
+    buildPicker();buildFlags();load();render();
+    var probe=new Image();probe.onload=function(){if(probe.width>0){USE_OFFICIAL=true;buildPicker();render();}};probe.onerror=function(){};probe.src="ghs/GHS02.svg";
+  })();
+</script>
