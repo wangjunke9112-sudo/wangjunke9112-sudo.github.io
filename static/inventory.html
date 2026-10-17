@@ -124,6 +124,8 @@
   .librow .lname{font-size:14px;font-weight:500}
   .librow .lmeta{font-size:11.5px;color:var(--muted);font-family:var(--font-m);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   .librow.needrow .lthumb{outline:1.5px dashed var(--border);border-radius:4px}
+  .libgroup{font-family:var(--font-m);font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:var(--accent);background:var(--surface-2);padding:6px 10px;border-bottom:1px solid var(--border);position:sticky;top:0;z-index:1}
+  .cattag{display:inline-block;margin-left:6px;font-size:10px;font-family:var(--font-m);color:var(--accent);background:var(--accent-soft);border:1px solid var(--border);border-radius:5px;padding:1px 6px;vertical-align:middle}
   .needbadge{display:inline-block;margin-left:7px;font-size:10.5px;font-weight:600;color:#9a6a00;background:#fff4d6;border:1px solid #f0d58a;border-radius:4px;padding:1px 6px;vertical-align:middle;letter-spacing:.2px}
   :root[data-theme="dark"] .needbadge{color:#f0c24a;background:#3a2f12;border-color:#5c4a1c}
   @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .needbadge{color:#f0c24a;background:#3a2f12;border-color:#5c4a1c}}
@@ -182,7 +184,7 @@
         <div class="f-wide">
           <label for="f_name">Chemical name 名称 — type English, 中文, abbreviation, or a CAS number *</label>
           <div class="namewrap">
-            <input id="f_name" list="dict" placeholder="e.g. PEABr · 氯苯 · 108-90-7 — then press Look up" autocomplete="off" oninput="onName()" onchange="maybeLoad()">
+            <input id="f_name" list="dict" placeholder="e.g. PEABr · 氯苯 · 108-90-7 — then press Enter" autocomplete="off" oninput="onName()" onchange="maybeLoad()" onkeydown="if(event.key==='Enter'){event.preventDefault();doLookup();}">
             <button type="button" onclick="doLookup()" id="lookbtn">Look up</button>
           </div>
           <datalist id="dict"></datalist>
@@ -193,6 +195,7 @@
         <div class="f-half"><label for="f_name_zh">中文名 Chinese name <span style="color:var(--muted)">— optional, searchable &amp; remembered</span></label><input id="f_name_zh" placeholder="例如 苯甲醚 (auto-filled when PubChem has it)"></div>
         <div class="f-half"><label for="f_iupac">Official / IUPAC name 规范名</label><input id="f_iupac" placeholder="canonical name (auto on lookup)"></div>
         <div class="f-half"><label for="f_aliases">Our short names 别名 <span style="color:var(--muted)">— optional, e.g. EDAI2</span></label><input id="f_aliases" placeholder="comma-separated; type any of these later to recall this chemical"></div>
+        <div><label for="f_cat">Category 类别</label><select id="f_cat"></select></div>
         <div><label for="f_cas">CAS 号 <span style="color:var(--muted)">— unique key</span></label><input id="f_cas" class="mono" placeholder="—" oninput="onCas()"></div>
         <div><label for="f_formula">Formula 分子式</label><input id="f_formula" class="mono" placeholder="—" oninput="onFormula()"></div>
         <div><label for="f_mw">Molar mass 摩尔质量</label><input id="f_mw" class="mono" placeholder="g/mol"></div>
@@ -233,7 +236,7 @@
 
     <section class="panel" id="libpanel" hidden>
       <h2><span>Chemical library 化学品库 <span id="libcount" style="font-weight:400;font-size:13px;color:var(--muted)"></span></span><span style="margin-left:auto;display:flex;gap:10px;align-items:center"><button onclick="libAdd()" style="font-size:13px;padding:5px 12px">＋ New chemical</button><button onclick="closeLib()" style="font-size:13px;padding:5px 12px">Close</button></span></h2>
-      <input id="libsearch" placeholder="Search the library — name, 中文名, CAS, abbreviation…" oninput="buildLibPanel()" style="margin-bottom:10px">
+      <div style="display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap"><input id="libsearch" placeholder="Search the library — name, 中文名, CAS, abbreviation…" oninput="buildLibPanel()" style="flex:1;min-width:200px"><select id="libcatfilter" onchange="buildLibPanel()" style="width:auto;min-width:160px"></select></div>
       <label style="display:inline-flex;align-items:center;gap:7px;font-size:13px;margin-bottom:10px;cursor:pointer"><input type="checkbox" id="libneed" onchange="buildLibPanel()"> Show only chemicals that still need a structure <span id="libneedcount" style="color:var(--muted);font-size:12px"></span></label>
       <div style="font-size:12px;color:var(--muted);margin-bottom:10px">Edit any entry's name, 中文名, short names, CAS, formula or structure — changes apply to every future look-up. Rows marked <span class="needbadge">no structure</span> have neither a SMILES drawing nor an image — open them to paste a screenshot or ChemDraw export.</div>
       <div id="liblist" style="max-height:460px;overflow:auto;border:1px solid var(--border);border-radius:10px"></div>
@@ -251,6 +254,7 @@
     </div>
     <div class="toolbar">
       <input class="search" id="search" placeholder="Search logged chemicals — name, 中文名, CAS, vendor…" oninput="render()">
+      <select id="catfilter" onchange="setCatFilter(this.value)" style="width:auto;min-width:150px"></select>
       <select id="locfilter" onchange="setLocFilter(this.value)" style="width:auto;min-width:150px"></select>
       <select id="venfilter" onchange="setVenFilter(this.value)" style="width:auto;min-width:150px"></select>
       <select id="sortsel" onchange="setSort(this.value)" style="width:auto;min-width:150px">
@@ -349,8 +353,12 @@
   function autoReg(cas){return (REG[cas]||[]).slice();}
 
   var ALLFLAGS=["危化品","易制毒","易制爆","剧毒品"];
-  var COLS=["name","name_zh","iupac","aliases","cas","formula","mw","smiles","ghs","flags","vendor","purity","amount","location","registered_by","date_added","status","archived","disposed_by","disposed_date"];
-  var items=[], editId=null, confirmId=null, disposeId=null, filter="current", sortBy="recent", locFilter="all", venFilter="all", alignArmed=false;
+  /* functional category in the device stack (editable per chemical) */
+  var CATS=[{k:"precursor",label:"Essential precursors",zh:"核心前驱体"},{k:"HTL",label:"HTL (hole transport)",zh:"空穴传输"},{k:"ETL",label:"ETL (electron transport)",zh:"电子传输"},{k:"additive",label:"Additives / passivation",zh:"添加剂 / 钝化"},{k:"solvent",label:"Solvents",zh:"溶剂"},{k:"other",label:"Other",zh:"其他"}];
+  function catLabel(k){for(var i=0;i<CATS.length;i++)if(CATS[i].k===k)return CATS[i].label;return "";}
+  function catIndex(k){for(var i=0;i<CATS.length;i++)if(CATS[i].k===k)return i;return 99;}
+  var COLS=["name","name_zh","iupac","aliases","cas","formula","mw","smiles","ghs","flags","category","vendor","purity","amount","location","registered_by","date_added","status","archived","disposed_by","disposed_date"];
+  var items=[], editId=null, confirmId=null, disposeId=null, filter="current", sortBy="recent", locFilter="all", venFilter="all", catFilter="all", alignArmed=false;
   var LS=window.localStorage;
   var CASRE=/^\d{2,7}-\d{2}-\d$/;
 
@@ -367,14 +375,14 @@
   function dget(name){var k=norm(name);if(DICT[k])return DICT[k];var kk=k.replace(/\s/g,"");for(var x in DICT){var d=DICT[x];if(d.a&&d.a===kk)return d;if(d.abbr&&norm(d.abbr)===k)return d;if(d.zh&&d.zh===name.trim())return d;if(d.cas&&d.cas===name.trim())return d;if(d.aliases&&d.aliases.indexOf(k)>=0)return d;}return null;}
   function findItem(v){v=norm(v);if(!v)return null;return items.find(function(x){if(norm(x.name)===v||norm(x.name_zh)===v||norm(x.cas)===v||norm(x.iupac)===v)return true;return (x.aliases||[]).some(function(a){return norm(a)===v;});});}
 
-  function load(){var raw=null;try{raw=LS.getItem("lens_inv_items");}catch(e){}if(raw){try{items=JSON.parse(raw)||[];}catch(e){items=[];}}else{items=seed();persist();}loadCatalog();seedLibrary();loadLists();items.forEach(function(x){if(!catalog[catKey(x)])upsertCatalog(x);noteVendor(x.vendor);noteLoc(x.location);});Object.keys(catalog).forEach(function(k){var c=catalog[k];if(!c.mw&&c.formula){var w=computeMW(c.formula);if(w)c.mw=w;}});items.forEach(function(x){if(!x.mw&&x.formula){var w=computeMW(x.formula);if(w)x.mw=w;}});saveCatalog();persist();}
+  function load(){var raw=null;try{raw=LS.getItem("lens_inv_items");}catch(e){}if(raw){try{items=JSON.parse(raw)||[];}catch(e){items=[];}}else{items=seed();persist();}loadCatalog();seedLibrary();loadLists();items.forEach(function(x){if(!catalog[catKey(x)])upsertCatalog(x);noteVendor(x.vendor);noteLoc(x.location);});Object.keys(catalog).forEach(function(k){var c=catalog[k];if(!c.mw&&c.formula){var w=computeMW(c.formula);if(w)c.mw=w;}});items.forEach(function(x){if(!x.mw&&x.formula){var w=computeMW(x.formula);if(w)x.mw=w;}if(!x.category){var c=catalog[catKey(x)];if(c&&c.category)x.category=c.category;}});saveCatalog();persist();}
   function persist(){try{LS.setItem("lens_inv_items",JSON.stringify(items));}catch(e){}}
   /* persistent "known chemicals" catalog — identity + short names remembered even when no bottle remains */
   var catalog={};
   function loadCatalog(){try{catalog=JSON.parse(LS.getItem("lens_inv_catalog")||"{}")||{};}catch(e){catalog={};}}
   function saveCatalog(){try{LS.setItem("lens_inv_catalog",JSON.stringify(catalog));}catch(e){}}
   function catKey(d){var cas=(d.cas||"").trim();return cas?("cas:"+cas):("n:"+norm(d.name||d.n||""));}
-  function upsertCatalog(d){if(!d.name)return;var k=catKey(d);var ex=catalog[k]||{};catalog[k]={name:d.name,name_zh:d.name_zh||"",iupac:d.iupac||d.name,cas:d.cas||"",formula:d.formula||"",mw:d.mw||"",smiles:d.smiles||"",img:d.img||ex.img||"",ghs:(d.ghs||[]).slice(),flags:(d.flags||[]).slice(),aliases:(d.aliases||[]).slice()};saveCatalog();}
+  function upsertCatalog(d){if(!d.name)return;var k=catKey(d);var ex=catalog[k]||{};catalog[k]={name:d.name,name_zh:d.name_zh||"",iupac:d.iupac||d.name,cas:d.cas||"",formula:d.formula||"",mw:d.mw||"",smiles:d.smiles||"",img:d.img||ex.img||"",ghs:(d.ghs||[]).slice(),flags:(d.flags||[]).slice(),aliases:(d.aliases||[]).slice(),category:d.category||ex.category||""};saveCatalog();}
   function catGet(query){var v=norm(query);if(!v)return null;for(var k in catalog){var c=catalog[k];if(norm(c.name)===v||norm(c.name_zh)===v||norm(c.iupac)===v||norm(c.cas)===v)return c;if((c.aliases||[]).some(function(a){return norm(a)===v;}))return c;}return null;}
   /* persistent vendor + location lists — shown as pick-lists so people reuse one spelling (incl. of removed items) */
   var DEFAULT_LOCS=["Weighing glovebox","Spin-coating glovebox","Fume hood","Cabinet"];
@@ -389,144 +397,149 @@
   function updateFindLinks(){var el=$("findlinks");if(!el)return;var q=$("f_cas").value.trim()||$("f_name").value.trim();if(!q){el.innerHTML="";return;}var e=encodeURIComponent(q);el.innerHTML='Find product: <a target="_blank" rel="noopener" href="https://www.sigmaaldrich.com/US/en/search/'+e+'">Sigma-Aldrich</a> · <a target="_blank" rel="noopener" href="https://www.tcichemicals.com/CN/zh/search/?text='+e+'">TCI</a> · <a target="_blank" rel="noopener" href="https://www.aladdin-e.com/zh_cn/csearch.html?keywords='+e+'">阿拉丁</a> · <a target="_blank" rel="noopener" href="https://www.macklin.cn/products?keywords='+e+'">麦克林</a>';}
   /* ---- Built-in perovskite chemical library (compiled from Suzhou Liwei + Sigma/TCI/Greatcell catalogs). Seeds the known-chemicals catalog on load so lookups resolve by name / 中文名 / abbreviation / CAS. ---- */
   var LIBRARY=[
-{n:"Lead(II) iodide",z:"碘化铅",a:"PbI2",c:"10101-63-0",f:"PbI2",m:"461.01",s:""},
-{n:"Lead(II) bromide",z:"溴化铅",a:"PbBr2",c:"10031-22-8",f:"PbBr2",m:"367.01",s:""},
-{n:"Lead(II) chloride",z:"氯化铅",a:"PbCl2",c:"7758-95-4",f:"PbCl2",m:"278.11",s:""},
-{n:"Lead(II) thiocyanate",z:"硫氰酸铅",a:"Pb(SCN)2",c:"592-87-0",f:"PbC2N2S2",m:"323.36",s:""},
-{n:"Tin(II) iodide",z:"碘化亚锡",a:"SnI2",c:"10294-70-9",f:"SnI2",m:"372.52",s:""},
-{n:"Tin(II) fluoride",z:"二氟化锡",a:"SnF2",c:"7783-47-3",f:"SnF2",m:"156.71",s:""},
-{n:"Cesium iodide",z:"碘化铯",a:"CsI",c:"7789-17-5",f:"CsI",m:"259.81",s:""},
-{n:"Cesium bromide",z:"溴化铯",a:"CsBr",c:"7787-69-1",f:"CsBr",m:"212.81",s:""},
-{n:"Cesium chloride",z:"氯化铯",a:"CsCl",c:"7647-17-8",f:"CsCl",m:"168.36",s:""},
-{n:"Cesium triiodide",z:"三碘化铯",a:"CsI3",c:"20202-54-4",f:"CsI3",m:"513.62",s:""},
-{n:"Rubidium chloride",z:"氯化铷",a:"RbCl",c:"7791-11-9",f:"RbCl",m:"120.92",s:""},
-{n:"Cesium acetate",z:"乙酸铯",a:"CsOAc",c:"3396-11-0",f:"C2H3CsO2",m:"191.95",s:"CC(=O)[O-].[Cs+]"},
-{n:"Formamidinium iodide",z:"甲脒氢碘酸盐",a:"FAI",c:"879643-71-7",f:"CH5IN2",m:"171.97",s:"C(=[NH2+])N.[I-]"},
-{n:"Formamidinium bromide",z:"甲脒氢溴酸盐",a:"FABr",c:"146958-06-7",f:"CH5BrN2",m:"124.97",s:"C(=[NH2+])N.[Br-]"},
-{n:"Formamidinium chloride",z:"甲脒氢氯酸盐",a:"FACl",c:"6313-33-3",f:"CH5ClN2",m:"80.52",s:"C(=[NH2+])N.[Cl-]"},
-{n:"Methylammonium iodide",z:"甲基碘化胺",a:"MAI",c:"14965-49-2",f:"CH6IN",m:"158.97",s:"C[NH3+].[I-]"},
-{n:"Methylammonium bromide",z:"溴化甲铵",a:"MABr",c:"6876-37-5",f:"CH6BrN",m:"111.97",s:"C[NH3+].[Br-]"},
-{n:"Methylammonium chloride",z:"氯化甲胺",a:"MACl",c:"593-51-1",f:"CH6ClN",m:"67.52",s:"C[NH3+].[Cl-]"},
-{n:"Formamidinium thiocyanate",z:"硫氰酸甲脒",a:"FASCN",c:"1821033-48-0",f:"C2H5N3S",m:"103.15",s:""},
-{n:"Methylammonium thiocyanate",z:"硫氰酸甲胺",a:"MASCN",c:"61540-63-4",f:"C2H6N2S",m:"90.15",s:""},
-{n:"Cesium thiocyanate",z:"硫氰酸铯",a:"CsSCN",c:"3879-01-4",f:"CCsNS",m:"190.99",s:""},
-{n:"Rubidium thiocyanate",z:"硫氰酸铷",a:"RbSCN",c:"",f:"CRbNS",m:"143.55",s:""},
-{n:"Potassium thiocyanate",z:"硫氰酸钾",a:"KSCN",c:"333-20-0",f:"CKNS",m:"97.18",s:"[K+].[S-]C#N"},
-{n:"Guanidinium iodide",z:"碘化胍",a:"GUAI",c:"",f:"CH6IN3",m:"186.98",s:""},
-{n:"Dimethyl sulfoxide",z:"二甲基亚砜",a:"DMSO",c:"67-68-5",f:"C2H6OS",m:"78.13",s:"CS(C)=O"},
-{n:"N,N-Dimethylformamide",z:"N,N-二甲基甲酰胺",a:"DMF",c:"68-12-2",f:"C3H7NO",m:"73.09",s:"CN(C)C=O"},
-{n:"Acetonitrile",z:"乙腈",a:"ACN",c:"75-05-8",f:"C2H3N",m:"41.05",s:"CC#N"},
-{n:"Chlorobenzene",z:"氯苯",a:"CB",c:"108-90-7",f:"C6H5Cl",m:"112.56",s:"Clc1ccccc1"},
-{n:"Isopropanol",z:"异丙醇",a:"IPA",c:"67-63-0",f:"C3H8O",m:"60.10",s:"CC(C)O"},
-{n:"Ethyl acetate",z:"乙酸乙酯",a:"EA",c:"141-78-6",f:"C4H8O2",m:"88.11",s:"CCOC(C)=O"},
-{n:"Methyl acetate",z:"乙酸甲酯",a:"MA",c:"79-20-9",f:"C3H6O2",m:"74.08",s:"COC(C)=O"},
-{n:"n-Hexane",z:"正己烷",a:"Hexane",c:"110-54-3",f:"C6H14",m:"86.18",s:"CCCCCC"},
-{n:"Ethanol",z:"无水乙醇",a:"EtOH",c:"64-17-5",f:"C2H6O",m:"46.07",s:"CCO"},
-{n:"2-Methoxyethanol",z:"2-甲氧基乙醇",a:"2-ME",c:"109-86-4",f:"C3H8O2",m:"76.09",s:"COCCO"},
-{n:"1-Methyl-2-pyrrolidone",z:"N-甲基-2-吡咯烷酮",a:"NMP",c:"872-50-4",f:"C5H9NO",m:"99.13",s:"CN1CCCC1=O"},
-{n:"Anisole",z:"苯甲醚",a:"Anisole",c:"100-66-3",f:"C7H8O",m:"108.14",s:"COc1ccccc1"},
-{n:"n-Butanol",z:"正丁醇",a:"n-BuOH",c:"71-36-3",f:"C4H10O",m:"74.12",s:"CCCCO"},
-{n:"Fullerene C60",z:"富勒烯-C60",a:"C60",c:"99685-96-8",f:"C60",m:"720.64",s:""},
-{n:"[6,6]-Phenyl-C61-butyric acid methyl ester",z:"",a:"PC61BM",c:"160848-22-6",f:"C72H14O2",m:"910.88",s:""},
-{n:"Indene-C60 bisadduct",z:"茚双加成",a:"ICBA",c:"1207461-57-1",f:"C72H16",m:"",s:""},
-{n:"Bathocuproine",z:"浴铜灵",a:"BCP",c:"4733-39-5",f:"C26H20N2",m:"360.46",s:""},
-{n:"Tin(IV) oxide",z:"二氧化锡",a:"SnO2",c:"18282-10-5",f:"O2Sn",m:"150.71",s:""},
-{n:"Nickel(II) oxide",z:"氧化镍",a:"NiOx",c:"1313-99-1",f:"NiO",m:"74.69",s:""},
-{n:"Titanium dioxide",z:"二氧化钛",a:"TiO2",c:"13463-67-7",f:"O2Ti",m:"79.87",s:""},
-{n:"Magnesium fluoride",z:"氟化镁",a:"MgF2",c:"7783-40-6",f:"F2Mg",m:"62.30",s:""},
-{n:"Lithium fluoride",z:"氟化锂",a:"LiF",c:"7789-24-4",f:"FLi",m:"25.94",s:""},
-{n:"Copper(I) iodide",z:"碘化亚铜",a:"CuI",c:"7681-65-4",f:"CuI",m:"190.45",s:""},
-{n:"Sodium iodide",z:"碘化钠",a:"NaI",c:"7681-82-5",f:"INa",m:"149.89",s:""},
-{n:"Silver iodide",z:"碘化银",a:"AgI",c:"7783-96-2",f:"AgI",m:"234.77",s:""},
-{n:"F4-TCNQ",z:"",a:"F4TCNQ",c:"29261-33-4",f:"C12F4N4",m:"276.14",s:""},
-{n:"4-tert-Butylpyridine",z:"4-叔丁基吡啶",a:"tBP",c:"3978-81-2",f:"C9H13N",m:"135.21",s:"CC(C)(C)c1ccncc1"},
-{n:"PEDOT:PSS",z:"聚乙撑二氧噻吩:聚苯乙烯磺酸盐",a:"PEDOT:PSS",c:"",f:"",m:"",s:""},
-{n:"Indium tin oxide",z:"氧化铟锡",a:"ITO",c:"",f:"",m:"",s:""},
-{n:"Spiro-OMeTAD",z:"",a:"Spiro-OMeTAD",c:"207739-72-8",f:"C81H68N4O8",m:"1225.43",s:""},
-{n:"PTAA (poly-triarylamine)",z:"聚三芳胺",a:"PTAA",c:"1333317-99-9",f:"",m:"",s:""},
-{n:"Poly(3-hexylthiophene)",z:"聚3-己基噻吩",a:"P3HT",c:"104934-50-1",f:"",m:"",s:""},
-{n:"LiTFSI",z:"双三氟甲磺酰亚胺锂",a:"LiTFSI",c:"90076-65-6",f:"C2F6LiNO4S2",m:"287.09",s:""},
-{n:"[2-(9H-Carbazol-9-yl)ethyl]phosphonic acid",z:"",a:"2PACz",c:"20999-38-6",f:"C14H14NO3P",m:"",s:""},
-{n:"[2-(3,6-Dimethoxy-9H-carbazol-9-yl)ethyl]phosphonic acid",z:"",a:"MeO-2PACz",c:"2377770-18-6",f:"",m:"",s:""},
-{n:"[2-(3,6-Dichloro-9H-carbazol-9-yl)ethyl]phosphonic acid",z:"",a:"Cl-2PACz",c:"3036926-72-1",f:"",m:"",s:""},
-{n:"[2-(3,6-Dibromo-9H-carbazol-9-yl)ethyl]phosphonic acid",z:"",a:"Br-2PACz",c:"2762888-11-7",f:"",m:"",s:""},
-{n:"[2-(3,6-Diiodo-9H-carbazol-9-yl)ethyl]phosphonic acid",z:"",a:"I-2PACz",c:"3026275-69-1",f:"",m:"",s:""},
-{n:"[4-(9H-Carbazol-9-yl)butyl]phosphonic acid",z:"",a:"4PACz",c:"20999-36-4",f:"C16H18NO3P",m:"",s:""},
-{n:"[4-(3,6-Dimethoxy-9H-carbazol-9-yl)butyl]phosphonic acid",z:"",a:"MeO-4PACz",c:"2922526-56-3",f:"",m:"",s:""},
-{n:"[4-(3,6-Dimethyl-9H-carbazol-9-yl)butyl]phosphonic acid",z:"",a:"Me-4PACz",c:"2747959-96-0",f:"",m:"",s:""},
-{n:"[4-(3,6-Dibromo-9H-carbazol-9-yl)butyl]phosphonic acid",z:"",a:"Br-4PACz",c:"2996161-28-3",f:"",m:"",s:""},
-{n:"[4-(3,6-Diphenyl-9H-carbazol-9-yl)butyl]phosphonic acid",z:"",a:"Ph-4PACz",c:"2814500-04-2",f:"",m:"",s:""},
-{n:"[2-(7H-Dibenzo[c,g]carbazol-7-yl)ethyl]phosphonic acid",z:"",a:"2PADCB",c:"2882156-61-6",f:"",m:"",s:""},
-{n:"[4-(7H-Dibenzo[c,g]carbazol-7-yl)butyl]phosphonic acid",z:"",a:"4PADCB",c:"2882156-63-8",f:"",m:"",s:""},
-{n:"Phenethylammonium iodide",z:"碘化苯乙铵",a:"PEAI",c:"151059-43-7",f:"C8H12IN",m:"249.10",s:"c1ccccc1CC[NH3+].[I-]"},
-{n:"Phenethylammonium bromide",z:"溴化苯乙铵",a:"PEABr",c:"53916-94-2",f:"C8H12BrN",m:"202.09",s:"c1ccccc1CC[NH3+].[Br-]"},
-{n:"Phenethylammonium chloride",z:"氯化苯乙铵",a:"PEACl",c:"156-28-5",f:"C8H12ClN",m:"157.64",s:"c1ccccc1CC[NH3+].[Cl-]"},
-{n:"n-Butylammonium iodide",z:"丁基碘化铵",a:"BAI",c:"36945-08-1",f:"C4H12IN",m:"201.05",s:"CCCC[NH3+].[I-]"},
-{n:"n-Butylammonium chloride",z:"氯化丁铵",a:"BACl",c:"3858-78-4",f:"C4H12ClN",m:"109.60",s:"CCCC[NH3+].[Cl-]"},
-{n:"n-Octylammonium iodide",z:"辛基碘化铵",a:"OAI",c:"60734-63-6",f:"C8H20IN",m:"257.15",s:"CCCCCCCC[NH3+].[I-]"},
-{n:"n-Octylammonium chloride",z:"辛基氯化铵",a:"OACl",c:"142-95-0",f:"C8H20ClN",m:"165.70",s:"CCCCCCCC[NH3+].[Cl-]"},
-{n:"n-Hexylammonium iodide",z:"己基碘化铵",a:"HAI",c:"54285-91-5",f:"C6H16IN",m:"229.10",s:"CCCCCC[NH3+].[I-]"},
-{n:"Oleylammonium iodide",z:"油胺氢碘酸盐",a:"OAMI",c:"1802520-56-4",f:"C18H38IN",m:"395.40",s:""},
-{n:"Ethylenediammonium diiodide",z:"乙二胺氢碘酸盐",a:"EDAI2",c:"5700-49-2",f:"C2H10I2N2",m:"315.93",s:"[NH3+]CC[NH3+].[I-].[I-]"},
-{n:"Propane-1,3-diammonium diiodide",z:"丙二胺氢碘酸盐",a:"PDAI2",c:"120675-53-8",f:"C3H12I2N2",m:"329.95",s:"[NH3+]CCC[NH3+].[I-].[I-]"},
-{n:"Propane-1,3-diammonium bromide",z:"丙二胺氢溴酸盐",a:"PDABr2",c:"18773-03-0",f:"C3H12Br2N2",m:"235.95",s:"[NH3+]CCC[NH3+].[Br-].[Br-]"},
-{n:"n-Dodecylphosphonic acid",z:"十二烷基膦酸",a:"DDPA",c:"5137-70-2",f:"C12H27O3P",m:"250.31",s:"CCCCCCCCCCCCP(=O)(O)O"},
-{n:"Butylammonium lead iodide",z:"丁铵碘化铅",a:"BA2PbI4",c:"132069-10-4",f:"",m:"",s:""},
-{n:"Phenethylammonium lead iodide",z:"苯乙铵碘化铅",a:"PEA2PbI4",c:"131457-08-4",f:"",m:"",s:""},
-{n:"Guanidinium bromide",z:"溴化胍",a:"GABr",c:"",f:"CH6BrN3",m:"139.98",s:""},
-{n:"Propylammonium iodide",z:"",a:"PAI",c:"14488-45-0",f:"",m:"",s:""},
-{n:"Propylammonium bromide",z:"",a:"PABr",c:"4905-83-3",f:"",m:"",s:""},
-{n:"Propylammonium chloride",z:"",a:"PACl",c:"556-53-6",f:"",m:"",s:""},
-{n:"Hexylammonium chloride",z:"",a:"HACl",c:"142-81-4",f:"",m:"",s:""},
-{n:"n-Dodecylammonium iodide",z:"",a:"DAI",c:"34099-97-3",f:"",m:"",s:""},
-{n:"n-Dodecylammonium bromide",z:"",a:"DABr",c:"26204-55-7",f:"",m:"",s:""},
-{n:"n-Dodecylammonium chloride",z:"",a:"DACl",c:"929-73-7",f:"",m:"",s:""},
-{n:"4-Fluorophenethylammonium iodide",z:"",a:"4F-PEAI",c:"1413269-55-2",f:"",m:"",s:""},
-{n:"4-Fluorophenethylammonium chloride",z:"",a:"4F-PEACl",c:"459-19-8",f:"",m:"",s:""},
-{n:"4-Bromophenethylammonium iodide",z:"",a:"4Br-PEAI",c:"2421114-10-3",f:"",m:"",s:""},
-{n:"Phenethylammonium acetate",z:"",a:"PEAAc",c:"24722-38-1",f:"",m:"",s:""},
-{n:"3-Phenylpropylammonium iodide",z:"",a:"PhPAI",c:"2673196-34-2",f:"",m:"",s:""},
-{n:"4-tert-Butylbenzylammonium iodide",z:"",a:"TBPMAI",c:"2366873-27-8",f:"",m:"",s:""},
-{n:"Benzylammonium chloride",z:"",a:"PMACl",c:"3287-99-8",f:"",m:"",s:""},
-{n:"Cyclohexylammonium bromide",z:"",a:"CHABr",c:"26227-54-3",f:"",m:"",s:""},
-{n:"2-(4-Methoxyphenyl)ethylammonium iodide",z:"",a:"4M-PEAI",c:"2588234-99-3",f:"",m:"",s:""},
-{n:"Azetidinium chloride",z:"",a:"AzCl",c:"36520-39-5",f:"",m:"",s:""},
-{n:"Guanidinothiourea hydrochloride",z:"",a:"GTC",c:"",f:"",m:"",s:""},
-{n:"3-Amidinopyridinium chloride",z:"",a:"AP3MCl",c:"7356-60-7",f:"",m:"",s:""},
-{n:"4-Amidinopyridinium chloride",z:"",a:"AP4MCl",c:"42518-06-9",f:"",m:"",s:""},
-{n:"Piperazinium diiodide",z:"",a:"PDII",c:"58464-47-4",f:"",m:"",s:""},
-{n:"Piperazinium monoiodide",z:"",a:"PI",c:"56310-12-4",f:"",m:"",s:""},
-{n:"Dimethylammonium iodide",z:"",a:"DMAI",c:"51066-74-1",f:"",m:"",s:""},
-{n:"Cysteamine hydroiodide",z:"",a:"ESAI",c:"98650-04-5",f:"",m:"",s:""},
-{n:"2-Aminoethylphosphonic acid",z:"",a:"APA",c:"2041-14-7",f:"",m:"",s:""},
-{n:"O-Phosphonoethanolamine",z:"",a:"OPL",c:"1071-23-4",f:"",m:"",s:""},
-{n:"Ammonium fluoride",z:"氟化铵",a:"NH4F",c:"12125-01-8",f:"",m:"",s:""},
-{n:"4-Mercaptobenzoic acid",z:"",a:"4MBA",c:"1074-36-8",f:"",m:"",s:""},
-{n:"Perfluorooctyl iodide",z:"",a:"AFHI",c:"507-63-1",f:"",m:"",s:""},
-{n:"3-Pyridylethylamine",z:"",a:"3-PyEA",c:"20173-24-4",f:"",m:"",s:""},
-{n:"Methylammonium lead chloride",z:"",a:"MAPbCl3",c:"69276-12-6",f:"",m:"",s:""},
-{n:"Methylammonium lead bromide",z:"",a:"MAPbBr3",c:"69276-13-7",f:"",m:"",s:""},
-{n:"Formamidinium lead iodide",z:"",a:"FAPbI3",c:"1451592-07-6",f:"",m:"",s:""},
-{n:"Potassium benzenesulfonate",z:"",a:"PhSO3K",c:"934-55-4",f:"",m:"",s:""}
+{n:"Lead(II) iodide",z:"碘化铅",a:"PbI2",c:"10101-63-0",f:"PbI2",m:"461.01",s:"",k:"precursor"},
+{n:"Lead(II) bromide",z:"溴化铅",a:"PbBr2",c:"10031-22-8",f:"PbBr2",m:"367.01",s:"",k:"precursor"},
+{n:"Lead(II) chloride",z:"氯化铅",a:"PbCl2",c:"7758-95-4",f:"PbCl2",m:"278.11",s:"",k:"precursor"},
+{n:"Lead(II) thiocyanate",z:"硫氰酸铅",a:"Pb(SCN)2",c:"592-87-0",f:"PbC2N2S2",m:"323.36",s:"",k:"precursor"},
+{n:"Tin(II) iodide",z:"碘化亚锡",a:"SnI2",c:"10294-70-9",f:"SnI2",m:"372.52",s:"",k:"precursor"},
+{n:"Tin(II) fluoride",z:"二氟化锡",a:"SnF2",c:"7783-47-3",f:"SnF2",m:"156.71",s:"",k:"additive"},
+{n:"Cesium iodide",z:"碘化铯",a:"CsI",c:"7789-17-5",f:"CsI",m:"259.81",s:"",k:"precursor"},
+{n:"Cesium bromide",z:"溴化铯",a:"CsBr",c:"7787-69-1",f:"CsBr",m:"212.81",s:"",k:"precursor"},
+{n:"Cesium chloride",z:"氯化铯",a:"CsCl",c:"7647-17-8",f:"CsCl",m:"168.36",s:"",k:"precursor"},
+{n:"Cesium triiodide",z:"三碘化铯",a:"CsI3",c:"20202-54-4",f:"CsI3",m:"513.62",s:"",k:"precursor"},
+{n:"Rubidium chloride",z:"氯化铷",a:"RbCl",c:"7791-11-9",f:"RbCl",m:"120.92",s:"",k:"additive"},
+{n:"Cesium acetate",z:"乙酸铯",a:"CsOAc",c:"3396-11-0",f:"C2H3CsO2",m:"191.95",s:"CC(=O)[O-].[Cs+]",k:"additive"},
+{n:"Formamidinium iodide",z:"甲脒氢碘酸盐",a:"FAI",c:"879643-71-7",f:"CH5IN2",m:"171.97",s:"C(=[NH2+])N.[I-]",k:"precursor"},
+{n:"Formamidinium bromide",z:"甲脒氢溴酸盐",a:"FABr",c:"146958-06-7",f:"CH5BrN2",m:"124.97",s:"C(=[NH2+])N.[Br-]",k:"precursor"},
+{n:"Formamidinium chloride",z:"甲脒氢氯酸盐",a:"FACl",c:"6313-33-3",f:"CH5ClN2",m:"80.52",s:"C(=[NH2+])N.[Cl-]",k:"precursor"},
+{n:"Methylammonium iodide",z:"甲基碘化胺",a:"MAI",c:"14965-49-2",f:"CH6IN",m:"158.97",s:"C[NH3+].[I-]",k:"precursor"},
+{n:"Methylammonium bromide",z:"溴化甲铵",a:"MABr",c:"6876-37-5",f:"CH6BrN",m:"111.97",s:"C[NH3+].[Br-]",k:"precursor"},
+{n:"Methylammonium chloride",z:"氯化甲胺",a:"MACl",c:"593-51-1",f:"CH6ClN",m:"67.52",s:"C[NH3+].[Cl-]",k:"precursor"},
+{n:"Formamidinium thiocyanate",z:"硫氰酸甲脒",a:"FASCN",c:"1821033-48-0",f:"C2H5N3S",m:"103.15",s:"",k:"additive"},
+{n:"Methylammonium thiocyanate",z:"硫氰酸甲胺",a:"MASCN",c:"61540-63-4",f:"C2H6N2S",m:"90.15",s:"",k:"additive"},
+{n:"Cesium thiocyanate",z:"硫氰酸铯",a:"CsSCN",c:"3879-01-4",f:"CCsNS",m:"190.99",s:"",k:"additive"},
+{n:"Rubidium thiocyanate",z:"硫氰酸铷",a:"RbSCN",c:"",f:"CRbNS",m:"143.55",s:"",k:"additive"},
+{n:"Potassium thiocyanate",z:"硫氰酸钾",a:"KSCN",c:"333-20-0",f:"CKNS",m:"97.18",s:"[K+].[S-]C#N",k:"additive"},
+{n:"Guanidinium iodide",z:"碘化胍",a:"GUAI",c:"",f:"CH6IN3",m:"186.98",s:"",k:"additive"},
+{n:"Dimethyl sulfoxide",z:"二甲基亚砜",a:"DMSO",c:"67-68-5",f:"C2H6OS",m:"78.13",s:"CS(C)=O",k:"solvent"},
+{n:"N,N-Dimethylformamide",z:"N,N-二甲基甲酰胺",a:"DMF",c:"68-12-2",f:"C3H7NO",m:"73.09",s:"CN(C)C=O",k:"solvent"},
+{n:"Acetonitrile",z:"乙腈",a:"ACN",c:"75-05-8",f:"C2H3N",m:"41.05",s:"CC#N",k:"solvent"},
+{n:"Chlorobenzene",z:"氯苯",a:"CB",c:"108-90-7",f:"C6H5Cl",m:"112.56",s:"Clc1ccccc1",k:"solvent"},
+{n:"Isopropanol",z:"异丙醇",a:"IPA",c:"67-63-0",f:"C3H8O",m:"60.10",s:"CC(C)O",k:"solvent"},
+{n:"Ethyl acetate",z:"乙酸乙酯",a:"EA",c:"141-78-6",f:"C4H8O2",m:"88.11",s:"CCOC(C)=O",k:"solvent"},
+{n:"Methyl acetate",z:"乙酸甲酯",a:"MA",c:"79-20-9",f:"C3H6O2",m:"74.08",s:"COC(C)=O",k:"solvent"},
+{n:"n-Hexane",z:"正己烷",a:"Hexane",c:"110-54-3",f:"C6H14",m:"86.18",s:"CCCCCC",k:"solvent"},
+{n:"Ethanol",z:"无水乙醇",a:"EtOH",c:"64-17-5",f:"C2H6O",m:"46.07",s:"CCO",k:"solvent"},
+{n:"2-Methoxyethanol",z:"2-甲氧基乙醇",a:"2-ME",c:"109-86-4",f:"C3H8O2",m:"76.09",s:"COCCO",k:"solvent"},
+{n:"1-Methyl-2-pyrrolidone",z:"N-甲基-2-吡咯烷酮",a:"NMP",c:"872-50-4",f:"C5H9NO",m:"99.13",s:"CN1CCCC1=O",k:"solvent"},
+{n:"Anisole",z:"苯甲醚",a:"Anisole",c:"100-66-3",f:"C7H8O",m:"108.14",s:"COc1ccccc1",k:"solvent"},
+{n:"n-Butanol",z:"正丁醇",a:"n-BuOH",c:"71-36-3",f:"C4H10O",m:"74.12",s:"CCCCO",k:"solvent"},
+{n:"Fullerene C60",z:"富勒烯-C60",a:"C60",c:"99685-96-8",f:"C60",m:"720.64",s:"",k:"ETL"},
+{n:"[6,6]-Phenyl-C61-butyric acid methyl ester",z:"",a:"PC61BM",c:"160848-22-6",f:"C72H14O2",m:"910.88",s:"",k:"ETL"},
+{n:"Indene-C60 bisadduct",z:"茚双加成",a:"ICBA",c:"1207461-57-1",f:"C72H16",m:"",s:"",k:"ETL"},
+{n:"Bathocuproine",z:"浴铜灵",a:"BCP",c:"4733-39-5",f:"C26H20N2",m:"360.46",s:"",k:"ETL"},
+{n:"Tin(IV) oxide",z:"二氧化锡",a:"SnO2",c:"18282-10-5",f:"O2Sn",m:"150.71",s:"",k:"ETL"},
+{n:"Nickel(II) oxide",z:"氧化镍",a:"NiOx",c:"1313-99-1",f:"NiO",m:"74.69",s:"",k:"HTL"},
+{n:"Titanium dioxide",z:"二氧化钛",a:"TiO2",c:"13463-67-7",f:"O2Ti",m:"79.87",s:"",k:"ETL"},
+{n:"Magnesium fluoride",z:"氟化镁",a:"MgF2",c:"7783-40-6",f:"F2Mg",m:"62.30",s:"",k:"other"},
+{n:"Lithium fluoride",z:"氟化锂",a:"LiF",c:"7789-24-4",f:"FLi",m:"25.94",s:"",k:"ETL"},
+{n:"Copper(I) iodide",z:"碘化亚铜",a:"CuI",c:"7681-65-4",f:"CuI",m:"190.45",s:"",k:"HTL"},
+{n:"Sodium iodide",z:"碘化钠",a:"NaI",c:"7681-82-5",f:"INa",m:"149.89",s:"",k:"additive"},
+{n:"Silver iodide",z:"碘化银",a:"AgI",c:"7783-96-2",f:"AgI",m:"234.77",s:"",k:"other"},
+{n:"F4-TCNQ",z:"",a:"F4TCNQ",c:"29261-33-4",f:"C12F4N4",m:"276.14",s:"",k:"HTL"},
+{n:"4-tert-Butylpyridine",z:"4-叔丁基吡啶",a:"tBP",c:"3978-81-2",f:"C9H13N",m:"135.21",s:"CC(C)(C)c1ccncc1",k:"HTL"},
+{n:"PEDOT:PSS",z:"聚乙撑二氧噻吩:聚苯乙烯磺酸盐",a:"PEDOT:PSS",c:"",f:"",m:"",s:"",k:"HTL"},
+{n:"Indium tin oxide",z:"氧化铟锡",a:"ITO",c:"",f:"",m:"",s:"",k:"other"},
+{n:"Spiro-OMeTAD",z:"",a:"Spiro-OMeTAD",c:"207739-72-8",f:"C81H68N4O8",m:"1225.43",s:"",k:"HTL"},
+{n:"PTAA (poly-triarylamine)",z:"聚三芳胺",a:"PTAA",c:"1333317-99-9",f:"",m:"",s:"",k:"HTL"},
+{n:"Poly(3-hexylthiophene)",z:"聚3-己基噻吩",a:"P3HT",c:"104934-50-1",f:"",m:"",s:"",k:"HTL"},
+{n:"LiTFSI",z:"双三氟甲磺酰亚胺锂",a:"LiTFSI",c:"90076-65-6",f:"C2F6LiNO4S2",m:"287.09",s:"",k:"HTL"},
+{n:"[2-(9H-Carbazol-9-yl)ethyl]phosphonic acid",z:"",a:"2PACz",c:"20999-38-6",f:"C14H14NO3P",m:"",s:"",k:"HTL"},
+{n:"[2-(3,6-Dimethoxy-9H-carbazol-9-yl)ethyl]phosphonic acid",z:"",a:"MeO-2PACz",c:"2377770-18-6",f:"",m:"",s:"",k:"HTL"},
+{n:"[2-(3,6-Dichloro-9H-carbazol-9-yl)ethyl]phosphonic acid",z:"",a:"Cl-2PACz",c:"3036926-72-1",f:"",m:"",s:"",k:"HTL"},
+{n:"[2-(3,6-Dibromo-9H-carbazol-9-yl)ethyl]phosphonic acid",z:"",a:"Br-2PACz",c:"2762888-11-7",f:"",m:"",s:"",k:"HTL"},
+{n:"[2-(3,6-Diiodo-9H-carbazol-9-yl)ethyl]phosphonic acid",z:"",a:"I-2PACz",c:"3026275-69-1",f:"",m:"",s:"",k:"HTL"},
+{n:"[4-(9H-Carbazol-9-yl)butyl]phosphonic acid",z:"",a:"4PACz",c:"20999-36-4",f:"C16H18NO3P",m:"",s:"",k:"HTL"},
+{n:"[4-(3,6-Dimethoxy-9H-carbazol-9-yl)butyl]phosphonic acid",z:"",a:"MeO-4PACz",c:"2922526-56-3",f:"",m:"",s:"",k:"HTL"},
+{n:"[4-(3,6-Dimethyl-9H-carbazol-9-yl)butyl]phosphonic acid",z:"",a:"Me-4PACz",c:"2747959-96-0",f:"",m:"",s:"",k:"HTL"},
+{n:"[4-(3,6-Dibromo-9H-carbazol-9-yl)butyl]phosphonic acid",z:"",a:"Br-4PACz",c:"2996161-28-3",f:"",m:"",s:"",k:"HTL"},
+{n:"[4-(3,6-Diphenyl-9H-carbazol-9-yl)butyl]phosphonic acid",z:"",a:"Ph-4PACz",c:"2814500-04-2",f:"",m:"",s:"",k:"HTL"},
+{n:"[2-(7H-Dibenzo[c,g]carbazol-7-yl)ethyl]phosphonic acid",z:"",a:"2PADCB",c:"2882156-61-6",f:"",m:"",s:"",k:"HTL"},
+{n:"[4-(7H-Dibenzo[c,g]carbazol-7-yl)butyl]phosphonic acid",z:"",a:"4PADCB",c:"2882156-63-8",f:"",m:"",s:"",k:"HTL"},
+{n:"Phenethylammonium iodide",z:"碘化苯乙铵",a:"PEAI",c:"151059-43-7",f:"C8H12IN",m:"249.10",s:"c1ccccc1CC[NH3+].[I-]",k:"additive"},
+{n:"Phenethylammonium bromide",z:"溴化苯乙铵",a:"PEABr",c:"53916-94-2",f:"C8H12BrN",m:"202.09",s:"c1ccccc1CC[NH3+].[Br-]",k:"additive"},
+{n:"Phenethylammonium chloride",z:"氯化苯乙铵",a:"PEACl",c:"156-28-5",f:"C8H12ClN",m:"157.64",s:"c1ccccc1CC[NH3+].[Cl-]",k:"additive"},
+{n:"n-Butylammonium iodide",z:"丁基碘化铵",a:"BAI",c:"36945-08-1",f:"C4H12IN",m:"201.05",s:"CCCC[NH3+].[I-]",k:"additive"},
+{n:"n-Butylammonium chloride",z:"氯化丁铵",a:"BACl",c:"3858-78-4",f:"C4H12ClN",m:"109.60",s:"CCCC[NH3+].[Cl-]",k:"additive"},
+{n:"n-Octylammonium iodide",z:"辛基碘化铵",a:"OAI",c:"60734-63-6",f:"C8H20IN",m:"257.15",s:"CCCCCCCC[NH3+].[I-]",k:"additive"},
+{n:"n-Octylammonium chloride",z:"辛基氯化铵",a:"OACl",c:"142-95-0",f:"C8H20ClN",m:"165.70",s:"CCCCCCCC[NH3+].[Cl-]",k:"additive"},
+{n:"n-Hexylammonium iodide",z:"己基碘化铵",a:"HAI",c:"54285-91-5",f:"C6H16IN",m:"229.10",s:"CCCCCC[NH3+].[I-]",k:"additive"},
+{n:"Oleylammonium iodide",z:"油胺氢碘酸盐",a:"OAMI",c:"1802520-56-4",f:"C18H38IN",m:"395.40",s:"",k:"additive"},
+{n:"Ethylenediammonium diiodide",z:"乙二胺氢碘酸盐",a:"EDAI2",c:"5700-49-2",f:"C2H10I2N2",m:"315.93",s:"[NH3+]CC[NH3+].[I-].[I-]",k:"additive"},
+{n:"Propane-1,3-diammonium diiodide",z:"丙二胺氢碘酸盐",a:"PDAI2",c:"120675-53-8",f:"C3H12I2N2",m:"329.95",s:"[NH3+]CCC[NH3+].[I-].[I-]",k:"additive"},
+{n:"Propane-1,3-diammonium bromide",z:"丙二胺氢溴酸盐",a:"PDABr2",c:"18773-03-0",f:"C3H12Br2N2",m:"235.95",s:"[NH3+]CCC[NH3+].[Br-].[Br-]",k:"additive"},
+{n:"n-Dodecylphosphonic acid",z:"十二烷基膦酸",a:"DDPA",c:"5137-70-2",f:"C12H27O3P",m:"250.31",s:"CCCCCCCCCCCCP(=O)(O)O",k:"HTL"},
+{n:"Butylammonium lead iodide",z:"丁铵碘化铅",a:"BA2PbI4",c:"132069-10-4",f:"",m:"",s:"",k:"other"},
+{n:"Phenethylammonium lead iodide",z:"苯乙铵碘化铅",a:"PEA2PbI4",c:"131457-08-4",f:"",m:"",s:"",k:"other"},
+{n:"Guanidinium bromide",z:"溴化胍",a:"GABr",c:"",f:"CH6BrN3",m:"139.98",s:"",k:"additive"},
+{n:"Propylammonium iodide",z:"",a:"PAI",c:"14488-45-0",f:"",m:"",s:"",k:"additive"},
+{n:"Propylammonium bromide",z:"",a:"PABr",c:"4905-83-3",f:"",m:"",s:"",k:"additive"},
+{n:"Propylammonium chloride",z:"",a:"PACl",c:"556-53-6",f:"",m:"",s:"",k:"additive"},
+{n:"Hexylammonium chloride",z:"",a:"HACl",c:"142-81-4",f:"",m:"",s:"",k:"additive"},
+{n:"n-Dodecylammonium iodide",z:"",a:"DAI",c:"34099-97-3",f:"",m:"",s:"",k:"additive"},
+{n:"n-Dodecylammonium bromide",z:"",a:"DABr",c:"26204-55-7",f:"",m:"",s:"",k:"additive"},
+{n:"n-Dodecylammonium chloride",z:"",a:"DACl",c:"929-73-7",f:"",m:"",s:"",k:"additive"},
+{n:"4-Fluorophenethylammonium iodide",z:"",a:"4F-PEAI",c:"1413269-55-2",f:"",m:"",s:"",k:"additive"},
+{n:"4-Fluorophenethylammonium chloride",z:"",a:"4F-PEACl",c:"459-19-8",f:"",m:"",s:"",k:"additive"},
+{n:"4-Bromophenethylammonium iodide",z:"",a:"4Br-PEAI",c:"2421114-10-3",f:"",m:"",s:"",k:"additive"},
+{n:"Phenethylammonium acetate",z:"",a:"PEAAc",c:"24722-38-1",f:"",m:"",s:"",k:"additive"},
+{n:"3-Phenylpropylammonium iodide",z:"",a:"PhPAI",c:"2673196-34-2",f:"",m:"",s:"",k:"additive"},
+{n:"4-tert-Butylbenzylammonium iodide",z:"",a:"TBPMAI",c:"2366873-27-8",f:"",m:"",s:"",k:"additive"},
+{n:"Benzylammonium chloride",z:"",a:"PMACl",c:"3287-99-8",f:"",m:"",s:"",k:"additive"},
+{n:"Cyclohexylammonium bromide",z:"",a:"CHABr",c:"26227-54-3",f:"",m:"",s:"",k:"additive"},
+{n:"2-(4-Methoxyphenyl)ethylammonium iodide",z:"",a:"4M-PEAI",c:"2588234-99-3",f:"",m:"",s:"",k:"additive"},
+{n:"Azetidinium chloride",z:"",a:"AzCl",c:"36520-39-5",f:"",m:"",s:"",k:"additive"},
+{n:"Guanidinothiourea hydrochloride",z:"",a:"GTC",c:"",f:"",m:"",s:"",k:"additive"},
+{n:"3-Amidinopyridinium chloride",z:"",a:"AP3MCl",c:"7356-60-7",f:"",m:"",s:"",k:"additive"},
+{n:"4-Amidinopyridinium chloride",z:"",a:"AP4MCl",c:"42518-06-9",f:"",m:"",s:"",k:"additive"},
+{n:"Piperazinium diiodide",z:"",a:"PDII",c:"58464-47-4",f:"",m:"",s:"",k:"additive"},
+{n:"Piperazinium monoiodide",z:"",a:"PI",c:"56310-12-4",f:"",m:"",s:"",k:"additive"},
+{n:"Dimethylammonium iodide",z:"",a:"DMAI",c:"51066-74-1",f:"",m:"",s:"",k:"additive"},
+{n:"Cysteamine hydroiodide",z:"",a:"ESAI",c:"98650-04-5",f:"",m:"",s:"",k:"additive"},
+{n:"2-Aminoethylphosphonic acid",z:"",a:"APA",c:"2041-14-7",f:"",m:"",s:"",k:"additive"},
+{n:"O-Phosphonoethanolamine",z:"",a:"OPL",c:"1071-23-4",f:"",m:"",s:"",k:"additive"},
+{n:"Ammonium fluoride",z:"氟化铵",a:"NH4F",c:"12125-01-8",f:"",m:"",s:"",k:"additive"},
+{n:"4-Mercaptobenzoic acid",z:"",a:"4MBA",c:"1074-36-8",f:"",m:"",s:"",k:"additive"},
+{n:"Perfluorooctyl iodide",z:"",a:"AFHI",c:"507-63-1",f:"",m:"",s:"",k:"additive"},
+{n:"3-Pyridylethylamine",z:"",a:"3-PyEA",c:"20173-24-4",f:"",m:"",s:"",k:"additive"},
+{n:"Methylammonium lead chloride",z:"",a:"MAPbCl3",c:"69276-12-6",f:"",m:"",s:"",k:"precursor"},
+{n:"Methylammonium lead bromide",z:"",a:"MAPbBr3",c:"69276-13-7",f:"",m:"",s:"",k:"precursor"},
+{n:"Formamidinium lead iodide",z:"",a:"FAPbI3",c:"1451592-07-6",f:"",m:"",s:"",k:"precursor"},
+{n:"Potassium benzenesulfonate",z:"",a:"PhSO3K",c:"934-55-4",f:"",m:"",s:"",k:"additive"}
 ];
-  function seedLibrary(){var changed=false;LIBRARY.forEach(function(e){var d={name:e.n,name_zh:e.z,cas:e.c};var k=catKey(d);if(catalog[k])return;catalog[k]={name:e.n,name_zh:e.z||"",iupac:e.n,cas:e.c||"",formula:e.f||"",mw:(e.m||computeMW(e.f))||"",smiles:e.s||"",img:"",ghs:[],flags:autoReg(e.c),aliases:(e.a?[e.a]:[])};changed=true;});if(changed)saveCatalog();}
+  function seedLibrary(){var changed=false;LIBRARY.forEach(function(e){var d={name:e.n,name_zh:e.z,cas:e.c};var k=catKey(d);if(catalog[k]){if(!catalog[k].category&&e.k){catalog[k].category=e.k;changed=true;}return;}catalog[k]={name:e.n,name_zh:e.z||"",iupac:e.n,cas:e.c||"",formula:e.f||"",mw:(e.m||computeMW(e.f))||"",smiles:e.s||"",img:"",ghs:[],flags:autoReg(e.c),aliases:(e.a?[e.a]:[]),category:e.k||""};changed=true;});if(changed)saveCatalog();}
   /* ---- editable chemical library (catalog) ---- */
   var libKey=null, libDelArm=null;
   function libAll(){return Object.keys(catalog).map(function(k){var c=catalog[k];c.__k=k;return c;}).sort(function(a,b){return (a.name||"").toLowerCase().localeCompare((b.name||"").toLowerCase());});}
   function needsStruct(c){return !c.img&&!c.smiles;}
-  function buildLibPanel(){var box=$("liblist");if(!box)return;var all=libAll();$("libcount").textContent="("+all.length+")";var need=all.filter(needsStruct).length;$("libneedcount").textContent=need?("— "+need+" of "+all.length+" need one"):"— all have a structure ✓";var onlyNeed=$("libneed")&&$("libneed").checked;var q=deSub(norm($("libsearch").value));var arr=all.filter(function(c){if(onlyNeed&&!needsStruct(c))return false;if(!q)return true;return deSub((c.name+" "+(c.name_zh||"")+" "+(c.cas||"")+" "+((c.aliases||[]).join(" "))).toLowerCase()).indexOf(q)>=0;});
-    box.innerHTML=arr.map(function(c){var k=c.__k.replace(/\\/g,"\\\\").replace(/'/g,"\\'");var thumb=c.img?'<img src="'+esc(c.img)+'">':(c.smiles?'<canvas class="struct" data-w="54" data-h="40" style="width:54px;height:40px" data-smiles="'+esc(c.smiles)+'"></canvas>':'<span class="mono" style="font-size:10px;color:var(--muted)">'+esc(c.formula||"—")+'</span>');
+  var libCatArmed=false;
+  function buildLibPanel(){var box=$("liblist");if(!box)return;var lcf=$("libcatfilter");if(lcf&&!lcf.options.length){lcf.innerHTML=catOptionsHTML("","filter");}var all=libAll();$("libcount").textContent="("+all.length+")";var need=all.filter(needsStruct).length;$("libneedcount").textContent=need?("— "+need+" of "+all.length+" need one"):"— all have a structure ✓";var onlyNeed=$("libneed")&&$("libneed").checked;var catf=lcf?lcf.value:"all";var q=deSub(norm($("libsearch").value));var arr=all.filter(function(c){if(onlyNeed&&!needsStruct(c))return false;if(catf&&catf!=="all"&&(c.category||"")!==catf)return false;if(!q)return true;return deSub((c.name+" "+(c.name_zh||"")+" "+(c.cas||"")+" "+((c.aliases||[]).join(" "))).toLowerCase()).indexOf(q)>=0;});
+    arr.sort(function(a,b){var d=catIndex(a.category)-catIndex(b.category);return d||(a.name||"").toLowerCase().localeCompare((b.name||"").toLowerCase());});
+    var out="",lastCat=null;
+    arr.forEach(function(c){var k=c.__k.replace(/\\/g,"\\\\").replace(/'/g,"\\'");var thumb=c.img?'<img src="'+esc(c.img)+'">':(c.smiles?'<canvas class="struct" data-w="54" data-h="40" style="width:54px;height:40px" data-smiles="'+esc(c.smiles)+'"></canvas>':'<span class="mono" style="font-size:10px;color:var(--muted)">'+esc(c.formula||"—")+'</span>');
+      var ck=c.category||"";if(ck!==lastCat){lastCat=ck;out+='<div class="libgroup">'+esc(catLabel(ck)||"Uncategorized 未分类")+'</div>';}
       var badge=needsStruct(c)?'<span class="needbadge" title="No SMILES and no image — add one so it draws">no structure</span>':'';
-      return '<div class="librow'+(needsStruct(c)?' needrow':'')+'"><div class="lthumb">'+thumb+'</div><div class="lmain"><div class="lname">'+esc(c.name)+(c.name_zh?' · <span style="font-weight:400">'+esc(c.name_zh)+'</span>':'')+badge+'</div><div class="lmeta">'+esc(c.cas||"no CAS")+((c.aliases&&c.aliases.length)?' · '+esc(c.aliases.join(", ")):'')+'</div></div>'
+      out+='<div class="librow'+(needsStruct(c)?' needrow':'')+'"><div class="lthumb">'+thumb+'</div><div class="lmain"><div class="lname">'+esc(c.name)+(c.name_zh?' · <span style="font-weight:400">'+esc(c.name_zh)+'</span>':'')+badge+'</div><div class="lmeta">'+esc(c.cas||"no CAS")+((c.aliases&&c.aliases.length)?' · '+esc(c.aliases.join(", ")):'')+'</div></div>'
         +'<button onclick="libEdit(\''+k+'\')" style="font-size:12px;padding:5px 10px">Edit</button>'
         +'<button class="iconb del" title="Delete from library" onclick="libDelete(\''+k+'\')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M5 7h14M10 7V5h4v2M6 7l1 13h10l1-13"/></svg></button></div>';
-    }).join("")||'<div class="empty-state">No library chemicals match.</div>';
+    });
+    box.innerHTML=out||'<div class="empty-state">No library chemicals match.</div>';
     drawStructures();}
   function toggleLib(){if($("libpanel").hidden){$("libpanel").hidden=false;$("libbtn").textContent="Close library";buildLibPanel();try{$("libpanel").scrollIntoView({behavior:"smooth",block:"start"});}catch(e){}}else closeLib();}
   function closeLib(){$("libpanel").hidden=true;$("libbtn").textContent="Chemical library 化学品库";}
   function openAddForLib(){editId=null;$("addpanel").hidden=false;$("addbtn").textContent="Close form";$("formtitle").textContent=libKey?"Edit library chemical 库":"New library chemical 库";$("savebtn").textContent="Save to library";$("editflag").hidden=true;$("loadhint").textContent="Editing the shared chemical library — identity only; vendor / amount / location are ignored here.";}
   function libAdd(){libKey="";resetForm();openAddForLib();try{$("addpanel").scrollIntoView({behavior:"smooth",block:"center"});}catch(e){}$("f_name").focus();}
-  function libEdit(key){var c=catalog[key];if(!c)return;libKey=key;resetForm();openAddForLib();$("f_name").value=c.name;$("f_name_zh").value=c.name_zh||"";$("f_iupac").value=c.iupac||c.name;$("f_aliases").value=(c.aliases||[]).join(", ");$("f_cas").value=c.cas||"";$("f_formula").value=c.formula||"";$("f_mw").value=c.mw||"";$("f_smiles").value=c.smiles||"";$("f_img").value=c.img||"";setGhs(c.ghs||[]);setFlags(c.flags||[]);previewStruct();try{$("addpanel").scrollIntoView({behavior:"smooth",block:"center"});}catch(e){}}
+  function libEdit(key){var c=catalog[key];if(!c)return;libKey=key;resetForm();openAddForLib();$("f_name").value=c.name;$("f_name_zh").value=c.name_zh||"";$("f_iupac").value=c.iupac||c.name;$("f_aliases").value=(c.aliases||[]).join(", ");$("f_cas").value=c.cas||"";$("f_formula").value=c.formula||"";$("f_mw").value=c.mw||"";$("f_smiles").value=c.smiles||"";$("f_img").value=c.img||"";$("f_cat").value=c.category||"";setGhs(c.ghs||[]);setFlags(c.flags||[]);previewStruct();try{$("addpanel").scrollIntoView({behavior:"smooth",block:"center"});}catch(e){}}
   function libDelete(key){if(libDelArm!==key){libDelArm=key;tool('Click the trash again to delete "'+(catalog[key]?catalog[key].name:key)+'" from the library.');setTimeout(function(){libDelArm=null;},3500);return;}delete catalog[key];libDelArm=null;saveCatalog();buildLibPanel();render();tool("Removed from library.");}
   function exitLib(){libKey=null;$("formtitle").textContent="Add a chemical";$("savebtn").textContent="Add to inventory";resetForm();}
   function seed(){
@@ -542,28 +555,32 @@
   function buildPicker(){$("ghssel").innerHTML=Object.keys(GHS).map(function(code){return '<button type="button" class="ghs-chip" data-code="'+code+'" aria-pressed="false" onclick="toggleGhs(this)">'+ghsIcon(code,40)+'<span class="ghs-cap">'+GHS[code].zh+'<em>'+GHS[code].en+'</em></span></button>';}).join("");}
   function buildFlags(){var fb=$("flags");fb.innerHTML="";ALLFLAGS.forEach(function(fl){var l=document.createElement("label");l.innerHTML='<input type="checkbox" value="'+fl+'"> '+fl;fb.appendChild(l);});}
 
-  function onName(){$("formerr").hidden=true;$("fetchnote").textContent="";var it=findItem($("f_name").value);$("loadhint").textContent=it?"Previous entry found — press Look up or pick from the list to reuse it.":"";updateFindLinks();}
+  /* identity fields that belong to a loaded chemical — cleared when the typed name changes, so a new search never inherits the last one's CAS/formula/structure */
+  var autoName="";
+  function clearIdentity(){["f_name_zh","f_iupac","f_aliases","f_cas","f_formula","f_mw","f_smiles","f_img"].forEach(function(id){$(id).value="";});$("f_cat").value="";setGhs([]);setFlags([]);$("autotag").textContent="auto-assigned from CAS; adjust if needed";$("ghsnote").textContent="";$("fetchnote").textContent="";$("loadhint").textContent="";clearImg();previewStruct();}
+  function onName(){$("formerr").hidden=true;if(!editId&&autoName&&norm($("f_name").value)!==autoName){autoName="";clearIdentity();}$("fetchnote").textContent="";var it=findItem($("f_name").value);$("loadhint").textContent=it?"Previous entry found — press Enter or pick from the list to reuse it.":"";updateFindLinks();}
   function onCas(){var r=autoReg($("f_cas").value.trim());if(r.length){setFlags(r);$("autotag").textContent="auto-assigned from CAS: "+r.join(" ");}updateFindLinks();}
   function maybeLoad(){if(editId)return;if($("f_cas").value.trim()||$("f_formula").value.trim()||$("f_aliases").value.trim()||$("f_name_zh").value.trim())return;var v=$("f_name").value;var it=findItem(v);if(it){loadFrom(it,true);return;}var c=catGet(v);if(c){loadFrom(c,true);applyGhsAuto("name");$("fetchnote").textContent="Auto-filled from our saved chemicals. Add vendor, amount and location.";return;}var d=dget(v);if(d){fillDict(d);applyGhsAuto("name");$("fetchnote").textContent="Auto-filled from the built-in list. Add vendor, amount and location.";}}
   function doLookup(){
-    var raw=$("f_name").value.trim();var cas=$("f_cas").value.trim();
-    var query=raw||cas;if(!query)return;
-    var it=findItem(raw)||(cas?findItem(cas):null);
+    /* search strictly by what's in the name box (which accepts a name, 中文, abbreviation or CAS) — never fall back to a leftover CAS from a previously loaded chemical */
+    var raw=$("f_name").value.trim();var query=raw||$("f_cas").value.trim();if(!query)return;
+    var it=findItem(query);
     if(it){loadFrom(it,true);return;}
-    var c=catGet(raw)||(cas?catGet(cas):null);
+    var c=catGet(query);
     if(c){loadFrom(c,true);applyGhsAuto("name");$("fetchnote").textContent="Filled from our saved chemicals. Add this bottle's vendor, amount and location.";return;}
-    var d=dget(raw)||(cas?dget(cas):null);
+    var d=dget(query);
     if(d){fillDict(d);applyGhsAuto("name");$("fetchnote").textContent="Filled from the built-in list. Check the pictograms against the bottle.";return;}
     tryPubChem(query);
   }
   function loadFrom(it,keepBottleBlank){
     $("f_name").value=it.name;$("f_name_zh").value=it.name_zh||"";$("f_iupac").value=it.iupac||"";
-    $("f_cas").value=it.cas||"";$("f_formula").value=it.formula||"";$("f_mw").value=it.mw||computeMW(it.formula);$("f_smiles").value=it.smiles||"";$("f_img").value=it.img||"";$("f_aliases").value=(it.aliases||[]).join(", ");
+    $("f_cas").value=it.cas||"";$("f_formula").value=it.formula||"";$("f_mw").value=it.mw||computeMW(it.formula);$("f_smiles").value=it.smiles||"";$("f_img").value=it.img||"";$("f_aliases").value=(it.aliases||[]).join(", ");$("f_cat").value=it.category||"";
     setGhs(it.ghs||[]);setFlags(it.flags||[]);previewStruct();
     if(!keepBottleBlank){$("f_vendor").value=it.vendor||"";setPurity(it.purity);setAmount(it.amount);$("f_location").value=it.location||"";$("f_by").value=it.registered_by||"";$("f_date").value=it.date_added||"";if(it.archived){$("dispedit").hidden=false;$("f_disp_date").value=it.disposed_date||"";$("f_disp_by").value=it.disposed_by||"";}else{$("dispedit").hidden=true;}}
+    autoName=norm(it.name);
     $("loadhint").textContent="Loaded a previous entry for "+it.name+" — fill in this bottle's vendor, amount and location.";updateFindLinks();
   }
-  function fillDict(d){$("f_name").value=d.n;$("f_name_zh").value=d.zh||"";$("f_iupac").value=d.n;$("f_aliases").value=d.abbr||"";$("f_cas").value=d.cas||"";$("f_formula").value=d.f||"";$("f_mw").value=d.mw||computeMW(d.f);$("f_smiles").value=d.smiles||"";$("f_img").value="";setGhs(d.ghs||[]);var r=autoReg(d.cas);setFlags(r);$("autotag").textContent=r.length?("auto-assigned from CAS: "+r.join(" ")):"none matched — add manually if needed";previewStruct();updateFindLinks();}
+  function fillDict(d){autoName=norm(d.n);$("f_name").value=d.n;$("f_name_zh").value=d.zh||"";$("f_iupac").value=d.n;$("f_aliases").value=d.abbr||"";$("f_cas").value=d.cas||"";$("f_formula").value=d.f||"";$("f_mw").value=d.mw||computeMW(d.f);$("f_smiles").value=d.smiles||"";$("f_img").value="";$("f_cat").value=d.k||"";setGhs(d.ghs||[]);var r=autoReg(d.cas);setFlags(r);$("autotag").textContent=r.length?("auto-assigned from CAS: "+r.join(" ")):"none matched — add manually if needed";previewStruct();updateFindLinks();}
   function toggleGhs(b){var on=b.classList.toggle("on");b.setAttribute("aria-pressed",on?"true":"false");}
   function getGhs(){return [].map.call(document.querySelectorAll("#ghssel .ghs-chip.on"),function(b){return b.dataset.code;});}
   function setGhs(arr){arr=arr||[];document.querySelectorAll("#ghssel .ghs-chip").forEach(function(b){var on=arr.indexOf(b.dataset.code)>=0;b.classList.toggle("on",on);b.setAttribute("aria-pressed",on?"true":"false");});}
@@ -612,7 +629,7 @@
           var cas="",zh="";try{var syn=sj.InformationList.Information[0].Synonym;for(var i=0;i<syn.length;i++){if(!cas&&CASRE.test(syn[i]))cas=syn[i];if(!zh&&/[一-鿿]/.test(syn[i])&&syn[i].length<=16)zh=syn[i];}}catch(e){}
           if(cas){$("f_cas").value=cas;onCas();}
           if(zh&&!$("f_name_zh").value.trim())$("f_name_zh").value=zh;
-          updateFindLinks();
+          autoName=norm($("f_name").value);updateFindLinks();
           note.innerHTML='Filled from PubChem'+(zh?' (incl. 中文名)':'')+'. <a href="https://pubchem.ncbi.nlm.nih.gov/compound/'+p.CID+'" style="color:var(--accent)" target="_blank" rel="noopener">safety sheet</a>.';
           return pcGhs(p.CID,ctrl).then(function(codes){if(codes&&codes.length&&!getGhs().length){setGhs(codes);$("ghsnote").textContent="auto-filled from PubChem — please verify against the bottle label.";}else{applyGhsAuto("pubchem");}});
         });
@@ -627,8 +644,8 @@
   function getAmount(){var av=$("f_amount_val").value.trim(),au=$("f_amount_unit").value;return av?(au?av+" "+au:av):"";}
   var AMT_UNITS=["ug","mg","g","kg","uL","mL","L"];
   function setAmount(s){var m=(s||"").match(/^\s*([0-9.]+)?\s*([A-Za-zµ]+)?/);$("f_amount_val").value=m&&m[1]?m[1]:"";var u=m&&m[2]?m[2]:"";$("f_amount_unit").value=AMT_UNITS.indexOf(u)>=0?u:"";}
-  function readForm(){return {name:$("f_name").value.trim(),name_zh:$("f_name_zh").value.trim(),iupac:$("f_iupac").value.trim(),aliases:($("f_aliases").value||"").split(/[,，、;；\s]+/).map(function(s){return s.trim();}).filter(Boolean),cas:$("f_cas").value.trim(),formula:$("f_formula").value.trim(),mw:$("f_mw").value.trim(),smiles:$("f_smiles").value.trim(),img:$("f_img").value||"",ghs:getGhs(),flags:getFlags(),vendor:$("f_vendor").value.trim(),purity:getPurity(),amount:getAmount(),location:$("f_location").value.trim(),registered_by:$("f_by").value.trim(),date_added:$("f_date").value.trim()};}
-  function resetForm(){["f_name","f_name_zh","f_iupac","f_aliases","f_cas","f_formula","f_mw","f_smiles","f_img","f_vendor","f_grade","f_purity","f_amount_val","f_location","f_by","f_date","f_disp_date","f_disp_by"].forEach(function(id){$(id).value="";});$("f_amount_unit").value="";$("dispedit").hidden=true;setGhs([]);setFlags([]);$("fetchnote").textContent="";$("loadhint").textContent="";$("findlinks").innerHTML="";$("vendorhint").innerHTML="";$("autotag").textContent="auto-assigned from CAS; adjust if needed";$("ghsnote").textContent="";previewStruct();}
+  function readForm(){return {name:$("f_name").value.trim(),name_zh:$("f_name_zh").value.trim(),iupac:$("f_iupac").value.trim(),aliases:($("f_aliases").value||"").split(/[,，、;；\s]+/).map(function(s){return s.trim();}).filter(Boolean),cas:$("f_cas").value.trim(),formula:$("f_formula").value.trim(),mw:$("f_mw").value.trim(),smiles:$("f_smiles").value.trim(),img:$("f_img").value||"",ghs:getGhs(),flags:getFlags(),vendor:$("f_vendor").value.trim(),purity:getPurity(),amount:getAmount(),location:$("f_location").value.trim(),registered_by:$("f_by").value.trim(),date_added:$("f_date").value.trim(),category:$("f_cat").value};}
+  function resetForm(){["f_name","f_name_zh","f_iupac","f_aliases","f_cas","f_formula","f_mw","f_smiles","f_img","f_vendor","f_grade","f_purity","f_amount_val","f_location","f_by","f_date","f_disp_date","f_disp_by","f_cat"].forEach(function(id){$(id).value="";});$("f_amount_unit").value="";$("dispedit").hidden=true;setGhs([]);setFlags([]);$("fetchnote").textContent="";$("loadhint").textContent="";$("findlinks").innerHTML="";$("vendorhint").innerHTML="";$("autotag").textContent="auto-assigned from CAS; adjust if needed";$("ghsnote").textContent="";autoName="";previewStruct();}
 
   function save(){
     var d=readForm();
@@ -637,7 +654,7 @@
       if(!d.iupac)d.iupac=d.name;
       var nk=catKey(d);
       if(libKey&&libKey!==nk)delete catalog[libKey];
-      catalog[nk]={name:d.name,name_zh:d.name_zh,iupac:d.iupac,cas:d.cas,formula:d.formula,mw:d.mw,smiles:d.smiles,img:d.img||"",ghs:d.ghs||[],flags:d.flags||[],aliases:d.aliases||[]};
+      catalog[nk]={name:d.name,name_zh:d.name_zh,iupac:d.iupac,cas:d.cas,formula:d.formula,mw:d.mw,smiles:d.smiles,img:d.img||"",ghs:d.ghs||[],flags:d.flags||[],aliases:d.aliases||[],category:d.category||""};
       saveCatalog();exitLib();buildLibPanel();render();tool('Saved "'+d.name+'" to the library.');return;
     }
     var editIt=editId?items.find(function(x){return x.id===editId;}):null;var editingArch=!!(editIt&&editIt.archived);
@@ -691,9 +708,12 @@
   function counts(){var c={current:0,active:0,empty:0,disposed:0,all:items.length};items.forEach(function(x){if(x.archived){c.disposed++;}else{c.current++;if(x.status==="active")c.active++;else c.empty++;}});return c;}
   function buildFilter(){var c=counts();var defs=[["current","In use"],["active","Active"],["empty","Empty"],["disposed","Disposed 已处置"],["all","All"]];$("filterbar").innerHTML=defs.map(function(d){return '<button class="fchip'+(filter===d[0]?" on":"")+'" onclick="setFilter(\''+d[0]+'\')">'+d[1]+' ('+c[d[0]]+')</button>';}).join("");}
   function inFilter(x){if(filter==="all")return true;if(filter==="disposed")return x.archived;if(filter==="current")return !x.archived;if(filter==="active")return !x.archived&&x.status==="active";if(filter==="empty")return !x.archived&&x.status==="empty";return true;}
-  function viewList(){var q=deSub(norm($("search").value));var list=items.filter(function(x){if(!inFilter(x))return false;if(locFilter!=="all"&&(x.location||"")!==locFilter)return false;if(venFilter!=="all"&&(x.vendor||"")!==venFilter)return false;if(!q)return true;var hay=deSub((x.name+" "+(x.name_zh||"")+" "+(x.iupac||"")+" "+((x.aliases||[]).join(" "))+" "+x.cas+" "+(x.formula||"")+" "+x.vendor+" "+x.location+" "+(x.registered_by||"")).toLowerCase());return hay.indexOf(q)>=0;});return sortList(list);}
+  function viewList(){var q=deSub(norm($("search").value));var list=items.filter(function(x){if(!inFilter(x))return false;if(catFilter!=="all"&&(x.category||"")!==catFilter)return false;if(locFilter!=="all"&&(x.location||"")!==locFilter)return false;if(venFilter!=="all"&&(x.vendor||"")!==venFilter)return false;if(!q)return true;var hay=deSub((x.name+" "+(x.name_zh||"")+" "+(x.iupac||"")+" "+((x.aliases||[]).join(" "))+" "+x.cas+" "+(x.formula||"")+" "+x.vendor+" "+x.location+" "+(x.registered_by||"")).toLowerCase());return hay.indexOf(q)>=0;});return sortList(list);}
   function setLocFilter(v){locFilter=v;render();}
   function setVenFilter(v){venFilter=v;render();}
+  function setCatFilter(v){catFilter=v;render();}
+  function catOptionsHTML(sel,mode){var h=mode==="filter"?'<option value="all">All categories 类别</option>':'<option value="">— none —</option>';CATS.forEach(function(c){h+='<option value="'+c.k+'"'+(sel===c.k?' selected':'')+'>'+esc(c.label)+'</option>';});return h;}
+  function buildCatFilter(){var sel=$("catfilter");if(!sel)return;sel.innerHTML=catOptionsHTML(catFilter==="all"?"":catFilter,"filter");sel.value=catFilter;}
   function buildVendorFilter(){var sel=$("venfilter");if(!sel)return;if(venFilter!=="all"&&vendorsList.indexOf(venFilter)<0)venFilter="all";sel.innerHTML='<option value="all">All vendors 供应商</option>'+vendorsList.map(function(v){return '<option'+(v===venFilter?" selected":"")+'>'+esc(v)+'</option>';}).join("");sel.value=venFilter;}
   function buildLocFilter(){var sel=$("locfilter");if(!sel)return;if(locFilter!=="all"&&locsList.indexOf(locFilter)<0)locFilter="all";sel.innerHTML='<option value="all">All locations 位置</option>'+locsList.map(function(v){return '<option'+(v===locFilter?" selected":"")+'>'+esc(v)+'</option>';}).join("");sel.value=locFilter;}
   function buildChoiceDatalists(){var dv=$("vendors"),dl=$("locs");if(dv)dv.innerHTML=vendorsList.map(function(v){return '<option>'+esc(v)+'</option>';}).join("");if(dl)dl.innerHTML=locsList.map(function(v){return '<option>'+esc(v)+'</option>';}).join("");}
@@ -713,7 +733,7 @@
 
   function render(){
     $("exbanner").hidden=!items.some(function(x){return x._ex;});
-    stats();buildFilter();buildVendorFilter();buildLocFilter();buildChoiceDatalists();buildDicts();
+    stats();buildFilter();buildCatFilter();buildVendorFilter();buildLocFilter();buildChoiceDatalists();buildDicts();
     var casCount={};items.forEach(function(x){if(x.cas)casCount[x.cas]=(casCount[x.cas]||0)+1;});
     var list=viewList();var tb=$("rows");
     if(!list.length){var rawq=$("search").value.trim();var ab='<button onclick="openAdd(document.getElementById(\'search\').value.trim())" style="margin-left:8px">'+(rawq?'Add &quot;'+esc(rawq)+'&quot; as new':'Add a chemical')+'</button>';tb.innerHTML='<tr><td colspan="11"><div class="empty-state">'+(items.length?"No matches in this view.":"No chemicals yet.")+ab+'</div></td></tr>';return;}
@@ -735,7 +755,8 @@
       var abbr=(x.aliases||[]).filter(function(a){return a&&a.length<=12&&!/\s/.test(a);});
       var sub=esc(x.formula||"")+(x.mw?' · '+esc(x.mw)+' g/mol':'')+(abbr.length?' · <span class="abbr">'+esc(abbr.join(", "))+'</span>':'')+(x.name_zh?' · <span class="zh">'+esc(x.name_zh)+'</span>':'');
       var logCell='<div class="logline"><span class="logtag">注册</span>'+esc(x.date_added||"—")+(x.registered_by?' · '+esc(x.registered_by):'')+'</div>'+(x.archived?'<div class="logline disc"><span class="logtag">丢弃</span>'+esc(x.disposed_date||"—")+(x.disposed_by?' · '+esc(x.disposed_by):'')+'</div>':'');
-      return '<tr class="'+(x.archived?"gone":"")+'"><td><span class="cn">'+esc(x.name)+(x._ex?'<span class="exrow">example</span>':'')+dupe+'<small>'+sub+'</small></span></td>'
+      var catTag=x.category?'<span class="cattag" title="'+esc(catLabel(x.category))+'">'+esc(catLabel(x.category))+'</span>':'';
+      return '<tr class="'+(x.archived?"gone":"")+'"><td><span class="cn">'+esc(x.name)+(x._ex?'<span class="exrow">example</span>':'')+catTag+dupe+'<small>'+sub+'</small></span></td>'
         +'<td class="mono">'+esc(x.cas||"—")+'</td><td>'+esc(x.vendor||"—")+'</td><td>'+esc(x.amount||"—")+'</td><td>'+esc(x.purity||"—")+'</td><td>'+esc(x.location||"—")+'</td>'
         +'<td>'+haz+'</td><td>'+struct+'</td><td>'+statusCell+'</td><td>'+logCell+'</td><td>'+actCell+'</td></tr>';
     }).join("");
@@ -749,14 +770,14 @@
   function copyCSV(){var rows=rowsForExport();var csv=toCSV(rows),btn=$("copybtn");function ok(){btn.textContent="Copied ✓";tool("Copied "+rows.length+" record"+(rows.length===1?"":"s")+" ("+filter+").");setTimeout(function(){btn.textContent="Copy view";},1500);}if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(csv).then(ok).catch(fb);}else fb();function fb(){var ta=document.createElement("textarea");ta.value=csv;ta.style.position="fixed";ta.style.left="-9999px";document.body.appendChild(ta);ta.select();try{document.execCommand("copy");ok();}catch(e){}ta.remove();}}
   function importCSV(){$("fileinput").click();}
   function onFile(e){var f=e.target.files[0];if(!f)return;var rd=new FileReader();rd.onload=function(){parseCSV(rd.result);e.target.value="";};rd.readAsText(f);}
-  function parseCSV(text){var rows=splitCSV(text);if(!rows.length)return;var head=rows[0].map(function(h){return h.trim().toLowerCase();});var added=0;function sl(v){return v?v.split(";").map(function(s){return s.trim();}).filter(Boolean):[];}for(var i=1;i<rows.length;i++){var r=rows[i];if(r.length===1&&r[0]==="")continue;var o={};head.forEach(function(h,j){o[h]=r[j]!=null?r[j]:"";});if(!o.name&&!o.name_zh)continue;items.unshift({id:uid(),name:o.name||o.name_zh,name_zh:o.name_zh||"",iupac:o.iupac||o.name||"",aliases:sl(o.aliases),cas:o.cas||"",formula:o.formula||"",mw:o.mw||"",smiles:o.smiles||"",ghs:sl(o.ghs),flags:sl(o.flags),vendor:o.vendor||"",purity:o.purity||"",amount:o.amount||"",location:o.location||"",registered_by:o.registered_by||"",date_added:o.date_added||today(),status:(o.status==="empty"?"empty":"active"),archived:/^(yes|true|1)$/i.test(o.archived||""),disposed_by:o.disposed_by||"",disposed_date:o.disposed_date||""});added++;}persist();render();tool("Imported "+added+" row"+(added===1?"":"s")+" from CSV.");}
+  function parseCSV(text){var rows=splitCSV(text);if(!rows.length)return;var head=rows[0].map(function(h){return h.trim().toLowerCase();});var added=0;function sl(v){return v?v.split(";").map(function(s){return s.trim();}).filter(Boolean):[];}for(var i=1;i<rows.length;i++){var r=rows[i];if(r.length===1&&r[0]==="")continue;var o={};head.forEach(function(h,j){o[h]=r[j]!=null?r[j]:"";});if(!o.name&&!o.name_zh)continue;items.unshift({id:uid(),name:o.name||o.name_zh,name_zh:o.name_zh||"",iupac:o.iupac||o.name||"",aliases:sl(o.aliases),cas:o.cas||"",formula:o.formula||"",mw:o.mw||"",smiles:o.smiles||"",ghs:sl(o.ghs),flags:sl(o.flags),category:o.category||"",vendor:o.vendor||"",purity:o.purity||"",amount:o.amount||"",location:o.location||"",registered_by:o.registered_by||"",date_added:o.date_added||today(),status:(o.status==="empty"?"empty":"active"),archived:/^(yes|true|1)$/i.test(o.archived||""),disposed_by:o.disposed_by||"",disposed_date:o.disposed_date||""});added++;}persist();render();tool("Imported "+added+" row"+(added===1?"":"s")+" from CSV.");}
   function splitCSV(text){var rows=[],row=[],cur="",q=false,i=0,ch;text=text.replace(/\r\n?/g,"\n");for(;i<text.length;i++){ch=text[i];if(q){if(ch==='"'){if(text[i+1]==='"'){cur+='"';i++;}else q=false;}else cur+=ch;}else{if(ch==='"')q=true;else if(ch===","){row.push(cur);cur="";}else if(ch==="\n"){row.push(cur);rows.push(row);row=[];cur="";}else cur+=ch;}}if(cur!==""||row.length){row.push(cur);rows.push(row);}return rows;}
 
   (function(){
     var root=document.documentElement,saved;try{saved=LS.getItem("lens-theme");}catch(e){}
     if(saved==="dark"||saved==="light")root.setAttribute("data-theme",saved);
     $("tgl").addEventListener("click",function(){var dark=matchMedia("(prefers-color-scheme:dark)").matches;var cur=root.getAttribute("data-theme")||(dark?"dark":"light");var next=cur==="dark"?"light":"dark";root.setAttribute("data-theme",next);try{LS.setItem("lens-theme",next);}catch(e){}});
-    buildPicker();buildFlags();load();render();
+    buildPicker();buildFlags();$("f_cat").innerHTML=catOptionsHTML("","form");load();render();
     document.addEventListener("paste",function(e){if($("addpanel").hidden)return;var it=e.clipboardData&&e.clipboardData.items;if(!it)return;for(var i=0;i<it.length;i++){if(it[i].type&&it[i].type.indexOf("image")===0){var f=it[i].getAsFile();if(f){resizeImg(f,function(url){if(url){$("f_img").value=url;showImgPreview(url);}});e.preventDefault();}return;}}});
     if(!window.SmilesDrawer){var sdt=setInterval(function(){if(window.SmilesDrawer){clearInterval(sdt);drawStructures();}},200);setTimeout(function(){clearInterval(sdt);},5000);}
     var probe=new Image();probe.onload=function(){if(probe.width>0){USE_OFFICIAL=true;buildPicker();render();}};probe.onerror=function(){};probe.src="ghs/"+GHSFILE.GHS02;
