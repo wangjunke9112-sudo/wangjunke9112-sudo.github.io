@@ -98,7 +98,7 @@
   .fchip.on{border-color:var(--accent);color:var(--accent);background:var(--accent-soft)}
   .toolmsg{font-size:12px;color:var(--muted);margin-left:auto}
   .tablewrap{overflow-x:auto;border:1px solid var(--border);border-radius:var(--radius)}
-  table{width:100%;border-collapse:collapse;font-size:13.5px;min-width:980px}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;min-width:1080px}
   th{text-align:left;font-family:var(--font-m);font-size:11px;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);font-weight:400;padding:10px;border-bottom:1px solid var(--border);background:var(--surface-2)}
   td{padding:10px;border-bottom:1px solid var(--border);vertical-align:middle}
   tr:last-child td{border-bottom:none}
@@ -116,6 +116,10 @@
   .pill.active{background:var(--ok-soft);color:var(--ok)} .pill.empty{background:var(--warn-soft);color:var(--warn)}
   .pill.disposed{background:var(--surface-2);color:var(--muted);cursor:default}
   .disp-meta{display:block;font-size:10.5px;color:var(--muted);margin-top:3px}
+  .logline{font-family:var(--font-m);font-size:11px;white-space:nowrap;color:var(--fg)}
+  .logline .logtag{color:var(--muted);margin-right:2px}
+  .logline.disc{margin-top:4px;color:var(--danger)}
+  .logline.disc .logtag{color:var(--danger)}
   .rowact{display:flex;gap:4px;justify-content:flex-end;align-items:center}
   .iconb{background:transparent;border:none;padding:5px;border-radius:7px;color:var(--muted);display:grid;place-items:center}
   .iconb:hover{background:var(--surface-2);color:var(--fg);border:none}
@@ -173,16 +177,16 @@
         </div>
         <input type="hidden" id="f_name_zh">
         <div class="f-half"><label for="f_iupac">Official / IUPAC name 规范名</label><input id="f_iupac" placeholder="canonical name (auto on lookup)"></div>
+        <div class="f-half"><label for="f_aliases">Our short names 别名 <span style="color:var(--muted)">— optional, e.g. EDAI2, XDA</span></label><input id="f_aliases" placeholder="comma-separated; type any of these later to recall this chemical"></div>
         <div><label for="f_cas">CAS 号 <span style="color:var(--muted)">— unique key</span></label><input id="f_cas" class="mono" placeholder="—" oninput="onCas()"></div>
         <div><label for="f_formula">Formula 分子式</label><input id="f_formula" class="mono" placeholder="—"></div>
         <div><label for="f_mw">Molar mass 摩尔质量</label><input id="f_mw" class="mono" placeholder="g/mol"></div>
         <div class="f-half"><label for="f_smiles">SMILES <span style="color:var(--muted)">— draws the structure (auto on lookup)</span></label><input id="f_smiles" class="mono" placeholder="optional" oninput="previewStruct()"></div>
-        <div><label for="f_signal">GHS signal</label><select id="f_signal"><option value="">—</option><option>Warning 警示</option><option>Danger 危险</option></select></div>
         <div><label for="f_vendor">Vendor 供应商</label><input id="f_vendor" list="vendors" placeholder="e.g. 阿拉丁 Aladdin"></div>
         <div><label for="f_purity">Purity 纯度</label><input id="f_purity" placeholder="e.g. 99.99%"></div>
         <div><label for="f_amount">Amount 数量</label><input id="f_amount" placeholder="e.g. 25 g"></div>
         <div><label for="f_location">Location 位置</label><input id="f_location" list="locs" placeholder="e.g. Glovebox A"></div>
-        <div><label for="f_by">Registered by 登记人</label><input id="f_by" placeholder="your name / 姓名"></div>
+        <div><label for="f_by">Registered by 注册人 *</label><input id="f_by" placeholder="your name / 姓名"></div>
         <div style="display:flex;align-items:flex-end"><canvas id="f_struct" class="struct" width="150" height="80" title="structure preview" style="cursor:default"></canvas></div>
 
         <div class="hazblock">
@@ -216,7 +220,7 @@
 
     <div class="tablewrap">
       <table>
-        <thead><tr><th>Chemical</th><th>CAS</th><th>Vendor</th><th>Amount</th><th>Purity</th><th>Location</th><th>Hazard</th><th>Structure</th><th>Status</th><th></th></tr></thead>
+        <thead><tr><th>Chemical</th><th>CAS</th><th>Vendor</th><th>Amount</th><th>Purity</th><th>Location</th><th>Hazard</th><th>Structure</th><th>Status</th><th>注册 / 丢弃</th><th></th></tr></thead>
         <tbody id="rows"></tbody>
       </table>
     </div>
@@ -225,7 +229,7 @@
 
 <footer><div class="wrap">LENS Lab · SCUT. Stored in this browser; Export keeps a CSV backup. Disposed bottles are archived with who disposed them, not erased. Structures are drawn from SMILES (no uploads); official UN GHS artwork loads from a local <span class="mono">ghs/</span> folder when present. A shared, multi-user version can sit behind the same page later.</div></footer>
 
-<script src="https://cdn.jsdelivr.net/npm/smiles-drawer@2.0.3/dist/smiles-drawer.min.js"></script>
+<script src="https://unpkg.com/smiles-drawer@1.2.0/dist/smiles-drawer.min.js"></script>
 <script>
   /* ---- GHS pictograms: official UN files from ghs/GHS0x.svg when present; faithful inline stand-ins otherwise ---- */
   var GHS={
@@ -240,7 +244,9 @@
     GHS09:{zh:"环境危害",en:"Environment",svg:'<path d="M12 22h8" stroke="#15181d" stroke-width="1.6" stroke-linecap="round"/><g stroke="#15181d" stroke-width="1.5" fill="none" stroke-linecap="round"><path d="M15 31v-8"/><path d="M15 25l-2.5-2.5M15 25l2.5-2.5M15 28l-2-2M15 28l2-2"/></g><g fill="#15181d"><path d="M21 29c2.5-2 6-2 8.5 0-2.5 2-6 2-8.5 0z"/><path d="M29 27.5l3.5-2v5z"/></g><path d="M24 28.1l1.4 1.4m0-1.4L24 29.5" stroke="#fff" stroke-width="0.8"/></g>'}
   };
   var USE_OFFICIAL=false;
-  function ghsIcon(code,px){var g=GHS[code];if(!g)return"";if(USE_OFFICIAL)return '<img class="ghs-dia" src="ghs/'+code+'.svg" width="'+px+'" height="'+px+'" alt="'+g.en+'" title="'+g.zh+' '+g.en+'">';return '<svg class="ghs-dia" width="'+px+'" height="'+px+'" viewBox="0 0 44 44" role="img" aria-label="'+g.en+'"><rect x="4.8" y="4.8" width="34.4" height="34.4" rx="4" transform="rotate(45 22 22)" fill="#fff" stroke="#E2231A" stroke-width="3.2"/>'+g.svg+'</svg>';}
+  /* maps each hazard class to the official Wikimedia filename as uploaded to the ghs/ folder */
+  var GHSFILE={GHS01:"GHS-pictogram-explos.svg",GHS02:"GHS-pictogram-flamme.svg",GHS03:"GHS-pictogram-rondflam.svg",GHS04:"GHS-pictogram-bottle.svg",GHS05:"GHS-pictogram-acid.svg",GHS06:"GHS-pictogram-skull.svg",GHS07:"GHS-pictogram-exclam.svg",GHS08:"GHS-pictogram-silhouete.svg",GHS09:"GHS-pictogram-pollu.svg"};
+  function ghsIcon(code,px){var g=GHS[code];if(!g)return"";if(USE_OFFICIAL)return '<img class="ghs-dia" src="ghs/'+GHSFILE[code]+'" width="'+px+'" height="'+px+'" alt="'+g.en+'" title="'+g.zh+' '+g.en+'">';return '<svg class="ghs-dia" width="'+px+'" height="'+px+'" viewBox="0 0 44 44" role="img" aria-label="'+g.en+'"><rect x="4.8" y="4.8" width="34.4" height="34.4" rx="4" transform="rotate(45 22 22)" fill="#fff" stroke="#E2231A" stroke-width="3.2"/>'+g.svg+'</svg>';}
 
   /* ---- Structure drawing from SMILES (smiles-drawer); always light theme on white, readable in both modes ---- */
   function drawOne(cv){if(!window.SmilesDrawer)return;var smi=cv.getAttribute("data-smiles");if(!smi)return;try{var d=new SmilesDrawer.Drawer({width:cv.width,height:cv.height,padding:6,compactDrawing:false,bondThickness:1.1});SmilesDrawer.parse(smi,function(t){d.draw(t,cv,"light",false);},function(){});}catch(e){}}
@@ -286,7 +292,7 @@
   function autoReg(cas){return (REG[cas]||[]).slice();}
 
   var ALLFLAGS=["危化品","易制毒","易制爆","剧毒品"];
-  var COLS=["name","name_zh","iupac","cas","formula","mw","smiles","signal","ghs","flags","vendor","purity","amount","location","registered_by","date_added","status","archived","disposed_by","disposed_date"];
+  var COLS=["name","name_zh","iupac","aliases","cas","formula","mw","smiles","ghs","flags","vendor","purity","amount","location","registered_by","date_added","status","archived","disposed_by","disposed_date"];
   var items=[], editId=null, confirmId=null, disposeId=null, filter="current", alignArmed=false;
   var LS=window.localStorage;
   var CASRE=/^\d{2,7}-\d{2}-\d$/;
@@ -297,7 +303,7 @@
   function $(id){return document.getElementById(id);}
   function today(){return new Date().toISOString().slice(0,10);}
   function dget(name){var k=norm(name);if(DICT[k])return DICT[k];var kk=k.replace(/\s/g,"");for(var x in DICT){var d=DICT[x];if(d.a&&d.a===kk)return d;if(d.abbr&&norm(d.abbr)===k)return d;if(d.zh&&d.zh===name.trim())return d;if(d.cas&&d.cas===name.trim())return d;if(d.aliases&&d.aliases.indexOf(k)>=0)return d;}return null;}
-  function findItem(v){v=norm(v);if(!v)return null;return items.find(function(x){return norm(x.name)===v||norm(x.name_zh)===v||norm(x.cas)===v||norm(x.iupac)===v;});}
+  function findItem(v){v=norm(v);if(!v)return null;return items.find(function(x){if(norm(x.name)===v||norm(x.name_zh)===v||norm(x.cas)===v||norm(x.iupac)===v)return true;return (x.aliases||[]).some(function(a){return norm(a)===v;});});}
 
   function load(){var raw=null;try{raw=LS.getItem("lens_inv_items");}catch(e){}if(raw){try{items=JSON.parse(raw)||[];}catch(e){items=[];}}else{items=seed();persist();}}
   function persist(){try{LS.setItem("lens_inv_items",JSON.stringify(items));}catch(e){}}
@@ -310,7 +316,7 @@
     return s.map(function(r){var d=dget(r.n)||{};return{id:uid(),_ex:true,name:r.n,name_zh:d.zh||"",iupac:d.n||r.n,cas:d.cas||"",formula:d.f||"",mw:d.mw||"",smiles:d.smiles||"",signal:d.sig||"",ghs:(d.ghs||[]).slice(),flags:autoReg(d.cas),vendor:r.v,purity:"",amount:r.am,location:r.lo,registered_by:"example",date_added:"2026-10-10",status:r.st,archived:!!r.arch,disposed_by:r.arch?"example":"",disposed_date:r.arch?"2026-10-15":""};});
   }
 
-  function buildDicts(){var dl=$("dict"),seen={};dl.innerHTML="";function add(v){if(!v)return;var key=v.toLowerCase();if(seen[key])return;seen[key]=1;var o=document.createElement("option");o.value=v;dl.appendChild(o);}Object.keys(DICT).forEach(function(k){var d=DICT[k];add(d.n);add(d.zh);if(d.abbr)add(d.abbr);});items.forEach(function(x){add(x.name);add(x.iupac);add(x.name_zh);});}
+  function buildDicts(){var dl=$("dict"),seen={};dl.innerHTML="";function add(v){if(!v)return;var key=v.toLowerCase();if(seen[key])return;seen[key]=1;var o=document.createElement("option");o.value=v;dl.appendChild(o);}Object.keys(DICT).forEach(function(k){var d=DICT[k];add(d.n);add(d.zh);if(d.abbr)add(d.abbr);});items.forEach(function(x){add(x.name);add(x.iupac);add(x.name_zh);(x.aliases||[]).forEach(add);});}
   function buildPicker(){$("ghssel").innerHTML=Object.keys(GHS).map(function(code){return '<button type="button" class="ghs-chip" data-code="'+code+'" aria-pressed="false" onclick="toggleGhs(this)">'+ghsIcon(code,40)+'<span class="ghs-cap">'+GHS[code].zh+'<em>'+GHS[code].en+'</em></span></button>';}).join("");}
   function buildFlags(){var fb=$("flags");fb.innerHTML="";ALLFLAGS.forEach(function(fl){var l=document.createElement("label");l.innerHTML='<input type="checkbox" value="'+fl+'"> '+fl;fb.appendChild(l);});}
 
@@ -328,13 +334,12 @@
   }
   function loadFrom(it,keepBottleBlank){
     $("f_name").value=it.name;$("f_name_zh").value=it.name_zh||"";$("f_iupac").value=it.iupac||"";
-    $("f_cas").value=it.cas||"";$("f_formula").value=it.formula||"";$("f_mw").value=it.mw||"";$("f_smiles").value=it.smiles||"";
-    setSignal(it.signal||"");setGhs(it.ghs||[]);setFlags(it.flags||[]);previewStruct();
+    $("f_cas").value=it.cas||"";$("f_formula").value=it.formula||"";$("f_mw").value=it.mw||"";$("f_smiles").value=it.smiles||"";$("f_aliases").value=(it.aliases||[]).join(", ");
+    setGhs(it.ghs||[]);setFlags(it.flags||[]);previewStruct();
     if(!keepBottleBlank){$("f_vendor").value=it.vendor||"";$("f_purity").value=it.purity||"";$("f_amount").value=it.amount||"";$("f_location").value=it.location||"";}
     $("loadhint").textContent="Loaded a previous entry for "+it.name+" — fill in this bottle's vendor, amount and location.";
   }
-  function fillDict(d){$("f_name").value=d.n;$("f_name_zh").value=d.zh||"";$("f_iupac").value=d.n;$("f_cas").value=d.cas||"";$("f_formula").value=d.f||"";$("f_mw").value=d.mw||"";$("f_smiles").value=d.smiles||"";setSignal(d.sig||"");setGhs(d.ghs||[]);var r=autoReg(d.cas);setFlags(r);$("autotag").textContent=r.length?("auto-assigned from CAS: "+r.join(" ")):"none matched — add manually if needed";previewStruct();}
-  function setSignal(v){$("f_signal").value=/danger/i.test(v)?"Danger 危险":/warning/i.test(v)?"Warning 警示":"";}
+  function fillDict(d){$("f_name").value=d.n;$("f_name_zh").value=d.zh||"";$("f_iupac").value=d.n;$("f_aliases").value="";$("f_cas").value=d.cas||"";$("f_formula").value=d.f||"";$("f_mw").value=d.mw||"";$("f_smiles").value=d.smiles||"";setGhs(d.ghs||[]);var r=autoReg(d.cas);setFlags(r);$("autotag").textContent=r.length?("auto-assigned from CAS: "+r.join(" ")):"none matched — add manually if needed";previewStruct();}
   function toggleGhs(b){var on=b.classList.toggle("on");b.setAttribute("aria-pressed",on?"true":"false");}
   function getGhs(){return [].map.call(document.querySelectorAll("#ghssel .ghs-chip.on"),function(b){return b.dataset.code;});}
   function setGhs(arr){arr=arr||[];document.querySelectorAll("#ghssel .ghs-chip").forEach(function(b){var on=arr.indexOf(b.dataset.code)>=0;b.classList.toggle("on",on);b.setAttribute("aria-pressed",on?"true":"false");});}
@@ -364,13 +369,16 @@
       .finally(function(){clearTimeout(to);});
   }
 
-  function readForm(){return {name:$("f_name").value.trim(),name_zh:$("f_name_zh").value.trim(),iupac:$("f_iupac").value.trim(),cas:$("f_cas").value.trim(),formula:$("f_formula").value.trim(),mw:$("f_mw").value.trim(),smiles:$("f_smiles").value.trim(),signal:$("f_signal").value,ghs:getGhs(),flags:getFlags(),vendor:$("f_vendor").value.trim(),purity:$("f_purity").value.trim(),amount:$("f_amount").value.trim(),location:$("f_location").value.trim(),registered_by:$("f_by").value.trim()};}
-  function resetForm(){["f_name","f_name_zh","f_iupac","f_cas","f_formula","f_mw","f_smiles","f_vendor","f_purity","f_amount","f_location","f_by"].forEach(function(id){$(id).value="";});$("f_signal").value="";setGhs([]);setFlags([]);$("fetchnote").textContent="";$("loadhint").textContent="";$("autotag").textContent="auto-assigned from CAS; adjust if needed";previewStruct();}
+  function readForm(){return {name:$("f_name").value.trim(),name_zh:$("f_name_zh").value.trim(),iupac:$("f_iupac").value.trim(),aliases:($("f_aliases").value||"").split(/[,，、;；\s]+/).map(function(s){return s.trim();}).filter(Boolean),cas:$("f_cas").value.trim(),formula:$("f_formula").value.trim(),mw:$("f_mw").value.trim(),smiles:$("f_smiles").value.trim(),ghs:getGhs(),flags:getFlags(),vendor:$("f_vendor").value.trim(),purity:$("f_purity").value.trim(),amount:$("f_amount").value.trim(),location:$("f_location").value.trim(),registered_by:$("f_by").value.trim()};}
+  function resetForm(){["f_name","f_name_zh","f_iupac","f_aliases","f_cas","f_formula","f_mw","f_smiles","f_vendor","f_purity","f_amount","f_location","f_by"].forEach(function(id){$(id).value="";});$("f_signal").value="";setGhs([]);setFlags([]);$("fetchnote").textContent="";$("loadhint").textContent="";$("autotag").textContent="auto-assigned from CAS; adjust if needed";previewStruct();}
 
   function save(){
-    var d=readForm();if(!d.name){$("formerr").hidden=false;return;}if(!d.iupac)d.iupac=d.name;
+    var d=readForm();
+    if(!d.name){$("formerr").textContent="Enter a chemical name first.";$("formerr").hidden=false;return;}
+    if(!d.registered_by){$("formerr").textContent="Enter the registrant's name (注册人).";$("formerr").hidden=false;return;}
+    if(!d.iupac)d.iupac=d.name;
     if(editId){var it=items.find(function(x){return x.id===editId;});if(it){Object.assign(it,d);delete it._ex;}cancelEdit();}
-    else{d.id=uid();d.date_added=today();d.status="active";d.archived=false;d.disposed_by="";d.disposed_date="";items.unshift(d);}
+    else{d.id=uid();d.date_added=today();d.status="active";d.archived=false;d.disposed_by="";d.disposed_date="";if(!d.aliases)d.aliases=[];items.unshift(d);}
     persist();resetForm();render();
   }
   function edit(id){var it=items.find(function(x){return x.id===id;});if(!it)return;editId=id;loadFrom(it,false);$("formtitle").textContent="Edit chemical";$("savebtn").textContent="Save changes";$("editflag").hidden=false;$("loadhint").textContent="";window.scrollTo({top:0,behavior:"smooth"});}
@@ -408,44 +416,45 @@
   function counts(){var c={current:0,active:0,empty:0,disposed:0,all:items.length};items.forEach(function(x){if(x.archived){c.disposed++;}else{c.current++;if(x.status==="active")c.active++;else c.empty++;}});return c;}
   function buildFilter(){var c=counts();var defs=[["current","In use"],["active","Active"],["empty","Empty"],["disposed","Disposed 已处置"],["all","All"]];$("filterbar").innerHTML=defs.map(function(d){return '<button class="fchip'+(filter===d[0]?" on":"")+'" onclick="setFilter(\''+d[0]+'\')">'+d[1]+' ('+c[d[0]]+')</button>';}).join("");}
   function inFilter(x){if(filter==="all")return true;if(filter==="disposed")return x.archived;if(filter==="current")return !x.archived;if(filter==="active")return !x.archived&&x.status==="active";if(filter==="empty")return !x.archived&&x.status==="empty";return true;}
-  function viewList(){var q=norm($("search").value);return items.filter(function(x){if(!inFilter(x))return false;return !q||((x.name+" "+(x.name_zh||"")+" "+(x.iupac||"")+" "+x.cas+" "+x.vendor+" "+x.location).toLowerCase().indexOf(q)>=0);});}
+  function viewList(){var q=norm($("search").value);return items.filter(function(x){if(!inFilter(x))return false;if(!q)return true;var hay=(x.name+" "+(x.name_zh||"")+" "+(x.iupac||"")+" "+((x.aliases||[]).join(" "))+" "+x.cas+" "+(x.formula||"")+" "+x.vendor+" "+x.location+" "+(x.registered_by||"")).toLowerCase();return hay.indexOf(q)>=0;});}
 
   function render(){
     $("exbanner").hidden=!items.some(function(x){return x._ex;});
     stats();buildFilter();buildDicts();
     var casCount={};items.forEach(function(x){if(x.cas)casCount[x.cas]=(casCount[x.cas]||0)+1;});
     var list=viewList();var tb=$("rows");
-    if(!list.length){tb.innerHTML='<tr><td colspan="10"><div class="empty-state">'+(items.length?"No matches in this view.":"No chemicals yet. Add your first above.")+'</div></td></tr>';return;}
+    if(!list.length){tb.innerHTML='<tr><td colspan="11"><div class="empty-state">'+(items.length?"No matches in this view.":"No chemicals yet. Add your first above.")+'</div></td></tr>';return;}
     tb.innerHTML=list.map(function(x){
       var haz=(x.ghs&&x.ghs.length)?'<span class="haz-icons">'+x.ghs.map(function(c){return ghsIcon(c,24);}).join("")+'</span>':'<span class="haz-none">—</span>';
       if(x.flags&&x.flags.length)haz+='<span class="haz-flags">'+esc(x.flags.join(" "))+'</span>';
       var struct=x.smiles?'<canvas class="struct" width="74" height="54" data-smiles="'+esc(x.smiles)+'" onclick="enlarge(this)" title="Click to enlarge"></canvas>':'<span class="nostruct">'+esc(x.formula||"—")+'</span>';
       var statusCell,actCell;
       if(x.archived){
-        statusCell='<span class="pill disposed">disposed</span><span class="disp-meta">by '+esc(x.disposed_by||"—")+(x.disposed_date?' · '+esc(x.disposed_date):'')+'</span>';
+        statusCell='<span class="pill disposed">disposed 已丢弃</span>';
         if(confirmId===x.id)actCell='<span class="confirm"><b>Delete forever?</b><button onclick="del(\''+x.id+'\')">Yes</button><button onclick="cancelDel()">No</button></span>';
         else actCell='<span class="rowact"><button class="iconb" title="Restore to inventory" onclick="restore(\''+x.id+'\')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12a8 8 0 1 0 2.3-5.6M4 4v4h4"/></svg></button><button class="iconb del" title="Delete permanently" onclick="askDel(\''+x.id+'\')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M5 7h14M10 7V5h4v2M6 7l1 13h10l1-13"/></svg></button></span>';
       }else{
         statusCell='<button class="pill '+x.status+'" onclick="cycle(\''+x.id+'\')" title="Click to toggle active / empty">'+x.status+'</button>';
-        if(disposeId===x.id)actCell='<span class="disp-form"><input id="dispinp" placeholder="Disposed by 处置人" autofocus><button class="btn-primary" onclick="doDispose(\''+x.id+'\')">Dispose</button><button onclick="cancelDispose()">✕</button></span>';
-        else actCell='<span class="rowact"><button class="iconb" title="Edit" onclick="edit(\''+x.id+'\')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4L19 9l-4-4L4 16z"/><path d="M14 6l4 4"/></svg></button><button class="iconb del" title="Dispose (records who)" onclick="askDispose(\''+x.id+'\')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M5 7h14M10 7V5h4v2M6 7l1 13h10l1-13"/></svg></button></span>';
+        if(disposeId===x.id)actCell='<span class="disp-form"><input id="dispinp" placeholder="丢弃人 discarded by" autofocus><button class="btn-primary" onclick="doDispose(\''+x.id+'\')">丢弃 Discard</button><button onclick="cancelDispose()">✕</button></span>';
+        else actCell='<span class="rowact"><button class="iconb" title="Edit" onclick="edit(\''+x.id+'\')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4L19 9l-4-4L4 16z"/><path d="M14 6l4 4"/></svg></button><button class="iconb del" title="Discard (records who 丢弃)" onclick="askDispose(\''+x.id+'\')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M5 7h14M10 7V5h4v2M6 7l1 13h10l1-13"/></svg></button></span>';
       }
       var dupe=(x.cas&&casCount[x.cas]>1)?'<span class="dupe" title="Same CAS on more than one record">CAS×'+casCount[x.cas]+'</span>':'';
-      var sub=esc(x.formula||"")+(x.mw?' · '+esc(x.mw)+' g/mol':'')+(x.name_zh?' · <span class="zh">'+esc(x.name_zh)+'</span>':'');
+      var sub=esc(x.formula||"")+(x.mw?' · '+esc(x.mw)+' g/mol':'')+(x.name_zh?' · <span class="zh">'+esc(x.name_zh)+'</span>':'')+((x.aliases&&x.aliases.length)?' · aka '+esc(x.aliases.join(", ")):'');
+      var logCell='<div class="logline"><span class="logtag">注册</span>'+esc(x.date_added||"—")+(x.registered_by?' · '+esc(x.registered_by):'')+'</div>'+(x.archived?'<div class="logline disc"><span class="logtag">丢弃</span>'+esc(x.disposed_date||"—")+(x.disposed_by?' · '+esc(x.disposed_by):'')+'</div>':'');
       return '<tr class="'+(x.archived?"gone":"")+'"><td><span class="cn">'+esc(x.name)+(x._ex?'<span class="exrow">example</span>':'')+dupe+'<small>'+sub+'</small></span></td>'
         +'<td class="mono">'+esc(x.cas||"—")+'</td><td>'+esc(x.vendor||"—")+'</td><td>'+esc(x.amount||"—")+'</td><td>'+esc(x.purity||"—")+'</td><td>'+esc(x.location||"—")+'</td>'
-        +'<td>'+haz+'</td><td>'+struct+'</td><td>'+statusCell+'</td><td>'+actCell+'</td></tr>';
+        +'<td>'+haz+'</td><td>'+struct+'</td><td>'+statusCell+'</td><td>'+logCell+'</td><td>'+actCell+'</td></tr>';
     }).join("");
     drawStructures();
   }
 
   function rowsForExport(){return viewList().filter(function(x){return !x._ex;});}
-  function toCSV(rows){var head=COLS.join(",");var lines=rows.map(function(x){return COLS.map(function(c){var v;if(c==="flags"||c==="ghs")v=(x[c]||[]).join(";");else if(c==="archived")v=x.archived?"yes":"";else v=(x[c]==null?"":x[c]);v=String(v);return /[",\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v;}).join(",");});return [head].concat(lines).join("\n");}
+  function toCSV(rows){var head=COLS.join(",");var lines=rows.map(function(x){return COLS.map(function(c){var v;if(c==="flags"||c==="ghs"||c==="aliases")v=(x[c]||[]).join(";");else if(c==="archived")v=x.archived?"yes":"";else v=(x[c]==null?"":x[c]);v=String(v);return /[",\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v;}).join(",");});return [head].concat(lines).join("\n");}
   function exportCSV(){var rows=rowsForExport();if(!rows.length){tool("Nothing to export in this view.");return;}var csv=toCSV(rows),blob=new Blob([csv],{type:"text/csv"}),url=URL.createObjectURL(blob);var a=document.createElement("a");a.href=url;a.download="lens-inventory-"+filter+"-"+today()+".csv";document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(url);},1000);tool("Exported "+rows.length+" record"+(rows.length===1?"":"s")+" ("+filter+").");}
   function copyCSV(){var rows=rowsForExport();var csv=toCSV(rows),btn=$("copybtn");function ok(){btn.textContent="Copied ✓";tool("Copied "+rows.length+" record"+(rows.length===1?"":"s")+" ("+filter+").");setTimeout(function(){btn.textContent="Copy view";},1500);}if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(csv).then(ok).catch(fb);}else fb();function fb(){var ta=document.createElement("textarea");ta.value=csv;ta.style.position="fixed";ta.style.left="-9999px";document.body.appendChild(ta);ta.select();try{document.execCommand("copy");ok();}catch(e){}ta.remove();}}
   function importCSV(){$("fileinput").click();}
   function onFile(e){var f=e.target.files[0];if(!f)return;var rd=new FileReader();rd.onload=function(){parseCSV(rd.result);e.target.value="";};rd.readAsText(f);}
-  function parseCSV(text){var rows=splitCSV(text);if(!rows.length)return;var head=rows[0].map(function(h){return h.trim().toLowerCase();});var added=0;function sl(v){return v?v.split(";").map(function(s){return s.trim();}).filter(Boolean):[];}for(var i=1;i<rows.length;i++){var r=rows[i];if(r.length===1&&r[0]==="")continue;var o={};head.forEach(function(h,j){o[h]=r[j]!=null?r[j]:"";});if(!o.name&&!o.name_zh)continue;items.unshift({id:uid(),name:o.name||o.name_zh,name_zh:o.name_zh||"",iupac:o.iupac||o.name||"",cas:o.cas||"",formula:o.formula||"",mw:o.mw||"",smiles:o.smiles||"",signal:o.signal||"",ghs:sl(o.ghs),flags:sl(o.flags),vendor:o.vendor||"",purity:o.purity||"",amount:o.amount||"",location:o.location||"",registered_by:o.registered_by||"",date_added:o.date_added||today(),status:(o.status==="empty"?"empty":"active"),archived:/^(yes|true|1)$/i.test(o.archived||""),disposed_by:o.disposed_by||"",disposed_date:o.disposed_date||""});added++;}persist();render();tool("Imported "+added+" row"+(added===1?"":"s")+" from CSV.");}
+  function parseCSV(text){var rows=splitCSV(text);if(!rows.length)return;var head=rows[0].map(function(h){return h.trim().toLowerCase();});var added=0;function sl(v){return v?v.split(";").map(function(s){return s.trim();}).filter(Boolean):[];}for(var i=1;i<rows.length;i++){var r=rows[i];if(r.length===1&&r[0]==="")continue;var o={};head.forEach(function(h,j){o[h]=r[j]!=null?r[j]:"";});if(!o.name&&!o.name_zh)continue;items.unshift({id:uid(),name:o.name||o.name_zh,name_zh:o.name_zh||"",iupac:o.iupac||o.name||"",aliases:sl(o.aliases),cas:o.cas||"",formula:o.formula||"",mw:o.mw||"",smiles:o.smiles||"",ghs:sl(o.ghs),flags:sl(o.flags),vendor:o.vendor||"",purity:o.purity||"",amount:o.amount||"",location:o.location||"",registered_by:o.registered_by||"",date_added:o.date_added||today(),status:(o.status==="empty"?"empty":"active"),archived:/^(yes|true|1)$/i.test(o.archived||""),disposed_by:o.disposed_by||"",disposed_date:o.disposed_date||""});added++;}persist();render();tool("Imported "+added+" row"+(added===1?"":"s")+" from CSV.");}
   function splitCSV(text){var rows=[],row=[],cur="",q=false,i=0,ch;text=text.replace(/\r\n?/g,"\n");for(;i<text.length;i++){ch=text[i];if(q){if(ch==='"'){if(text[i+1]==='"'){cur+='"';i++;}else q=false;}else cur+=ch;}else{if(ch==='"')q=true;else if(ch===","){row.push(cur);cur="";}else if(ch==="\n"){row.push(cur);rows.push(row);row=[];cur="";}else cur+=ch;}}if(cur!==""||row.length){row.push(cur);rows.push(row);}return rows;}
 
   (function(){
@@ -453,6 +462,7 @@
     if(saved==="dark"||saved==="light")root.setAttribute("data-theme",saved);
     $("tgl").addEventListener("click",function(){var dark=matchMedia("(prefers-color-scheme:dark)").matches;var cur=root.getAttribute("data-theme")||(dark?"dark":"light");var next=cur==="dark"?"light":"dark";root.setAttribute("data-theme",next);try{LS.setItem("lens-theme",next);}catch(e){}});
     buildPicker();buildFlags();load();render();
-    var probe=new Image();probe.onload=function(){if(probe.width>0){USE_OFFICIAL=true;buildPicker();render();}};probe.onerror=function(){};probe.src="ghs/GHS02.svg";
+    if(!window.SmilesDrawer){var sdt=setInterval(function(){if(window.SmilesDrawer){clearInterval(sdt);drawStructures();}},200);setTimeout(function(){clearInterval(sdt);},5000);}
+    var probe=new Image();probe.onload=function(){if(probe.width>0){USE_OFFICIAL=true;buildPicker();render();}};probe.onerror=function(){};probe.src="ghs/"+GHSFILE.GHS02;
   })();
 </script>
