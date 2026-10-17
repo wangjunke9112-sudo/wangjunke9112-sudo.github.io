@@ -216,7 +216,7 @@
         <div style="display:flex;align-items:flex-end;gap:8px"><canvas id="f_struct" class="struct" data-w="150" data-h="80" title="structure preview" style="width:150px;height:80px;cursor:default"></canvas><img id="f_structimg" class="struct" hidden alt="structure" style="width:150px;height:80px;object-fit:contain;background:#fff"></div>
 
         <div class="hazblock">
-          <span class="hazlabel"><b>GHS pictograms 危害象形图</b> — tap the red diamonds that match the ones printed on the bottle</span>
+          <span class="hazlabel"><b>GHS pictograms 危害象形图</b> — tap the red diamonds that match the ones printed on the bottle <span class="autotag" id="ghsnote"></span></span>
           <div class="ghssel" id="ghssel"></div>
         </div>
         <div class="hazblock">
@@ -544,16 +544,16 @@
 
   function onName(){$("formerr").hidden=true;$("fetchnote").textContent="";var it=findItem($("f_name").value);$("loadhint").textContent=it?"Previous entry found — press Look up or pick from the list to reuse it.":"";updateFindLinks();}
   function onCas(){var r=autoReg($("f_cas").value.trim());if(r.length){setFlags(r);$("autotag").textContent="auto-assigned from CAS: "+r.join(" ");}updateFindLinks();}
-  function maybeLoad(){if(editId)return;if($("f_cas").value.trim()||$("f_formula").value.trim()||$("f_aliases").value.trim()||$("f_name_zh").value.trim())return;var v=$("f_name").value;var it=findItem(v);if(it){loadFrom(it,true);return;}var c=catGet(v);if(c){loadFrom(c,true);$("fetchnote").textContent="Auto-filled from our saved chemicals. Add vendor, amount and location.";return;}var d=dget(v);if(d){fillDict(d);$("fetchnote").textContent="Auto-filled from the built-in list. Add vendor, amount and location.";}}
+  function maybeLoad(){if(editId)return;if($("f_cas").value.trim()||$("f_formula").value.trim()||$("f_aliases").value.trim()||$("f_name_zh").value.trim())return;var v=$("f_name").value;var it=findItem(v);if(it){loadFrom(it,true);return;}var c=catGet(v);if(c){loadFrom(c,true);applyGhsAuto("name");$("fetchnote").textContent="Auto-filled from our saved chemicals. Add vendor, amount and location.";return;}var d=dget(v);if(d){fillDict(d);applyGhsAuto("name");$("fetchnote").textContent="Auto-filled from the built-in list. Add vendor, amount and location.";}}
   function doLookup(){
     var raw=$("f_name").value.trim();var cas=$("f_cas").value.trim();
     var query=raw||cas;if(!query)return;
     var it=findItem(raw)||(cas?findItem(cas):null);
     if(it){loadFrom(it,true);return;}
     var c=catGet(raw)||(cas?catGet(cas):null);
-    if(c){loadFrom(c,true);$("fetchnote").textContent="Filled from our saved chemicals. Add this bottle's vendor, amount and location.";return;}
+    if(c){loadFrom(c,true);applyGhsAuto("name");$("fetchnote").textContent="Filled from our saved chemicals. Add this bottle's vendor, amount and location.";return;}
     var d=dget(raw)||(cas?dget(cas):null);
-    if(d){fillDict(d);$("fetchnote").textContent="Filled from the built-in list. Check the pictograms against the bottle.";return;}
+    if(d){fillDict(d);applyGhsAuto("name");$("fetchnote").textContent="Filled from the built-in list. Check the pictograms against the bottle.";return;}
     tryPubChem(query);
   }
   function loadFrom(it,keepBottleBlank){
@@ -569,6 +569,26 @@
   function setGhs(arr){arr=arr||[];document.querySelectorAll("#ghssel .ghs-chip").forEach(function(b){var on=arr.indexOf(b.dataset.code)>=0;b.classList.toggle("on",on);b.setAttribute("aria-pressed",on?"true":"false");});}
   function setFlags(arr){arr=arr||[];document.querySelectorAll("#flags input").forEach(function(c){c.checked=arr.indexOf(c.value)>=0;});}
   function getFlags(){return [].map.call(document.querySelectorAll("#flags input:checked"),function(c){return c.value;});}
+
+  /* ---- GHS auto-assist: keyword/class guess so students don't have to hunt for pictograms. Only ever fills an EMPTY picker, never overrides a stored set or a student's taps. Always flagged "verify against the bottle". ---- */
+  var GHSKW=[
+    [/\blead\b|plumb|pbi|pbbr|pbcl|pb\(|pb₂|lead\(/,["GHS08","GHS07","GHS09"]],
+    [/mercur|cadmium|thalli|arsen|chromate|dichromate|osmium|beryll/,["GHS06","GHS08","GHS09"]],
+    [/hydrazine|azide/,["GHS02","GHS06","GHS08"]],
+    [/phosphonic acid|phosphoric acid|sulfonic acid|sulfuric|nitric acid|hydrochloric|hydrobromic|hydroiodic|\bhf\b|hydrofluoric/,["GHS05","GHS07"]],
+    [/dimethylformamide|\bdmf\b|\bdma\b|dimethylacetamide|formamide/,["GHS02","GHS08","GHS07"]],
+    [/acetonitrile|\bacn\b|\bmecn\b/,["GHS02","GHS07"]],
+    [/chlorobenzene|toluene|xylene|styrene|\bbenzene\b/,["GHS02","GHS08","GHS07"]],
+    [/chloroform|dichloromethane|\bdcm\b|carbon tetrachloride|dichloroethane/,["GHS08","GHS07"]],
+    [/isopropanol|\bipa\b|ethanol|methanol|\bbutanol\b|propanol|\bacetone\b|\bhexane\b|heptane|pentane|ethyl acetate|methyl acetate|\banisole\b|\bthf\b|tetrahydrofuran|diethyl ether|\bether\b|pyrrolidone|\bnmp\b|methoxyethanol|dioxane|cyclohexane/,["GHS02","GHS07"]],
+    [/\btin\b|stann|sni|snf|sno|sncl/,["GHS07"]],
+    [/thiocyanate/,["GHS07"]],
+    [/iodide|bromide|chloride|fluoride|ammonium|iodate|bromate/,["GHS07"]]
+  ];
+  function guessGhs(){var s=(($("f_name").value||"")+" "+($("f_iupac").value||"")+" "+($("f_aliases").value||"")+" "+($("f_formula").value||"")).toLowerCase();for(var i=0;i<GHSKW.length;i++){if(GHSKW[i][0].test(s))return GHSKW[i][1].slice();}return [];}
+  function applyGhsAuto(source){if(getGhs().length)return;var g=guessGhs();if(!g.length){if(source==="pubchem")$("ghsnote").textContent="PubChem had no pictograms — tap them from the bottle label.";return;}setGhs(g);$("ghsnote").textContent=(source==="pubchem"?"auto-filled from PubChem":"auto-suggested from the name")+" — please verify against the bottle label.";}
+  /* best-effort authoritative GHS from PubChem's safety sheet (works on the live site; blocked in this preview) */
+  function pcGhs(cid,ctrl){return fetch("https://pubchem.ncbi.nlm.nih.gov/rest/pug_view/data/compound/"+cid+"/JSON?heading=GHS+Classification",{signal:ctrl.signal}).then(function(r){return r.ok?r.json():null;}).then(function(j){if(!j)return [];var codes={};try{var str=JSON.stringify(j);var m=str.match(/GHS0[1-9]/g);if(m)m.forEach(function(c){codes[c]=1;});if(!Object.keys(codes).length){[[/explos/i,"GHS01"],[/flammable/i,"GHS02"],[/oxidiz/i,"GHS03"],[/compressed gas|gas under/i,"GHS04"],[/corrosiv/i,"GHS05"],[/acute tox/i,"GHS06"],[/irritant|\bharmful\b|exclamation/i,"GHS07"],[/health hazard/i,"GHS08"],[/environ/i,"GHS09"]].forEach(function(p){if(p[0].test(str))codes[p[1]]=1;});}}catch(e){}return Object.keys(codes);}).catch(function(){return [];});}
 
   var lookupCtrl=null;
   function tryPubChem(query){
@@ -593,7 +613,8 @@
           if(cas){$("f_cas").value=cas;onCas();}
           if(zh&&!$("f_name_zh").value.trim())$("f_name_zh").value=zh;
           updateFindLinks();
-          note.innerHTML='Filled from PubChem'+(zh?' (incl. 中文名)':'')+'. Tap the GHS diamonds from the bottle — <a href="https://pubchem.ncbi.nlm.nih.gov/compound/'+p.CID+'" style="color:var(--accent)" target="_blank" rel="noopener">safety sheet</a>.';
+          note.innerHTML='Filled from PubChem'+(zh?' (incl. 中文名)':'')+'. <a href="https://pubchem.ncbi.nlm.nih.gov/compound/'+p.CID+'" style="color:var(--accent)" target="_blank" rel="noopener">safety sheet</a>.';
+          return pcGhs(p.CID,ctrl).then(function(codes){if(codes&&codes.length&&!getGhs().length){setGhs(codes);$("ghsnote").textContent="auto-filled from PubChem — please verify against the bottle label.";}else{applyGhsAuto("pubchem");}});
         });
       })
       .catch(function(){if(ctrl.signal.aborted)note.textContent="Lookup stopped (PubChem slow or unreachable). Enter the details by hand — vendor links above still work.";else note.textContent="No match from PubChem (it is also blocked in this preview; works on your own site). Enter details by hand.";})
@@ -607,7 +628,7 @@
   var AMT_UNITS=["ug","mg","g","kg","uL","mL","L"];
   function setAmount(s){var m=(s||"").match(/^\s*([0-9.]+)?\s*([A-Za-zµ]+)?/);$("f_amount_val").value=m&&m[1]?m[1]:"";var u=m&&m[2]?m[2]:"";$("f_amount_unit").value=AMT_UNITS.indexOf(u)>=0?u:"";}
   function readForm(){return {name:$("f_name").value.trim(),name_zh:$("f_name_zh").value.trim(),iupac:$("f_iupac").value.trim(),aliases:($("f_aliases").value||"").split(/[,，、;；\s]+/).map(function(s){return s.trim();}).filter(Boolean),cas:$("f_cas").value.trim(),formula:$("f_formula").value.trim(),mw:$("f_mw").value.trim(),smiles:$("f_smiles").value.trim(),img:$("f_img").value||"",ghs:getGhs(),flags:getFlags(),vendor:$("f_vendor").value.trim(),purity:getPurity(),amount:getAmount(),location:$("f_location").value.trim(),registered_by:$("f_by").value.trim(),date_added:$("f_date").value.trim()};}
-  function resetForm(){["f_name","f_name_zh","f_iupac","f_aliases","f_cas","f_formula","f_mw","f_smiles","f_img","f_vendor","f_grade","f_purity","f_amount_val","f_location","f_by","f_date","f_disp_date","f_disp_by"].forEach(function(id){$(id).value="";});$("f_amount_unit").value="";$("dispedit").hidden=true;setGhs([]);setFlags([]);$("fetchnote").textContent="";$("loadhint").textContent="";$("findlinks").innerHTML="";$("vendorhint").innerHTML="";$("autotag").textContent="auto-assigned from CAS; adjust if needed";previewStruct();}
+  function resetForm(){["f_name","f_name_zh","f_iupac","f_aliases","f_cas","f_formula","f_mw","f_smiles","f_img","f_vendor","f_grade","f_purity","f_amount_val","f_location","f_by","f_date","f_disp_date","f_disp_by"].forEach(function(id){$(id).value="";});$("f_amount_unit").value="";$("dispedit").hidden=true;setGhs([]);setFlags([]);$("fetchnote").textContent="";$("loadhint").textContent="";$("findlinks").innerHTML="";$("vendorhint").innerHTML="";$("autotag").textContent="auto-assigned from CAS; adjust if needed";$("ghsnote").textContent="";previewStruct();}
 
   function save(){
     var d=readForm();
