@@ -423,7 +423,11 @@
      and polls a cheap version counter to pick up others' edits.
      Local storage is kept as an offline cache / fallback.
      ============================================================ */
-  var API_BASE="https://api.lens-laboratory.com"; /* shared cloud storage Worker (custom domain — reachable in China, unlike *.workers.dev) */
+  /* Same Worker, two addresses: custom domain (reachable in China AND abroad) first, workers.dev as fallback. The page auto-picks whichever the current network can reach, so no single blocked host locks anyone out. */
+  var API_BASES=["https://api.lens-laboratory.com","https://lens-inventory-api.lens-laboratory.workers.dev"];
+  var API_BASE=(function(){try{return localStorage.getItem("lens_apibase")||API_BASES[0];}catch(e){return API_BASES[0];}})();
+  function probeBase(base){return new Promise(function(res){var ctl=(typeof AbortController!=="undefined")?new AbortController():null;var t=setTimeout(function(){if(ctl)try{ctl.abort();}catch(e){}res(false);},3500);fetch(base+"/api/version",ctl?{method:"GET",signal:ctl.signal}:{method:"GET"}).then(function(){clearTimeout(t);res(true);}).catch(function(){clearTimeout(t);res(false);});});}
+  function pickApiBase(cb){(function go(i){if(i>=API_BASES.length){if(cb)cb();return;}probeBase(API_BASES[i]).then(function(ok){if(ok){API_BASE=API_BASES[i];try{localStorage.setItem("lens_apibase",API_BASE);}catch(e){}if(cb)cb();}else go(i+1);});})(0);}
   var cloudVer=-1, suppressPush=true, cloudPoll=null, cloudBusy=false;
   var _shItems={}, _shCat={}, _shVend="", _shLoc="";
   var builtinSeed={}, cloudQ=[], cloudSending=false;
@@ -485,7 +489,7 @@
       setCloudStatus(true);
       render();
       if(cb)cb();
-    }).catch(function(){setCloudStatus(false);if(cb)cb();});
+    }).catch(function(){setCloudStatus(false);pickApiBase(function(){});if(cb)cb();});
   }
   function pollVersion(){
     if(!cloudOn()||cloudBusy)return;cloudBusy=true;
@@ -493,7 +497,7 @@
       cloudBusy=false;
       if(!j)return;
       if(typeof j.version==="number"&&j.version!==cloudVer)pullState();else setCloudStatus(true);
-    }).catch(function(){cloudBusy=false;setCloudStatus(false);});
+    }).catch(function(){cloudBusy=false;setCloudStatus(false);pickApiBase(function(){});});
   }
   function startCloud(){
     if(!cloudConfigured()){setCloudStatus();hideLogin();return;}   /* local dev mode: no sign-in */
@@ -508,7 +512,7 @@
   function hideLogin(){var o=$("loginwrap");if(o){o.hidden=true;o.style.display="none";}}
   function applyUser(){var lock=cloudOn()&&!isAdmin();var by=$("f_by");if(by){if(!editId)by.value=curName();by.readOnly=lock;}var db=$("f_disp_by");if(db)db.readOnly=lock;var ab=$("adminbtn");if(ab)ab.hidden=!isAdmin();}
   function doLogin(){var u=($("lg_user").value||"").trim(),pw=$("lg_pw").value||"";if(!u||!pw){$("lg_err").textContent="Enter your username and password.";return;}$("lg_err").textContent="Signing in…";$("lg_go").disabled=true;
-    fetch(API_BASE+"/api/login",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({username:u,password:pw})}).then(function(r){return r.json().then(function(j){return{ok:r.ok,j:j};});}).then(function(res){$("lg_go").disabled=false;if(!res.ok){$("lg_err").textContent=(res.j&&res.j.error)||"Sign-in failed.";return;}setApiToken(res.j.token);saveUser({username:res.j.username,name:res.j.name,role:res.j.role});$("lg_pw").value="";$("lg_err").textContent="";_shItems={};_shCat={};_shVend="";_shLoc="";startCloud();}).catch(function(){$("lg_go").disabled=false;$("lg_err").textContent="Can't reach the server — check your connection.";});}
+    fetch(API_BASE+"/api/login",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({username:u,password:pw})}).then(function(r){return r.json().then(function(j){return{ok:r.ok,j:j};});}).then(function(res){$("lg_go").disabled=false;if(!res.ok){$("lg_err").textContent=(res.j&&res.j.error)||"Sign-in failed.";return;}setApiToken(res.j.token);saveUser({username:res.j.username,name:res.j.name,role:res.j.role});$("lg_pw").value="";$("lg_err").textContent="";_shItems={};_shCat={};_shVend="";_shLoc="";startCloud();}).catch(function(){$("lg_go").disabled=false;pickApiBase(function(){});$("lg_err").textContent="Network hiccup — tap Sign in again.";});}
   function logout(){setApiToken("");saveUser(null);if(cloudPoll)clearInterval(cloudPoll);items=[];render();showLogin();setCloudStatus();}
   function changePw(){if(!cloudOn())return;var pw=window.prompt("Set a new password for your account ("+curName()+"):","");if(pw==null)return;pw=pw.trim();if(pw.length<4){tool("Password must be at least 4 characters.");return;}cloudFetch("/api/mypassword",{method:"POST",body:JSON.stringify({password:pw})}).then(function(r){if(r.status===401){onUnauthorized();return null;}return r.json();}).then(function(j){if(j&&j.ok)tool("Password changed — use it next time you sign in.");else tool((j&&j.error)||"Could not change the password.");}).catch(function(){tool("Could not reach the server.");});}
   /* ---- admin: manage accounts ---- */
@@ -945,7 +949,7 @@
     function paintTgl(){$("tgl").innerHTML=effTheme()==="dark"?SUN:MOON;}
     paintTgl();
     $("tgl").addEventListener("click",function(){var next=effTheme()==="dark"?"light":"dark";root.setAttribute("data-theme",next);try{LS.setItem("lens-theme",next);}catch(e){}paintTgl();});
-    buildPicker();buildFlags();$("f_cat").innerHTML=catOptionsHTML("","form");loadUser();load();render();suppressPush=false;startCloud();
+    buildPicker();buildFlags();$("f_cat").innerHTML=catOptionsHTML("","form");loadUser();load();render();suppressPush=false;pickApiBase(function(){startCloud();});
     document.addEventListener("paste",function(e){if($("addpanel").hidden)return;var it=e.clipboardData&&e.clipboardData.items;if(!it)return;for(var i=0;i<it.length;i++){if(it[i].type&&it[i].type.indexOf("image")===0){var f=it[i].getAsFile();if(f){resizeImg(f,function(url){if(url){$("f_img").value=url;showImgPreview(url);}});e.preventDefault();}return;}}});
     if(!window.SmilesDrawer){var sdt=setInterval(function(){if(window.SmilesDrawer){clearInterval(sdt);drawStructures();}},200);setTimeout(function(){clearInterval(sdt);},5000);}
     var probe=new Image();probe.onload=function(){if(probe.width>0){USE_OFFICIAL=true;buildPicker();render();}};probe.onerror=function(){};probe.src="/ghs/"+GHSFILE.GHS02;
