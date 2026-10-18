@@ -115,6 +115,8 @@
   .cn{font-weight:500}.cn small{display:block;color:var(--muted);font-family:var(--font-m);font-size:11px;font-weight:400}
   .cn .zh{color:var(--fg);font-family:var(--font-b)}
   .cn .abbr{color:var(--accent);font-family:var(--font-b);font-weight:600}
+  .nmedit{cursor:pointer;border-bottom:1px dotted transparent}
+  .nmedit:hover{color:var(--accent);border-bottom-color:var(--accent)}
   .mono{font-family:var(--font-m);font-size:12px}
   .haz-icons{display:inline-flex;gap:3px;flex-wrap:wrap;vertical-align:middle}
   .haz-flags{display:block;font-family:var(--font-m);font-size:10.5px;color:var(--danger);margin-top:3px}
@@ -385,7 +387,7 @@
   function dget(name){var k=norm(name);if(DICT[k])return DICT[k];var kk=k.replace(/\s/g,"");for(var x in DICT){var d=DICT[x];if(d.a&&d.a===kk)return d;if(d.abbr&&norm(d.abbr)===k)return d;if(d.zh&&d.zh===name.trim())return d;if(d.cas&&d.cas===name.trim())return d;if(d.aliases&&d.aliases.indexOf(k)>=0)return d;}return null;}
   function findItem(v){v=norm(v);if(!v)return null;return items.find(function(x){if(norm(x.name)===v||norm(x.name_zh)===v||norm(x.cas)===v||norm(x.iupac)===v)return true;return (x.aliases||[]).some(function(a){return norm(a)===v;});});}
 
-  function load(){var raw=null;try{raw=LS.getItem("lens_inv_items");}catch(e){}if(raw){try{items=JSON.parse(raw)||[];}catch(e){items=[];}}else{items=seed();persist();}loadCatalog();seedLibrary();loadLists();items.forEach(function(x){if(!catalog[catKey(x)])upsertCatalog(x);noteVendor(x.vendor);noteLoc(x.location);});Object.keys(catalog).forEach(function(k){var c=catalog[k];if(!c.mw&&c.formula){var w=computeMW(c.formula);if(w)c.mw=w;}});items.forEach(function(x){if(!x.mw&&x.formula){var w=computeMW(x.formula);if(w)x.mw=w;}if(!x.category){var c=catalog[catKey(x)];if(c&&c.category)x.category=c.category;}});saveCatalog();persist();}
+  function load(){var raw=null;try{raw=LS.getItem("lens_inv_items");}catch(e){}if(raw){try{items=JSON.parse(raw)||[];}catch(e){items=[];}}else{items=[];}items=items.filter(function(x){return !x._ex;});loadCatalog();seedLibrary();loadLists();items.forEach(function(x){if(!catalog[catKey(x)])upsertCatalog(x);noteVendor(x.vendor);noteLoc(x.location);});Object.keys(catalog).forEach(function(k){var c=catalog[k];if(!c.mw&&c.formula){var w=computeMW(c.formula);if(w)c.mw=w;}});items.forEach(function(x){if(!x.mw&&x.formula){var w=computeMW(x.formula);if(w)x.mw=w;}if(!x.category){var c=catalog[catKey(x)];if(c&&c.category)x.category=c.category;}});saveCatalog();persist();}
   function persist(){try{LS.setItem("lens_inv_items",JSON.stringify(items));}catch(e){}}
   /* persistent "known chemicals" catalog — identity + short names remembered even when no bottle remains */
   var catalog={};
@@ -404,7 +406,7 @@
   function noteLoc(v){v=(v||"").trim();if(v&&locsList.indexOf(v)<0){locsList.push(v);locsList.sort();saveLists();}}
   function vendorHint(){var v=$("f_vendor").value.trim(),el=$("vendorhint");if(!el)return;if(!v){el.innerHTML="";el.removeAttribute("data-match");return;}var lv=v.toLowerCase();var m=vendorsList.find(function(x){var lx=x.toLowerCase();return lx!==lv&&(lx.indexOf(lv)>=0||lv.indexOf(lx)>=0);});el.setAttribute("data-match",m||"");el.innerHTML=m?('similar on file: <a href="#" onclick="return adoptVendor()" style="color:var(--accent)">'+esc(m)+'</a> — click to use it'):"";}
   function adoptVendor(){var m=$("vendorhint").getAttribute("data-match");if(m)$("f_vendor").value=m;$("vendorhint").innerHTML="";return false;}
-  function updateFindLinks(){var el=$("findlinks");if(!el)return;var q=$("f_cas").value.trim()||$("f_name").value.trim();if(!q){el.innerHTML="";return;}var e=encodeURIComponent(q);el.innerHTML='Find product: <a target="_blank" rel="noopener" href="https://www.sigmaaldrich.com/US/en/search/'+e+'">Sigma-Aldrich</a> · <a target="_blank" rel="noopener" href="https://www.tcichemicals.com/CN/zh/search/?text='+e+'">TCI</a> · <a target="_blank" rel="noopener" href="https://www.aladdin-e.com/zh_cn/csearch.html?keywords='+e+'">阿拉丁</a> · <a target="_blank" rel="noopener" href="https://www.macklin.cn/products?keywords='+e+'">麦克林</a>';}
+  function updateFindLinks(){var el=$("findlinks");if(!el)return;var q=$("f_cas").value.trim()||$("f_name").value.trim();if(!q){el.innerHTML="";return;}var e=encodeURIComponent(q);el.innerHTML='Find product: <a target="_blank" rel="noopener" href="https://www.sigmaaldrich.com/US/en/search/'+e+'">Sigma-Aldrich</a> · <a target="_blank" rel="noopener" href="https://www.tcichemicals.com/CN/zh/search/?text='+e+'">TCI</a> · <a target="_blank" rel="noopener" href="https://www.greatcellsolarmaterials.com/catalogsearch/result/?q='+e+'">Greatcell</a> · <a target="_blank" rel="noopener" href="https://www.aladdin-e.com/zh_cn/csearch.html?keywords='+e+'">阿拉丁</a> · <a target="_blank" rel="noopener" href="https://www.macklin.cn/products?keywords='+e+'">麦克林</a>';}
   /* ---- Built-in perovskite chemical library (compiled from Suzhou Liwei + Sigma/TCI/Greatcell catalogs). Seeds the known-chemicals catalog on load so lookups resolve by name / 中文名 / abbreviation / CAS. ---- */
   var LIBRARY=[
 {n:"Lead(II) iodide",z:"碘化铅",a:"PbI2",c:"10101-63-0",f:"PbI2",m:"461.01",s:"",k:"precursor"},
@@ -767,7 +769,7 @@
       var sub=esc(x.formula||"")+(x.mw?' · '+esc(x.mw)+' g/mol':'')+(abbr.length?' · <span class="abbr">'+esc(abbr.join(", "))+'</span>':'')+(x.name_zh?' · <span class="zh">'+esc(x.name_zh)+'</span>':'');
       var logCell='<div class="logline"><span class="logtag">注册</span>'+esc(x.date_added||"—")+(x.registered_by?' · '+esc(x.registered_by):'')+'</div>'+(x.archived?'<div class="logline disc"><span class="logtag">丢弃</span>'+esc(x.disposed_date||"—")+(x.disposed_by?' · '+esc(x.disposed_by):'')+'</div>':'');
       var catTag=x.category?'<span class="cattag" title="'+esc(catLabel(x.category))+'">'+esc(catLabel(x.category))+'</span>':'';
-      return '<tr class="'+(x.archived?"gone":"")+'"><td><span class="cn">'+esc(x.name)+(x._ex?'<span class="exrow">example</span>':'')+catTag+dupe+'<small>'+sub+'</small></span></td>'
+      return '<tr class="'+(x.archived?"gone":"")+'"><td><span class="cn"><span class="nmedit" title="Click to edit this chemical" onclick="edit(\''+x.id+'\')">'+esc(x.name)+'</span>'+catTag+dupe+'<small>'+sub+'</small></span></td>'
         +'<td class="mono">'+esc(x.cas||"—")+'</td><td>'+esc(x.vendor||"—")+'</td><td>'+esc(x.amount||"—")+'</td><td>'+esc(x.purity||"—")+'</td><td>'+esc(x.location||"—")+'</td>'
         +'<td>'+haz+'</td><td>'+struct+'</td><td>'+statusCell+'</td><td>'+logCell+'</td><td>'+actCell+'</td></tr>';
     }).join("");
