@@ -26,8 +26,13 @@
  *       LENS.token()
  */
 (function () {
-  var API_BASE = "https://api.lens-laboratory.com";
+  // Same Worker, two addresses: custom domain (China + abroad) first, workers.dev fallback.
+  // The gate auto-picks whichever the current network can reach.
+  var API_BASES = ["https://api.lens-laboratory.com", "https://lens-inventory-api.lens-laboratory.workers.dev"];
   var LS = window.localStorage;
+  var API_BASE = (function(){ try { return LS.getItem("lens_apibase") || API_BASES[0]; } catch(e){ return API_BASES[0]; } })();
+  function probeBase(base){ return new Promise(function(res){ var ctl=(typeof AbortController!=="undefined")?new AbortController():null; var t=setTimeout(function(){ if(ctl) try{ctl.abort();}catch(e){} res(false); },3500); fetch(base+"/api/version", ctl?{method:"GET",signal:ctl.signal}:{method:"GET"}).then(function(){ clearTimeout(t); res(true); }).catch(function(){ clearTimeout(t); res(false); }); }); }
+  function pickApiBase(cb){ (function go(i){ if(i>=API_BASES.length){ if(cb)cb(); return; } probeBase(API_BASES[i]).then(function(ok){ if(ok){ API_BASE=API_BASES[i]; try{ LS.setItem("lens_apibase",API_BASE); }catch(e){} if(cb)cb(); } else go(i+1); }); })(0); }
 
   function tok()      { try { return LS.getItem("lens_token") || ""; } catch (e) { return ""; } }
   function setTok(t)  { try { t ? LS.setItem("lens_token", t) : LS.removeItem("lens_token"); } catch (e) {} }
@@ -127,7 +132,8 @@
       reveal();
     }).catch(function () {
       btn.disabled = false;
-      err.textContent = "Can't reach the server — check your connection.";
+      pickApiBase(function () {});
+      err.textContent = "Network hiccup — tap Sign in again.";
     });
   }
 
@@ -163,14 +169,16 @@
   function gateNow() {
     injectCSS();
     showSpinner();
-    if (!tok()) { showLogin(); return; }
-    verify(function (status) {
-      if (status === true || status === "offline") {
-        reveal();                       // trust local token; don't lock out if server unreachable
-      } else {
-        setTok(""); setUser(null);
-        showLogin("Session expired — please sign in again.");
-      }
+    pickApiBase(function () {           // find a reachable address first (handles China / travel)
+      if (!tok()) { showLogin(); return; }
+      verify(function (status) {
+        if (status === true || status === "offline") {
+          reveal();                     // trust local token; don't lock out if server unreachable
+        } else {
+          setTok(""); setUser(null);
+          showLogin("Session expired — please sign in again.");
+        }
+      });
     });
   }
 
