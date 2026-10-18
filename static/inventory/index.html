@@ -268,7 +268,7 @@
             <input id="f_conc" type="number" min="0" step="any" placeholder="conc" oninput="updateSpecHint()" onchange="normNum(this)" style="width:74px">
             <select id="f_conc_unit" onchange="updateSpecHint()" style="width:auto;min-width:76px"><option value="">unit</option><option>wt%</option><option>vol%</option><option>M</option><option>mg/mL</option></select>
             <span style="color:var(--muted);font-size:13px">in</span>
-            <input id="f_solvent" list="solvents" placeholder="solvent 溶剂" oninput="updateSpecHint()" style="width:120px">
+            <input id="f_solvent" list="solvents" placeholder="solvent 溶剂" oninput="updateSpecHint()" onchange="applySolventHaz()" style="width:120px">
             <datalist id="solvents"><option>ethanol</option><option>H2O</option><option>IPA</option><option>chlorobenzene</option><option>DMF</option><option>DMSO</option><option>toluene</option><option>acetonitrile</option><option>methanol</option><option>2-methoxyethanol</option></datalist>
             <span style="color:var(--muted);font-size:13px">· Mn</span>
             <input id="f_mn" type="number" min="0" step="any" placeholder="g/mol" oninput="updateSpecHint()" onchange="normNum(this)" style="width:88px">
@@ -423,9 +423,13 @@
     "7757-79-1":["危化品","易制爆"],"6484-52-2":["危化品","易制爆"],"7631-99-4":["危化品","易制爆"],
     "75-52-5":["危化品","易制爆"],"7429-90-5":["易制爆"],
     "143-33-9":["危化品","剧毒品"],"151-50-8":["危化品","剧毒品"],"1327-53-3":["危化品","剧毒品"],
-    "26628-22-8":["危化品","剧毒品"],"7487-94-7":["危化品","剧毒品"]
+    "26628-22-8":["危化品","剧毒品"],"7487-94-7":["危化品","剧毒品"],
+    "64-17-5":["危化品"],"109-99-9":["危化品"],"141-78-6":["危化品"],"100-66-3":["危化品"],"75-09-2":["危化品"],"109-86-4":["危化品"],"872-50-4":["危化品"]
   };
   function autoReg(cas){return (REG[cas]||[]).slice();}
+  /* common dispersion / ink solvents → CAS, so a formulation inherits the solvent's GHS + 管控 */
+  var SOLVCAS={"ethanol":"64-17-5","etoh":"64-17-5","乙醇":"64-17-5","methanol":"67-56-1","meoh":"67-56-1","甲醇":"67-56-1","h2o":"","water":"","水":"","ipa":"67-63-0","isopropanol":"67-63-0","2-propanol":"67-63-0","异丙醇":"67-63-0","acetone":"67-64-1","丙酮":"67-64-1","toluene":"108-88-3","甲苯":"108-88-3","dmf":"68-12-2","dmso":"67-68-5","chlorobenzene":"108-90-7","cb":"108-90-7","氯苯":"108-90-7","acetonitrile":"75-05-8","acn":"75-05-8","mecn":"75-05-8","乙腈":"75-05-8","thf":"109-99-9","tetrahydrofuran":"109-99-9","nmp":"872-50-4","2-methoxyethanol":"109-86-4","chloroform":"67-66-3","dcm":"75-09-2","dichloromethane":"75-09-2","ethyl acetate":"141-78-6","anisole":"100-66-3"};
+  function solventCas(s){s=norm(s);if(SOLVCAS[s]!=null)return SOLVCAS[s];var d=dget(s);return d&&d.cas?d.cas:"";}
 
   var ALLFLAGS=["危化品","易制毒","易制爆","剧毒品"];
   /* functional category in the device stack (editable per chemical) */
@@ -796,7 +800,20 @@
     [/thiocyanate/,["GHS07"]],
     [/iodide|bromide|chloride|fluoride|ammonium|iodate|bromate/,["GHS07"]]
   ];
-  function guessGhs(){var s=(($("f_name").value||"")+" "+($("f_iupac").value||"")+" "+($("f_aliases").value||"")+" "+($("f_formula").value||"")).toLowerCase();for(var i=0;i<GHSKW.length;i++){if(GHSKW[i][0].test(s))return GHSKW[i][1].slice();}return [];}
+  function ghsForText(s){s=(s||"").toLowerCase();for(var i=0;i<GHSKW.length;i++){if(GHSKW[i][0].test(s))return GHSKW[i][1].slice();}return [];}
+  function guessGhs(){return ghsForText(($("f_name").value||"")+" "+($("f_iupac").value||"")+" "+($("f_aliases").value||"")+" "+($("f_formula").value||""));}
+  /* a dispersion/solution inherits its SOLVENT's hazards: union the solvent's GHS + 管控 into whatever is already set (the chemical's own or the bottle's), never removing. */
+  function applySolventHaz(){
+    updateSpecHint();
+    var sv=$("f_solvent").value.trim();if(!sv)return;
+    var add=ghsForText(sv);var d=dget(sv);if(d&&d.ghs)add=add.concat(d.ghs);
+    var cur=getGhs(),merged=cur.slice(),addedG=[];
+    add.forEach(function(c){if(merged.indexOf(c)<0){merged.push(c);addedG.push(c);}});
+    if(addedG.length)setGhs(merged);
+    var addedF=[],cas=solventCas(sv);
+    if(cas){var fl=autoReg(cas),curf=getFlags(),mf=curf.slice();fl.forEach(function(v){if(mf.indexOf(v)<0){mf.push(v);addedF.push(v);}});if(addedF.length)setFlags(mf);}
+    if(addedG.length||addedF.length)$("ghsnote").textContent="Added "+sv+" hazards: "+addedG.map(function(c){return (GHS[c]&&GHS[c].en)||c;}).concat(addedF).join(", ")+" — verify against the bottle.";
+  }
   function applyGhsAuto(source){if(getGhs().length)return;var g=guessGhs();if(!g.length){if(source==="pubchem")$("ghsnote").textContent="PubChem had no pictograms — tap them from the bottle label.";return;}setGhs(g);$("ghsnote").textContent=(source==="pubchem"?"auto-filled from PubChem":"auto-suggested from the name")+" — please verify against the bottle label.";}
   /* best-effort authoritative GHS from PubChem's safety sheet (works on the live site; blocked in this preview) */
   function pcGhs(cid,ctrl){return fetch("https://pubchem.ncbi.nlm.nih.gov/rest/pug_view/data/compound/"+cid+"/JSON?heading=GHS+Classification",{signal:ctrl.signal}).then(function(r){return r.ok?r.json():null;}).then(function(j){if(!j)return [];var codes={};try{var str=JSON.stringify(j);var m=str.match(/GHS0[1-9]/g);if(m)m.forEach(function(c){codes[c]=1;});if(!Object.keys(codes).length){[[/explos/i,"GHS01"],[/flammable/i,"GHS02"],[/oxidiz/i,"GHS03"],[/compressed gas|gas under/i,"GHS04"],[/corrosiv/i,"GHS05"],[/acute tox/i,"GHS06"],[/irritant|\bharmful\b|exclamation/i,"GHS07"],[/health hazard/i,"GHS08"],[/environ/i,"GHS09"]].forEach(function(p){if(p[0].test(str))codes[p[1]]=1;});}}catch(e){}return Object.keys(codes);}).catch(function(){return [];});}
