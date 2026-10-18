@@ -56,8 +56,13 @@
   .eyebrow{font-family:var(--font-m);font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--hero-accent);margin:0}
   .htitle{font-family:var(--font-d);font-weight:700;font-size:clamp(26px,4vw,36px);line-height:1.04;margin:7px 0 0;letter-spacing:-.015em}
   .htitle .zh{font-weight:600;color:var(--hero-dim);font-size:.6em;margin-left:8px;letter-spacing:0}
-  .intern{display:inline-flex;align-items:center;gap:7px;margin-top:14px;font-family:var(--font-m);font-size:11px;letter-spacing:.06em;color:var(--hero-dim);border:1px solid rgba(157,177,214,.3);border-radius:20px;padding:4px 12px}
+  .intern{display:inline-flex;align-items:center;gap:7px;margin-top:14px;font-family:var(--font-m);font-size:11px;letter-spacing:.06em;color:var(--hero-dim);border:1px solid rgba(157,177,214,.3);border-radius:20px;padding:4px 12px;cursor:pointer}
+  .intern:hover{border-color:var(--hero-accent);color:var(--hero-accent)}
   .intern i{width:6px;height:6px;border-radius:50%;background:var(--hero-gold);display:inline-block}
+  .intern[data-s="ok"] i{background:#4FBF8A}
+  .intern[data-s="err"] i{background:#E8766A}
+  .intern[data-s="warn"] i{background:#E7BB6A}
+  .intern[data-s="local"] i{background:var(--hero-accent)}
 
   main .wrap{padding-block:20px 40px}
   .exbanner{background:var(--warn-soft);color:var(--warn);border:1px solid var(--border);border-radius:10px;padding:9px 14px;font-size:13px;display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:18px}
@@ -179,16 +184,12 @@
     </div>
     <p class="eyebrow">South China University of Technology · 华南理工大学</p>
     <h1 class="htitle">Chemical inventory<span class="zh">化学品库</span></h1>
-    <span class="intern"><i></i>Internal · saved in this browser</span>
+    <span class="intern" id="cloudtag" onclick="connectCloud()" title="Shared storage — click to enter the lab key"><i></i>Saved in this browser</span>
   </div>
 </header>
 
 <main>
   <div class="wrap">
-    <div class="exbanner" id="exbanner" hidden>
-      <span>Showing example rows so you can see how it works. Add your own, or clear them to start clean.</span>
-      <button onclick="clearExamples()">Clear examples</button>
-    </div>
 
     <div class="stats" id="stats"></div>
 
@@ -374,6 +375,89 @@
   var LS=window.localStorage;
   var CASRE=/^\d{2,7}-\d{2}-\d$/;
 
+  /* ============================================================
+     SHARED CLOUD STORAGE  (Cloudflare Worker + D1)
+     Dormant until API_BASE is set below. When set, the page loads
+     the shared inventory on open, pushes every change per-record,
+     and polls a cheap version counter to pick up others' edits.
+     Local storage is kept as an offline cache / fallback.
+     ============================================================ */
+  var API_BASE=""; /* <-- after deploying the Worker, put its URL here, e.g.
+                        "https://lens-inventory-api.yourname.workers.dev"  */
+  var cloudVer=-1, suppressPush=true, cloudPoll=null, cloudBusy=false;
+  var _shItems={}, _shCat={}, _shVend="", _shLoc="";
+  function apiKey(){try{return LS.getItem("lens_api_key")||"";}catch(e){return "";}}
+  function setApiKey(k){try{LS.setItem("lens_api_key",k||"");}catch(e){}}
+  function cloudConfigured(){return !!API_BASE;}
+  function cloudOn(){return !!API_BASE && !!apiKey();}
+  function cloudHeaders(){return {"Content-Type":"application/json","X-LENS-Key":apiKey()};}
+  function cloudFetch(path,opts){opts=opts||{};opts.headers=cloudHeaders();return fetch(API_BASE+path,opts);}
+  function setCloudStatus(state){var t=$("cloudtag");if(!t)return;var label,cls;
+    if(!cloudConfigured()){label="Saved in this browser";cls="local";}
+    else if(!apiKey()){label="Shared · tap to connect";cls="warn";}
+    else if(state==="auth"){label="Shared · wrong key";cls="err";}
+    else if(state===false){label="Shared · offline";cls="err";}
+    else{label="Shared · synced";cls="ok";}
+    t.innerHTML='<i></i>'+label;t.setAttribute("data-s",cls);}
+  function cloudAck(r){if(!r)return;if(r.status===401){setCloudStatus("auth");return;}r.json().then(function(j){if(j&&typeof j.version==="number")cloudVer=j.version;setCloudStatus(true);}).catch(function(){});}
+  function cloudFail(){setCloudStatus(false);}
+  function cloudPutItem(it){if(!cloudOn())return;cloudFetch("/api/item",{method:"POST",body:JSON.stringify(it)}).then(cloudAck).catch(cloudFail);}
+  function cloudDelItem(id){if(!cloudOn())return;cloudFetch("/api/item?id="+encodeURIComponent(id),{method:"DELETE"}).then(cloudAck).catch(cloudFail);}
+  function cloudPutCat(k,entry){if(!cloudOn())return;cloudFetch("/api/catalog",{method:"POST",body:JSON.stringify({k:k,entry:entry})}).then(cloudAck).catch(cloudFail);}
+  function cloudDelCat(k){if(!cloudOn())return;cloudFetch("/api/catalog?k="+encodeURIComponent(k),{method:"DELETE"}).then(cloudAck).catch(cloudFail);}
+  function cloudPutMeta(k,arr){if(!cloudOn())return;cloudFetch("/api/meta",{method:"POST",body:JSON.stringify({k:k,value:arr})}).then(cloudAck).catch(cloudFail);}
+  function syncItems(){if(!cloudOn()||suppressPush)return;var cur={};items.forEach(function(x){if(x&&x.id)cur[x.id]=JSON.stringify(x);});Object.keys(cur).forEach(function(id){if(_shItems[id]!==cur[id])cloudPutItem(JSON.parse(cur[id]));});Object.keys(_shItems).forEach(function(id){if(!(id in cur))cloudDelItem(id);});_shItems=cur;}
+  function syncCatalog(){if(!cloudOn()||suppressPush)return;var cur={};Object.keys(catalog).forEach(function(k){cur[k]=JSON.stringify(catalog[k]);});Object.keys(cur).forEach(function(k){if(_shCat[k]!==cur[k])cloudPutCat(k,catalog[k]);});Object.keys(_shCat).forEach(function(k){if(!(k in cur))cloudDelCat(k);});_shCat=cur;}
+  function syncMeta(){if(!cloudOn()||suppressPush)return;var v=JSON.stringify(vendorsList),l=JSON.stringify(locsList);if(v!==_shVend){_shVend=v;cloudPutMeta("vendors",vendorsList);}if(l!==_shLoc){_shLoc=l;cloudPutMeta("locs",locsList);}}
+  function resetShadows(){_shItems={};items.forEach(function(x){if(x&&x.id)_shItems[x.id]=JSON.stringify(x);});_shCat={};Object.keys(catalog).forEach(function(k){_shCat[k]=JSON.stringify(catalog[k]);});_shVend=JSON.stringify(vendorsList);_shLoc=JSON.stringify(locsList);}
+  function pullState(cb){
+    if(!cloudOn()){if(cb)cb();return;}
+    cloudFetch("/api/state",{method:"GET"}).then(function(r){if(r.status===401){setCloudStatus("auth");throw 0;}return r.json();}).then(function(j){
+      if(!j){if(cb)cb();return;}
+      var serverEmpty=(!j.items||!j.items.length)&&(!j.catalog||!Object.keys(j.catalog).length);
+      if(serverEmpty&&items&&items.length){
+        /* first connection to an empty database — upload what's already here instead of wiping it */
+        if(typeof j.version==="number")cloudVer=j.version;
+        _shItems={};_shCat={};_shVend="";_shLoc="";suppressPush=false;
+        persist();saveCatalog();saveLists();
+        setCloudStatus(true);render();if(cb)cb();return;
+      }
+      suppressPush=true;
+      items=j.items||[];
+      if(j.catalog)catalog=j.catalog;
+      if(j.vendors&&j.vendors.length)vendorsList=j.vendors;
+      if(j.locs&&j.locs.length)locsList=j.locs;
+      seedLibrary();
+      if(typeof j.version==="number")cloudVer=j.version;
+      persistLocal();saveCatalogLocal();saveListsLocal();
+      resetShadows();
+      suppressPush=false;
+      setCloudStatus(true);
+      render();
+      if(cb)cb();
+    }).catch(function(){setCloudStatus(false);if(cb)cb();});
+  }
+  function pollVersion(){
+    if(!cloudOn()||cloudBusy)return;cloudBusy=true;
+    cloudFetch("/api/version",{method:"GET"}).then(function(r){if(r.status===401){setCloudStatus("auth");throw 0;}return r.json();}).then(function(j){
+      cloudBusy=false;
+      if(j&&typeof j.version==="number"&&j.version!==cloudVer)pullState();else setCloudStatus(true);
+    }).catch(function(){cloudBusy=false;setCloudStatus(false);});
+  }
+  function startCloud(){
+    if(!cloudConfigured()){setCloudStatus();return;}
+    setCloudStatus(cloudOn()?undefined:"warn");
+    if(cloudOn())pullState();
+    if(cloudPoll)clearInterval(cloudPoll);
+    cloudPoll=setInterval(pollVersion,20000);
+    try{window.addEventListener("focus",pollVersion);}catch(e){}
+  }
+  function connectCloud(){
+    if(!cloudConfigured()){tool("Shared storage isn't set up yet — the Worker URL (API_BASE) needs to be filled in.");return;}
+    var k=window.prompt("Enter the shared lab key to connect this device to the group inventory:",apiKey()||"");
+    if(k==null)return;setApiKey((k||"").trim());_shItems={};_shCat={};_shVend="";_shLoc="";startCloud();
+  }
+
   function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,6);}
   function norm(s){return (s||"").trim().toLowerCase();}
   function esc(s){return (s==null?"":String(s)).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];});}
@@ -388,11 +472,13 @@
   function findItem(v){v=norm(v);if(!v)return null;return items.find(function(x){if(norm(x.name)===v||norm(x.name_zh)===v||norm(x.cas)===v||norm(x.iupac)===v)return true;return (x.aliases||[]).some(function(a){return norm(a)===v;});});}
 
   function load(){var raw=null;try{raw=LS.getItem("lens_inv_items");}catch(e){}if(raw){try{items=JSON.parse(raw)||[];}catch(e){items=[];}}else{items=[];}items=items.filter(function(x){return !x._ex;});loadCatalog();seedLibrary();loadLists();items.forEach(function(x){if(!catalog[catKey(x)])upsertCatalog(x);noteVendor(x.vendor);noteLoc(x.location);});Object.keys(catalog).forEach(function(k){var c=catalog[k];if(!c.mw&&c.formula){var w=computeMW(c.formula);if(w)c.mw=w;}});items.forEach(function(x){if(!x.mw&&x.formula){var w=computeMW(x.formula);if(w)x.mw=w;}if(!x.category){var c=catalog[catKey(x)];if(c&&c.category)x.category=c.category;}});saveCatalog();persist();}
-  function persist(){try{LS.setItem("lens_inv_items",JSON.stringify(items));}catch(e){}}
+  function persistLocal(){try{LS.setItem("lens_inv_items",JSON.stringify(items));}catch(e){}}
+  function persist(){persistLocal();syncItems();}
   /* persistent "known chemicals" catalog — identity + short names remembered even when no bottle remains */
   var catalog={};
   function loadCatalog(){try{catalog=JSON.parse(LS.getItem("lens_inv_catalog")||"{}")||{};}catch(e){catalog={};}}
-  function saveCatalog(){try{LS.setItem("lens_inv_catalog",JSON.stringify(catalog));}catch(e){}}
+  function saveCatalogLocal(){try{LS.setItem("lens_inv_catalog",JSON.stringify(catalog));}catch(e){}}
+  function saveCatalog(){saveCatalogLocal();syncCatalog();}
   function catKey(d){var cas=(d.cas||"").trim();return cas?("cas:"+cas):("n:"+norm(d.name||d.n||""));}
   function upsertCatalog(d){if(!d.name)return;var k=catKey(d);var ex=catalog[k]||{};catalog[k]={name:d.name,name_zh:d.name_zh||"",iupac:d.iupac||d.name,cas:d.cas||"",formula:d.formula||"",mw:d.mw||"",smiles:d.smiles||"",img:d.img||ex.img||"",ghs:(d.ghs||[]).slice(),flags:(d.flags||[]).slice(),aliases:(d.aliases||[]).slice(),category:d.category||ex.category||""};saveCatalog();}
   function catGet(query){var v=norm(query);if(!v)return null;for(var k in catalog){var c=catalog[k];if(norm(c.name)===v||norm(c.name_zh)===v||norm(c.iupac)===v||norm(c.cas)===v)return c;if((c.aliases||[]).some(function(a){return norm(a)===v;}))return c;}return null;}
@@ -401,7 +487,8 @@
   var SEED_VENDORS=["Sigma-Aldrich","TCI","Greatcell Solar Materials","苏州励为 Liwei","阿拉丁 Aladdin","麦克林 Macklin","西陇 Xilong","Alfa Aesar","Thermo Fisher","J&K Scientific","安耐吉 Energy Chemical","Advanced Election Technology","Xi'an Polymer Light Technology"];
   var vendorsList=[], locsList=[];
   function loadLists(){try{vendorsList=JSON.parse(LS.getItem("lens_inv_vendors")||"null")||SEED_VENDORS.slice();}catch(e){vendorsList=SEED_VENDORS.slice();}try{locsList=JSON.parse(LS.getItem("lens_inv_locs")||"null")||DEFAULT_LOCS.slice();}catch(e){locsList=DEFAULT_LOCS.slice();}}
-  function saveLists(){try{LS.setItem("lens_inv_vendors",JSON.stringify(vendorsList));LS.setItem("lens_inv_locs",JSON.stringify(locsList));}catch(e){}}
+  function saveListsLocal(){try{LS.setItem("lens_inv_vendors",JSON.stringify(vendorsList));LS.setItem("lens_inv_locs",JSON.stringify(locsList));}catch(e){}}
+  function saveLists(){saveListsLocal();syncMeta();}
   function noteVendor(v){v=(v||"").trim();if(v&&vendorsList.indexOf(v)<0){vendorsList.push(v);vendorsList.sort();saveLists();}}
   function noteLoc(v){v=(v||"").trim();if(v&&locsList.indexOf(v)<0){locsList.push(v);locsList.sort();saveLists();}}
   function vendorHint(){var v=$("f_vendor").value.trim(),el=$("vendorhint");if(!el)return;if(!v){el.innerHTML="";el.removeAttribute("data-match");return;}var lv=v.toLowerCase();var m=vendorsList.find(function(x){var lx=x.toLowerCase();return lx!==lv&&(lx.indexOf(lv)>=0||lv.indexOf(lx)>=0);});el.setAttribute("data-match",m||"");el.innerHTML=m?('similar on file: <a href="#" onclick="return adoptVendor()" style="color:var(--accent)">'+esc(m)+'</a> — click to use it'):"";}
@@ -745,7 +832,6 @@
   function setSort(v){sortBy=v;render();}
 
   function render(){
-    $("exbanner").hidden=!items.some(function(x){return x._ex;});
     stats();buildFilter();buildCatFilter();buildVendorFilter();buildLocFilter();buildChoiceDatalists();buildDicts();
     var casCount={};items.forEach(function(x){if(x.cas)casCount[x.cas]=(casCount[x.cas]||0)+1;});
     var list=viewList();var tb=$("rows");
@@ -795,7 +881,7 @@
     function paintTgl(){$("tgl").innerHTML=effTheme()==="dark"?SUN:MOON;}
     paintTgl();
     $("tgl").addEventListener("click",function(){var next=effTheme()==="dark"?"light":"dark";root.setAttribute("data-theme",next);try{LS.setItem("lens-theme",next);}catch(e){}paintTgl();});
-    buildPicker();buildFlags();$("f_cat").innerHTML=catOptionsHTML("","form");load();render();
+    buildPicker();buildFlags();$("f_cat").innerHTML=catOptionsHTML("","form");load();render();suppressPush=false;startCloud();
     document.addEventListener("paste",function(e){if($("addpanel").hidden)return;var it=e.clipboardData&&e.clipboardData.items;if(!it)return;for(var i=0;i<it.length;i++){if(it[i].type&&it[i].type.indexOf("image")===0){var f=it[i].getAsFile();if(f){resizeImg(f,function(url){if(url){$("f_img").value=url;showImgPreview(url);}});e.preventDefault();}return;}}});
     if(!window.SmilesDrawer){var sdt=setInterval(function(){if(window.SmilesDrawer){clearInterval(sdt);drawStructures();}},200);setTimeout(function(){clearInterval(sdt);},5000);}
     var probe=new Image();probe.onload=function(){if(probe.width>0){USE_OFFICIAL=true;buildPicker();render();}};probe.onerror=function(){};probe.src="/ghs/"+GHSFILE.GHS02;
