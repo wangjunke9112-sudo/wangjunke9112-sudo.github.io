@@ -66,6 +66,8 @@
   .loginwrap{position:fixed;inset:0;z-index:1000;background:var(--hero-bg);display:flex;align-items:center;justify-content:center;padding:20px}
   .loginwrap[hidden]{display:none}
   input[readonly]{background:var(--surface-2,#eef1f5);color:var(--muted,#667);cursor:not-allowed}
+  .loclink{background:none;border:0;color:inherit;font:inherit;padding:0;cursor:pointer;text-decoration:underline;text-decoration-style:dotted;text-underline-offset:2px}
+  .loclink:hover{color:var(--accent,#1e4f8a)}
   .loginbox{width:100%;max-width:360px;background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:26px 24px;box-shadow:0 18px 50px rgba(0,0,0,.35)}
   .loginbrand{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin-bottom:4px}
   .loginbrand b{font-family:var(--font-d);font-weight:700;letter-spacing:.14em;font-size:20px;color:var(--fg)}
@@ -262,17 +264,17 @@
         <div style="grid-column:1/-1">
           <label>Formulation 配方 / 规格 <span style="color:var(--muted);font-weight:400">— for solutions, dispersions &amp; polymers; shown after the name in a fixed format</span></label>
           <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center">
-            <select id="f_form" onchange="updateSpecHint()" style="min-width:150px"><option value="">form 形态 —</option><option value="solution">solution 溶液</option><option value="dispersion">dispersion 分散液</option><option value="nanoparticle dispersion">nanoparticle dispersion 纳米分散液</option><option value="suspension">suspension 悬浮液</option><option value="neat liquid">neat liquid 原液</option><option value="powder">powder 粉末</option></select>
-            <input id="f_conc" type="number" min="0" step="any" placeholder="conc" oninput="updateSpecHint()" style="width:74px">
+            <select id="f_form" onchange="updateSpecHint()" style="min-width:150px"><option value="">form 形态 —</option><option value="solution">solution 溶液</option><option value="dispersion">dispersion 分散液</option><option value="nanoparticle dispersion">nanoparticle dispersion 纳米分散液</option><option value="suspension">suspension 悬浮液</option></select>
+            <input id="f_conc" type="number" min="0" step="any" placeholder="conc" oninput="updateSpecHint()" onchange="normNum(this)" style="width:74px">
             <select id="f_conc_unit" onchange="updateSpecHint()" style="width:auto;min-width:76px"><option value="">unit</option><option>wt%</option><option>vol%</option><option>M</option><option>mg/mL</option></select>
             <span style="color:var(--muted);font-size:13px">in</span>
             <input id="f_solvent" list="solvents" placeholder="solvent 溶剂" oninput="updateSpecHint()" style="width:120px">
             <datalist id="solvents"><option>ethanol</option><option>H2O</option><option>IPA</option><option>chlorobenzene</option><option>DMF</option><option>DMSO</option><option>toluene</option><option>acetonitrile</option><option>methanol</option><option>2-methoxyethanol</option></datalist>
             <span style="color:var(--muted);font-size:13px">· Mn</span>
-            <input id="f_mn" type="number" min="0" step="any" placeholder="g/mol" oninput="updateSpecHint()" style="width:88px">
+            <input id="f_mn" type="number" min="0" step="any" placeholder="g/mol" oninput="updateSpecHint()" onchange="normNum(this)" style="width:88px">
             <select id="f_mn_method" onchange="updateSpecHint()" style="width:auto;min-width:72px"><option value="">method</option><option>GPC</option><option>LS</option><option>MALLS</option><option>SEC</option></select>
             <span style="color:var(--muted);font-size:13px">Mw</span>
-            <input id="f_mwt" type="number" min="0" step="any" placeholder="g/mol" oninput="updateSpecHint()" style="width:88px">
+            <input id="f_mwt" type="number" min="0" step="any" placeholder="g/mol" oninput="updateSpecHint()" onchange="normNum(this)" style="width:88px">
             <select id="f_mw_method" onchange="updateSpecHint()" style="width:auto;min-width:72px"><option value="">method</option><option>GPC</option><option>LS</option><option>MALLS</option><option>SEC</option></select>
           </div>
           <div class="fetchnote" id="spechint" style="margin-top:3px"></div>
@@ -431,7 +433,7 @@
   function catLabel(k){for(var i=0;i<CATS.length;i++)if(CATS[i].k===k)return CATS[i].label;return "";}
   function catIndex(k){for(var i=0;i<CATS.length;i++)if(CATS[i].k===k)return i;return 99;}
   var COLS=["name","name_zh","iupac","aliases","cas","formula","mw","form","conc","conc_unit","solvent","mn","mn_method","mwt","mw_method","smiles","ghs","flags","category","vendor","purity","amount","location","registered_by","date_added","moved_by","moved_date","status","archived","disposed_by","disposed_date"];
-  var items=[], editId=null, confirmId=null, disposeId=null, filter="current", sortBy="recent", locFilter="all", venFilter="all", catFilter="all", alignArmed=false;
+  var items=[], editId=null, confirmId=null, disposeId=null, moveId=null, filter="current", sortBy="recent", locFilter="all", venFilter="all", catFilter="all", alignArmed=false;
   var LS=window.localStorage;
   var CASRE=/^\d{2,7}-\d{2}-\d$/;
 
@@ -560,6 +562,7 @@
   function specStr(x){if(!x)return"";var conc=(x.conc!=null&&x.conc!=="")?(String(x.conc)+(x.conc_unit?(" "+x.conc_unit):"")):"";var seg=(conc&&x.solvent)?(conc+" in "+x.solvent):(conc||(x.solvent?("in "+x.solvent):""));var head=(x.form&&seg)?(x.form+", "+seg):(x.form||seg);var parts=[];if(head)parts.push(head);if(x.mn&&fmtK(x.mn))parts.push("Mn "+fmtK(x.mn)+(x.mn_method?" ("+x.mn_method+")":""));if(x.mwt&&fmtK(x.mwt))parts.push("Mw "+fmtK(x.mwt)+(x.mw_method?" ("+x.mw_method+")":""));return parts.join(" · ");}
   function specFromForm(){return {form:$("f_form").value,conc:$("f_conc").value.trim(),conc_unit:$("f_conc_unit").value,solvent:$("f_solvent").value.trim(),mn:$("f_mn").value.trim(),mn_method:$("f_mn_method").value,mwt:$("f_mwt").value.trim(),mw_method:$("f_mw_method").value};}
   function updateSpecHint(){var el=$("spechint");if(!el)return;var s=specStr(specFromForm());el.textContent=s?("Shows as:  "+($("f_iupac").value||$("f_name").value||"name")+" — "+s):"";}
+  function normNum(el){var v=el.value;if(v!==""){var n=parseFloat(v);el.value=isFinite(n)?String(n):"";}updateSpecHint();}
   function dget(name){var k=norm(name);if(DICT[k])return DICT[k];var kk=k.replace(/\s/g,"");for(var x in DICT){var d=DICT[x];if(d.a&&d.a===kk)return d;if(d.abbr&&norm(d.abbr)===k)return d;if(d.zh&&d.zh===name.trim())return d;if(d.cas&&d.cas===name.trim())return d;if(d.aliases&&d.aliases.indexOf(k)>=0)return d;}return null;}
   function findItem(v){v=norm(v);if(!v)return null;return items.find(function(x){if(norm(x.name)===v||norm(x.name_zh)===v||norm(x.cas)===v||norm(x.iupac)===v)return true;return (x.aliases||[]).some(function(a){return norm(a)===v;});});}
 
@@ -867,7 +870,10 @@
   function openAdd(prefill){libKey=null;$("addpanel").hidden=false;$("addbtn").textContent="Close form";applyUser();if(prefill&&!editId){$("f_name").value=prefill;doLookup();}else{$("f_name").focus();}try{$("addpanel").scrollIntoView({behavior:"smooth",block:"center"});}catch(e){}}
   function closeAdd(){$("addpanel").hidden=true;$("addbtn").textContent="＋ Add chemical";if(libKey!==null)exitLib();else cancelEdit();}
   function toggleAdd(){if($("addpanel").hidden)openAdd($("search").value.trim());else closeAdd();}
-  function cycle(id){var it=items.find(function(x){return x.id===id;});if(!it||it.archived)return;it.status=it.status==="active"?"empty":"active";persist();render();}
+  /* inline "move" — any signed-in member can update a bottle's location; records who moved it */
+  function askMove(id){moveId=id;disposeId=null;confirmId=null;render();var inp=$("moveinp");if(inp){inp.focus();inp.select();}}
+  function cancelMove(){moveId=null;render();}
+  function doMove(id){var it=items.find(function(x){return x.id===id;});if(!it)return;var loc=($("moveinp")?$("moveinp").value.trim():"");if(!loc){tool("Enter the new location (位置) first.");if($("moveinp"))$("moveinp").focus();return;}moveId=null;if(loc!==(it.location||"")){var mv=curName();it.location=loc;if(mv){it.moved_by=mv;it.moved_date=today();}noteLoc(loc);persist();render();tool("Moved "+it.name+" → "+loc+(mv?(" · "+mv):"")+".");}else{render();}}
   function askDispose(id){disposeId=id;confirmId=null;render();var inp=$("dispinp");if(inp)inp.focus();}
   function cancelDispose(){disposeId=null;render();}
   function doDispose(id){var it=items.find(function(x){return x.id===id;});if(!it)return;var who=($("dispinp")?$("dispinp").value.trim():"");if(!who){tool("Enter the name of who is discarding it (丢弃人) first.");if($("dispinp")){$("dispinp").focus();$("dispinp").style.borderColor="var(--danger)";}return;}var dt=($("dispdate")&&$("dispdate").value.trim())||today();it.archived=true;it.disposed_by=who;it.disposed_date=dt;it.location="";disposeId=null;persist();render();tool("Discarded "+it.name+" — recorded "+who+".");}
@@ -890,16 +896,15 @@
   function tool(msg){$("toolmsg").textContent=msg||"";if(msg)setTimeout(function(){$("toolmsg").textContent="";},5000);}
 
   function stats(){
-    var act=items.filter(function(x){return !x.archived&&x.status==="active";}).length;
-    var emp=items.filter(function(x){return !x.archived&&x.status==="empty";}).length;
+    var inuse=items.filter(function(x){return !x.archived;}).length;
     var disp=items.filter(function(x){return x.archived;}).length;
-    $("stats").innerHTML=tile(items.length,"Total records")+tile(act,"Active")+tile(emp,"Empty")+tile(disp,"Disposed");
+    $("stats").innerHTML=tile(items.length,"Total records")+tile(inuse,"In use")+tile(disp,"Disposed");
   }
   function tile(n,l){return '<div class="stat"><div class="n">'+n+'</div><div class="l">'+l+'</div></div>';}
 
-  function counts(){var c={current:0,active:0,empty:0,disposed:0,all:items.length};items.forEach(function(x){if(x.archived){c.disposed++;}else{c.current++;if(x.status==="active")c.active++;else c.empty++;}});return c;}
-  function buildFilter(){var c=counts();var defs=[["current","In use"],["active","Active"],["empty","Empty"],["disposed","Disposed 已处置"],["all","All"]];$("filterbar").innerHTML=defs.map(function(d){return '<button class="fchip'+(filter===d[0]?" on":"")+'" onclick="setFilter(\''+d[0]+'\')">'+d[1]+' ('+c[d[0]]+')</button>';}).join("");}
-  function inFilter(x){if(filter==="all")return true;if(filter==="disposed")return x.archived;if(filter==="current")return !x.archived;if(filter==="active")return !x.archived&&x.status==="active";if(filter==="empty")return !x.archived&&x.status==="empty";return true;}
+  function counts(){var c={current:0,disposed:0,all:items.length};items.forEach(function(x){if(x.archived)c.disposed++;else c.current++;});return c;}
+  function buildFilter(){var c=counts();var defs=[["current","In use"],["disposed","Disposed 已处置"],["all","All"]];$("filterbar").innerHTML=defs.map(function(d){return '<button class="fchip'+(filter===d[0]?" on":"")+'" onclick="setFilter(\''+d[0]+'\')">'+d[1]+' ('+c[d[0]]+')</button>';}).join("");}
+  function inFilter(x){if(filter==="all")return true;if(filter==="disposed")return x.archived;if(filter==="current")return !x.archived;return true;}
   function viewList(){var q=deSub(norm($("search").value));var list=items.filter(function(x){if(!inFilter(x))return false;if(catFilter!=="all"&&(x.category||"")!==catFilter)return false;if(locFilter!=="all"&&(x.location||"")!==locFilter)return false;if(venFilter!=="all"&&(x.vendor||"")!==venFilter)return false;if(!q)return true;var hay=deSub((x.name+" "+(x.name_zh||"")+" "+(x.iupac||"")+" "+((x.aliases||[]).join(" "))+" "+x.cas+" "+(x.formula||"")+" "+x.vendor+" "+x.location+" "+(x.registered_by||"")).toLowerCase());return hay.indexOf(q)>=0;});return sortList(list);}
   function setLocFilter(v){locFilter=v;render();}
   function setVenFilter(v){venFilter=v;render();}
@@ -910,7 +915,7 @@
   function buildLocFilter(){var sel=$("locfilter");if(!sel)return;if(locFilter!=="all"&&locsList.indexOf(locFilter)<0)locFilter="all";sel.innerHTML='<option value="all">All locations 位置</option>'+locsList.map(function(v){return '<option'+(v===locFilter?" selected":"")+'>'+esc(v)+'</option>';}).join("");sel.value=locFilter;}
   function buildChoiceDatalists(){var dv=$("vendors"),dl=$("locs");if(dv)dv.innerHTML=vendorsList.map(function(v){return '<option>'+esc(v)+'</option>';}).join("");if(dl)dl.innerHTML=locsList.map(function(v){return '<option>'+esc(v)+'</option>';}).join("");}
   function nkey(s){return (s||"").toLowerCase();}
-  function srank(x){return x.archived?2:(x.status==="empty"?1:0);}
+  function srank(x){return x.archived?1:0;}
   function sortList(list){
     if(sortBy==="recent")return list;
     var c;
@@ -938,7 +943,7 @@
         if(confirmId===x.id)actCell='<span class="confirm"><b>Delete forever?</b><button onclick="del(\''+x.id+'\')">Yes</button><button onclick="cancelDel()">No</button></span>';
         else actCell='<span class="rowact"><button class="iconb" title="Edit (incl. 废弃日期)" onclick="edit(\''+x.id+'\')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4L19 9l-4-4L4 16z"/><path d="M14 6l4 4"/></svg></button><button class="iconb" title="Restore to inventory" onclick="restore(\''+x.id+'\')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12a8 8 0 1 0 2.3-5.6M4 4v4h4"/></svg></button><button class="iconb del" title="Delete permanently" onclick="askDel(\''+x.id+'\')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M5 7h14M10 7V5h4v2M6 7l1 13h10l1-13"/></svg></button></span>';
       }else{
-        statusCell='<button class="pill '+x.status+'" onclick="cycle(\''+x.id+'\')" title="Click to toggle active / empty">'+x.status+'</button>';
+        statusCell='<span class="pill active" title="In use until disposed 处置前保持在用">在用 active</span>';
         if(disposeId===x.id)actCell='<span class="disp-form"><input id="dispinp" placeholder="丢弃人 discarded by *" value="'+esc(curName())+'"'+((cloudOn()&&!isAdmin())?' readonly':'')+'><input id="dispdate" type="date" value="'+today()+'" title="废弃日期"><button class="btn-primary" onclick="doDispose(\''+x.id+'\')">丢弃 Discard</button><button onclick="cancelDispose()">✕</button></span>';
         else actCell='<span class="rowact"><button class="iconb" title="Edit" onclick="edit(\''+x.id+'\')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4L19 9l-4-4L4 16z"/><path d="M14 6l4 4"/></svg></button><button class="iconb del" title="Discard (records who 丢弃)" onclick="askDispose(\''+x.id+'\')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M5 7h14M10 7V5h4v2M6 7l1 13h10l1-13"/></svg></button></span>';
       }
@@ -948,8 +953,12 @@
       var logCell='<div class="logline"><span class="logtag">注册</span>'+esc(x.date_added||"—")+(x.registered_by?' · '+esc(x.registered_by):'')+'</div>'+(x.moved_by?'<div class="logline"><span class="logtag">移动</span>'+esc(x.moved_date||"—")+' · '+esc(x.moved_by)+'</div>':'')+(x.archived?'<div class="logline disc"><span class="logtag">丢弃</span>'+esc(x.disposed_date||"—")+(x.disposed_by?' · '+esc(x.disposed_by):'')+'</div>':'');
       var catTag=x.category?'<span class="cattag" title="'+esc(catLabel(x.category))+'">'+esc(catLabel(x.category))+'</span>':'';
       var spec=specStr(x);
+      var locCell;
+      if(x.archived)locCell='<td>'+esc(x.location||"—")+'</td>';
+      else if(moveId===x.id)locCell='<td><span class="disp-form"><input id="moveinp" list="locs" placeholder="新位置 location" value="'+esc(x.location||"")+'" onkeydown="if(event.key===\'Enter\')doMove(\''+x.id+'\')"><button class="btn-primary" onclick="doMove(\''+x.id+'\')">Move 移动</button><button onclick="cancelMove()">✕</button></span></td>';
+      else locCell='<td><button class="loclink" title="Click to update location 更新位置" onclick="askMove(\''+x.id+'\')">'+esc(x.location||"— set 设置")+'</button></td>';
       return '<tr class="'+(x.archived?"gone":"")+'"><td><span class="cn"><span class="nmedit" title="Click to edit this chemical" onclick="edit(\''+x.id+'\')">'+esc(x.name)+'</span>'+(spec?'<span style="color:var(--muted);font-weight:400"> — '+esc(spec)+'</span>':'')+catTag+dupe+'<small>'+sub+'</small></span></td>'
-        +'<td class="mono">'+esc(x.cas||"—")+'</td><td>'+esc(x.vendor||"—")+'</td><td>'+esc(x.amount||"—")+'</td><td>'+esc(x.purity||"—")+'</td><td>'+esc(x.location||"—")+'</td>'
+        +'<td class="mono">'+esc(x.cas||"—")+'</td><td>'+esc(x.vendor||"—")+'</td><td>'+esc(x.amount||"—")+'</td><td>'+esc(x.purity||"—")+'</td>'+locCell+''
         +'<td>'+haz+'</td><td>'+struct+'</td><td>'+statusCell+'</td><td>'+logCell+'</td><td>'+actCell+'</td></tr>';
     }).join("");
     drawStructures();
