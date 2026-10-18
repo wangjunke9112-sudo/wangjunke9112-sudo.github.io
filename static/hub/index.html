@@ -114,7 +114,7 @@
     <p class="seclabel">Tools</p>
     <div class="grid">
 
-      <a class="card" href="https://lens-laboratory.com/inventory.html" data-tool="chem">
+      <a class="card" href="https://lens-laboratory.com/inventory/" data-tool="chem">
         <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3h6M10 3v6.5L5.5 18a2 2 0 0 0 1.8 3h9.4a2 2 0 0 0 1.8-3L14 9.5V3"/><path d="M7.7 15h8.6"/></svg></span>
         <div><p class="cname">Chemical inventory</p><span class="czh">化学品库</span></div>
         <p class="cdesc">Register, locate, and retire chemicals. Auto-fills CAS, hazard class, and SDS link; flags controlled substances.</p>
@@ -176,7 +176,8 @@
   (function(){
     var root=document.documentElement, tgl=document.getElementById('tgl');
     var saved; try{saved=localStorage.getItem('lens-theme');}catch(e){}
-    if(saved==='dark'||saved==='light') root.setAttribute('data-theme',saved);
+    /* default to the light look (navy hero over a light body); only go dark if explicitly chosen */
+    root.setAttribute('data-theme', saved==='dark' ? 'dark' : 'light');
     tgl.addEventListener('click',function(){
       var dark=matchMedia('(prefers-color-scheme:dark)').matches;
       var cur=root.getAttribute('data-theme')|| (dark?'dark':'light');
