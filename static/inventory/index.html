@@ -63,6 +63,16 @@
   .intern[data-s="err"] i{background:#E8766A}
   .intern[data-s="warn"] i{background:#E7BB6A}
   .intern[data-s="local"] i{background:var(--hero-accent)}
+  .loginwrap{position:fixed;inset:0;z-index:1000;background:var(--hero-bg);display:flex;align-items:center;justify-content:center;padding:20px}
+  .loginbox{width:100%;max-width:360px;background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:26px 24px;box-shadow:0 18px 50px rgba(0,0,0,.35)}
+  .loginbrand{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin-bottom:4px}
+  .loginbrand b{font-family:var(--font-d);font-weight:700;letter-spacing:.14em;font-size:20px;color:var(--fg)}
+  .loginbrand span{font-family:var(--font-m);font-size:11.5px;color:var(--muted)}
+  .loginsub{margin:0 0 16px;color:var(--muted);font-size:13.5px}
+  .loginbox label{display:block;font-size:12px;color:var(--muted);margin:10px 0 4px}
+  .loginbox .btn-primary{width:100%;margin-top:16px;padding:10px}
+  .lg_err{color:var(--danger);font-size:13px;min-height:1.2em;margin-top:8px}
+  .loginnote{margin:14px 0 0;font-size:12px;color:var(--muted)}
 
   main .wrap{padding-block:20px 40px}
   .exbanner{background:var(--warn-soft);color:var(--warn);border:1px solid var(--border);border-radius:10px;padding:9px 14px;font-size:13px;display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:18px}
@@ -184,9 +194,23 @@
     </div>
     <p class="eyebrow">South China University of Technology · 华南理工大学</p>
     <h1 class="htitle">Chemical inventory<span class="zh">化学品库</span></h1>
-    <span class="intern" id="cloudtag" onclick="connectCloud()" title="Shared storage — click to enter the lab key"><i></i>Saved in this browser</span>
+    <span class="intern" id="cloudtag" title="Shared storage status"><i></i>Saved in this browser</span>
   </div>
 </header>
+
+<div class="loginwrap" id="loginwrap" hidden>
+  <div class="loginbox">
+    <div class="loginbrand"><b>LENS</b><span>Chemical inventory 化学品库</span></div>
+    <p class="loginsub">Sign in with your lab account</p>
+    <label for="lg_user">Username 用户名</label>
+    <input id="lg_user" autocomplete="username" autocapitalize="off" spellcheck="false" onkeydown="if(event.key==='Enter')document.getElementById('lg_pw').focus()">
+    <label for="lg_pw">Password 密码</label>
+    <input id="lg_pw" type="password" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()">
+    <button class="btn-primary" id="lg_go" onclick="doLogin()">Sign in 登录</button>
+    <div class="lg_err" id="lg_err"></div>
+    <p class="loginnote">Don't have an account? Ask the group admin to create one for you.</p>
+  </div>
+</div>
 
 <main>
   <div class="wrap">
@@ -249,6 +273,20 @@
       </div>
     </section>
 
+    <section class="panel" id="adminpanel" hidden>
+      <h2><span>Accounts 账号管理</span><span style="margin-left:auto"><button onclick="closeAdmin()" style="font-size:13px;padding:5px 12px">Close</button></span></h2>
+      <div style="font-size:12px;color:var(--muted);margin-bottom:12px">Each person signs in with their own username and password; their name then fills in automatically when they register or dispose a chemical. Give <b>admin</b> only to people who should manage accounts. Usernames are lower-case and can't be changed later (make a new one instead).</div>
+      <div id="userlist" style="border:1px solid var(--border);border-radius:10px;margin-bottom:14px;max-height:300px;overflow:auto"></div>
+      <div class="formgrid" style="align-items:end">
+        <div><label for="u_name">Full name 姓名</label><input id="u_name" placeholder="e.g. 张三 / Zhang San"></div>
+        <div><label for="u_user">Username 用户名</label><input id="u_user" autocapitalize="off" spellcheck="false" placeholder="e.g. zhangsan"></div>
+        <div><label for="u_pw">Password 密码</label><input id="u_pw" type="text" placeholder="give them a code"></div>
+        <div><label for="u_role">Role 角色</label><select id="u_role"><option value="user">Member 成员</option><option value="admin">Admin 管理员</option></select></div>
+        <div><button class="btn-primary" onclick="addUser()" style="width:100%">Add / update 保存</button></div>
+      </div>
+      <div class="lg_err" id="u_err" style="margin-top:8px"></div>
+    </section>
+
     <section class="panel" id="libpanel" hidden>
       <h2><span>Chemical library 化学品库 <span id="libcount" style="font-weight:400;font-size:13px;color:var(--muted)"></span></span><span style="margin-left:auto;display:flex;gap:10px;align-items:center"><button onclick="libAdd()" style="font-size:13px;padding:5px 12px">＋ New chemical</button><button onclick="closeLib()" style="font-size:13px;padding:5px 12px">Close</button></span></h2>
       <div style="display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap"><input id="libsearch" placeholder="Search the library — name, 中文名, CAS, abbreviation…" oninput="buildLibPanel()" style="flex:1;min-width:200px"><select id="libcatfilter" onchange="buildLibPanel()" style="width:auto;min-width:160px"></select></div>
@@ -264,6 +302,7 @@
       <div style="display:flex;gap:8px;flex-wrap:wrap">
         <button class="btn-primary" id="addbtn" onclick="toggleAdd()" style="white-space:nowrap">＋ Add chemical 添加化学品</button>
         <button id="libbtn" onclick="toggleLib()" style="white-space:nowrap">Chemical library 化学品库</button>
+        <button id="adminbtn" onclick="openAdmin()" hidden style="white-space:nowrap">Accounts 账号管理</button>
       </div>
       <span class="addhint">The search below only filters chemicals already logged.</span>
     </div>
@@ -388,21 +427,27 @@
   var builtinSeed={}, cloudQ=[], cloudSending=false;
   function enq(fn){cloudQ.push(fn);drainQ();}
   function drainQ(){if(cloudSending||!cloudQ.length)return;cloudSending=true;var fn=cloudQ.shift();fn().then(function(){cloudSending=false;drainQ();},function(){cloudSending=false;drainQ();});}
-  function apiKey(){try{return LS.getItem("lens_api_key")||"";}catch(e){return "";}}
-  function setApiKey(k){try{LS.setItem("lens_api_key",k||"");}catch(e){}}
+  /* ---- accounts / sign-in (token based) ---- */
+  var CUR=null; /* {username,name,role} */
+  function apiToken(){try{return LS.getItem("lens_token")||"";}catch(e){return "";}}
+  function setApiToken(t){try{if(t)LS.setItem("lens_token",t);else LS.removeItem("lens_token");}catch(e){}}
+  function loadUser(){try{CUR=JSON.parse(LS.getItem("lens_user")||"null");}catch(e){CUR=null;}}
+  function saveUser(u){CUR=u;try{if(u)LS.setItem("lens_user",JSON.stringify(u));else LS.removeItem("lens_user");}catch(e){}}
+  function curName(){return CUR&&CUR.name?CUR.name:"";}
+  function isAdmin(){return !!(CUR&&CUR.role==="admin");}
   function cloudConfigured(){return !!API_BASE;}
-  function cloudOn(){return !!API_BASE && !!apiKey();}
-  function cloudHeaders(){return {"Content-Type":"application/json","X-LENS-Key":apiKey()};}
+  function cloudOn(){return !!API_BASE && !!apiToken();}
+  function cloudHeaders(){return {"Content-Type":"application/json","X-LENS-Token":apiToken()};}
   function cloudFetch(path,opts){opts=opts||{};opts.headers=cloudHeaders();return fetch(API_BASE+path,opts);}
-  function setCloudStatus(state){var t=$("cloudtag");if(!t)return;var label,cls;
+  function onUnauthorized(){setApiToken("");saveUser(null);items=[];if(typeof render==="function")render();showLogin();}
+  function setCloudStatus(state){var t=$("cloudtag");if(!t)return;var nm=curName(),label,cls;
     if(!cloudConfigured()){label="Saved in this browser";cls="local";}
-    else if(!apiKey()){label="Shared · tap to connect";cls="warn";}
-    else if(state==="auth"){label="Shared · wrong key";cls="err";}
-    else if(state==="srv"){label="Shared · server error";cls="err";}
-    else if(state===false){label="Shared · offline";cls="err";}
-    else{label="Shared · synced";cls="ok";}
-    t.innerHTML='<i></i>'+label;t.setAttribute("data-s",cls);}
-  function cloudAck(r){if(!r)return;if(r.status===401){setCloudStatus("auth");return;}if(!r.ok){setCloudStatus("srv");return;}return r.json().then(function(j){if(j&&typeof j.version==="number")cloudVer=j.version;setCloudStatus(true);},function(){});}
+    else if(!apiToken()){label="Not signed in";cls="warn";}
+    else if(state==="srv"){label=nm+" · server error";cls="err";}
+    else if(state===false){label=nm+" · offline";cls="err";}
+    else{label=nm+" · synced";cls="ok";}
+    t.innerHTML='<i></i>'+esc(label)+(apiToken()?' · <a href="#" onclick="changePw();return false;" style="color:inherit;opacity:.85;text-decoration:underline">password</a> · <a href="#" onclick="logout();return false;" style="color:inherit;opacity:.85;text-decoration:underline">sign out</a>':'');t.setAttribute("data-s",cls);}
+  function cloudAck(r){if(!r)return;if(r.status===401){onUnauthorized();return;}if(!r.ok){setCloudStatus("srv");return;}return r.json().then(function(j){if(j&&typeof j.version==="number")cloudVer=j.version;setCloudStatus(true);},function(){});}
   function cloudFail(){setCloudStatus(false);}
   function cloudPutItem(it){if(!cloudOn())return;enq(function(){return cloudFetch("/api/item",{method:"POST",body:JSON.stringify(it)}).then(cloudAck,cloudFail);});}
   function cloudDelItem(id){if(!cloudOn())return;enq(function(){return cloudFetch("/api/item?id="+encodeURIComponent(id),{method:"DELETE"}).then(cloudAck,cloudFail);});}
@@ -415,7 +460,7 @@
   function resetShadows(){_shItems={};items.forEach(function(x){if(x&&x.id)_shItems[x.id]=JSON.stringify(x);});_shCat={};Object.keys(catalog).forEach(function(k){_shCat[k]=JSON.stringify(catalog[k]);});_shVend=JSON.stringify(vendorsList);_shLoc=JSON.stringify(locsList);}
   function pullState(cb){
     if(!cloudOn()){if(cb)cb();return;}
-    cloudFetch("/api/state",{method:"GET"}).then(function(r){if(r.status===401){setCloudStatus("auth");return null;}if(!r.ok){setCloudStatus("srv");return null;}return r.json();}).then(function(j){
+    cloudFetch("/api/state",{method:"GET"}).then(function(r){if(r.status===401){onUnauthorized();return null;}if(!r.ok){setCloudStatus("srv");return null;}return r.json();}).then(function(j){
       if(!j){if(cb)cb();return;}
       var serverEmpty=(!j.items||!j.items.length)&&(!j.catalog||!Object.keys(j.catalog).length);
       if(serverEmpty&&items&&items.length){
@@ -442,25 +487,35 @@
   }
   function pollVersion(){
     if(!cloudOn()||cloudBusy)return;cloudBusy=true;
-    cloudFetch("/api/version",{method:"GET"}).then(function(r){if(r.status===401){setCloudStatus("auth");return null;}if(!r.ok){setCloudStatus("srv");return null;}return r.json();}).then(function(j){
+    cloudFetch("/api/version",{method:"GET"}).then(function(r){if(r.status===401){onUnauthorized();return null;}if(!r.ok){setCloudStatus("srv");return null;}return r.json();}).then(function(j){
       cloudBusy=false;
       if(!j)return;
       if(typeof j.version==="number"&&j.version!==cloudVer)pullState();else setCloudStatus(true);
     }).catch(function(){cloudBusy=false;setCloudStatus(false);});
   }
   function startCloud(){
-    if(!cloudConfigured()){setCloudStatus();return;}
-    setCloudStatus(cloudOn()?undefined:"warn");
-    if(cloudOn())pullState();
+    if(!cloudConfigured()){setCloudStatus();hideLogin();return;}   /* local dev mode: no sign-in */
+    if(!apiToken()){showLogin();setCloudStatus();return;}
+    hideLogin();applyUser();setCloudStatus(undefined);pullState();
     if(cloudPoll)clearInterval(cloudPoll);
     cloudPoll=setInterval(pollVersion,20000);
     try{window.addEventListener("focus",pollVersion);}catch(e){}
   }
-  function connectCloud(){
-    if(!cloudConfigured()){tool("Shared storage isn't set up yet — the Worker URL (API_BASE) needs to be filled in.");return;}
-    var k=window.prompt("Enter the shared lab key to connect this device to the group inventory:",apiKey()||"");
-    if(k==null)return;setApiKey((k||"").trim());_shItems={};_shCat={};_shVend="";_shLoc="";startCloud();
-  }
+  /* ---- sign-in overlay ---- */
+  function showLogin(){var o=$("loginwrap");if(!o)return;o.hidden=false;$("lg_err").textContent="";var f=$("lg_user");if(f)try{f.focus();}catch(e){}}
+  function hideLogin(){var o=$("loginwrap");if(o)o.hidden=true;}
+  function applyUser(){var by=$("f_by");if(by){if(!editId)by.value=curName();by.readOnly=cloudOn()&&!isAdmin();}var ab=$("adminbtn");if(ab)ab.hidden=!isAdmin();}
+  function doLogin(){var u=($("lg_user").value||"").trim(),pw=$("lg_pw").value||"";if(!u||!pw){$("lg_err").textContent="Enter your username and password.";return;}$("lg_err").textContent="Signing in…";$("lg_go").disabled=true;
+    fetch(API_BASE+"/api/login",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({username:u,password:pw})}).then(function(r){return r.json().then(function(j){return{ok:r.ok,j:j};});}).then(function(res){$("lg_go").disabled=false;if(!res.ok){$("lg_err").textContent=(res.j&&res.j.error)||"Sign-in failed.";return;}setApiToken(res.j.token);saveUser({username:res.j.username,name:res.j.name,role:res.j.role});$("lg_pw").value="";$("lg_err").textContent="";_shItems={};_shCat={};_shVend="";_shLoc="";startCloud();}).catch(function(){$("lg_go").disabled=false;$("lg_err").textContent="Can't reach the server — check your connection.";});}
+  function logout(){setApiToken("");saveUser(null);if(cloudPoll)clearInterval(cloudPoll);items=[];render();showLogin();setCloudStatus();}
+  function changePw(){if(!cloudOn())return;var pw=window.prompt("Set a new password for your account ("+curName()+"):","");if(pw==null)return;pw=pw.trim();if(pw.length<4){tool("Password must be at least 4 characters.");return;}cloudFetch("/api/mypassword",{method:"POST",body:JSON.stringify({password:pw})}).then(function(r){if(r.status===401){onUnauthorized();return null;}return r.json();}).then(function(j){if(j&&j.ok)tool("Password changed — use it next time you sign in.");else tool((j&&j.error)||"Could not change the password.");}).catch(function(){tool("Could not reach the server.");});}
+  /* ---- admin: manage accounts ---- */
+  function openAdmin(){if(!isAdmin())return;$("adminpanel").hidden=false;loadUsers();try{$("adminpanel").scrollIntoView({behavior:"smooth",block:"start"});}catch(e){}}
+  function closeAdmin(){$("adminpanel").hidden=true;}
+  function loadUsers(){cloudFetch("/api/users",{method:"GET"}).then(function(r){if(r.status===401){onUnauthorized();return null;}return r.ok?r.json():null;}).then(function(j){var box=$("userlist");if(!box)return;if(!j||!j.users){box.innerHTML='<div class="empty-state">Could not load accounts.</div>';return;}box.innerHTML=j.users.map(function(u){var un=esc(u.username).replace(/'/g,"\\'");return '<div class="librow"><div class="lmain"><div class="lname">'+esc(u.name)+(u.role==="admin"?' <span class="cattag">admin</span>':'')+'</div><div class="lmeta">'+esc(u.username)+'</div></div><button class="iconb del" title="Remove account" onclick="delUser(\''+un+'\')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M5 7h14M10 7V5h4v2M6 7l1 13h10l1-13"/></svg></button></div>';}).join("")||'<div class="empty-state">No accounts yet — add the first one below.</div>';}).catch(function(){var box=$("userlist");if(box)box.innerHTML='<div class="empty-state">Could not load accounts.</div>';});}
+  function addUser(){var name=($("u_name").value||"").trim(),un=($("u_user").value||"").trim().toLowerCase(),pw=$("u_pw").value||"",role=$("u_role").value||"user";if(!name||!un||!pw){$("u_err").textContent="Fill in name, username and a password.";return;}$("u_err").textContent="Saving…";cloudFetch("/api/users",{method:"POST",body:JSON.stringify({name:name,username:un,password:pw,role:role})}).then(function(r){if(r.status===401){onUnauthorized();return null;}return r.json();}).then(function(j){if(j&&j.ok){$("u_name").value="";$("u_user").value="";$("u_pw").value="";$("u_err").textContent="Saved.";loadUsers();setTimeout(function(){$("u_err").textContent="";},1500);}else{$("u_err").textContent=(j&&j.error)||"Could not save.";}}).catch(function(){$("u_err").textContent="Could not reach the server.";});}
+  function delUser(un){if(!isAdmin())return;if(curDelUser!==un){curDelUser=un;tool('Click the trash again to remove "'+un+'".');setTimeout(function(){curDelUser=null;},3500);return;}curDelUser=null;cloudFetch("/api/users?username="+encodeURIComponent(un),{method:"DELETE"}).then(function(r){if(r.status===401){onUnauthorized();return null;}return r.json();}).then(function(){loadUsers();tool("Account removed.");}).catch(function(){tool("Could not remove the account.");});}
+  var curDelUser=null;
 
   function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,6);}
   function norm(s){return (s||"").trim().toLowerCase();}
@@ -748,7 +803,7 @@
   var AMT_UNITS=["ug","mg","g","kg","uL","mL","L"];
   function setAmount(s){var m=(s||"").match(/^\s*([0-9.]+)?\s*([A-Za-zµ]+)?/);$("f_amount_val").value=m&&m[1]?m[1]:"";var u=m&&m[2]?m[2]:"";$("f_amount_unit").value=AMT_UNITS.indexOf(u)>=0?u:"";}
   function readForm(){return {name:$("f_name").value.trim(),name_zh:$("f_name_zh").value.trim(),iupac:$("f_iupac").value.trim(),aliases:($("f_aliases").value||"").split(/[,，、;；\s]+/).map(function(s){return s.trim();}).filter(Boolean),cas:$("f_cas").value.trim(),formula:$("f_formula").value.trim(),mw:$("f_mw").value.trim(),smiles:$("f_smiles").value.trim(),img:$("f_img").value||"",ghs:getGhs(),flags:getFlags(),vendor:$("f_vendor").value.trim(),purity:getPurity(),amount:getAmount(),location:$("f_location").value.trim(),registered_by:$("f_by").value.trim(),date_added:$("f_date").value.trim(),category:$("f_cat").value};}
-  function resetForm(){["f_name","f_name_zh","f_iupac","f_aliases","f_cas","f_formula","f_mw","f_smiles","f_img","f_vendor","f_grade","f_purity","f_amount_val","f_location","f_by","f_date","f_disp_date","f_disp_by","f_cat"].forEach(function(id){$(id).value="";});$("f_amount_unit").value="";$("dispedit").hidden=true;setGhs([]);setFlags([]);$("fetchnote").textContent="";$("loadhint").textContent="";$("findlinks").innerHTML="";$("vendorhint").innerHTML="";$("autotag").textContent="auto-assigned from CAS; adjust if needed";$("ghsnote").textContent="";autoName="";previewStruct();}
+  function resetForm(){["f_name","f_name_zh","f_iupac","f_aliases","f_cas","f_formula","f_mw","f_smiles","f_img","f_vendor","f_grade","f_purity","f_amount_val","f_location","f_by","f_date","f_disp_date","f_disp_by","f_cat"].forEach(function(id){$(id).value="";});$("f_amount_unit").value="";$("dispedit").hidden=true;setGhs([]);setFlags([]);$("fetchnote").textContent="";$("loadhint").textContent="";$("findlinks").innerHTML="";$("vendorhint").innerHTML="";$("autotag").textContent="auto-assigned from CAS; adjust if needed";$("ghsnote").textContent="";autoName="";if(cloudOn()){$("f_by").value=curName();$("f_by").readOnly=!isAdmin();}else{$("f_by").readOnly=false;}previewStruct();}
 
   function save(){
     var d=readForm();
@@ -776,7 +831,7 @@
   }
   function edit(id){var it=items.find(function(x){return x.id===id;});if(!it)return;libKey=null;editId=id;$("addpanel").hidden=false;$("addbtn").textContent="Close form";loadFrom(it,false);$("formtitle").textContent="Edit chemical";$("savebtn").textContent="Save changes";$("editflag").hidden=false;$("loadhint").textContent="";try{$("addpanel").scrollIntoView({behavior:"smooth",block:"center"});}catch(e){}}
   function cancelEdit(){editId=null;$("formtitle").textContent="Add a chemical";$("savebtn").textContent="Add to inventory";$("editflag").hidden=true;resetForm();}
-  function openAdd(prefill){libKey=null;$("addpanel").hidden=false;$("addbtn").textContent="Close form";if(prefill&&!editId){$("f_name").value=prefill;doLookup();}else{$("f_name").focus();}try{$("addpanel").scrollIntoView({behavior:"smooth",block:"center"});}catch(e){}}
+  function openAdd(prefill){libKey=null;$("addpanel").hidden=false;$("addbtn").textContent="Close form";applyUser();if(prefill&&!editId){$("f_name").value=prefill;doLookup();}else{$("f_name").focus();}try{$("addpanel").scrollIntoView({behavior:"smooth",block:"center"});}catch(e){}}
   function closeAdd(){$("addpanel").hidden=true;$("addbtn").textContent="＋ Add chemical";if(libKey!==null)exitLib();else cancelEdit();}
   function toggleAdd(){if($("addpanel").hidden)openAdd($("search").value.trim());else closeAdd();}
   function cycle(id){var it=items.find(function(x){return x.id===id;});if(!it||it.archived)return;it.status=it.status==="active"?"empty":"active";persist();render();}
@@ -851,7 +906,7 @@
         else actCell='<span class="rowact"><button class="iconb" title="Edit (incl. 废弃日期)" onclick="edit(\''+x.id+'\')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4L19 9l-4-4L4 16z"/><path d="M14 6l4 4"/></svg></button><button class="iconb" title="Restore to inventory" onclick="restore(\''+x.id+'\')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12a8 8 0 1 0 2.3-5.6M4 4v4h4"/></svg></button><button class="iconb del" title="Delete permanently" onclick="askDel(\''+x.id+'\')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M5 7h14M10 7V5h4v2M6 7l1 13h10l1-13"/></svg></button></span>';
       }else{
         statusCell='<button class="pill '+x.status+'" onclick="cycle(\''+x.id+'\')" title="Click to toggle active / empty">'+x.status+'</button>';
-        if(disposeId===x.id)actCell='<span class="disp-form"><input id="dispinp" placeholder="丢弃人 discarded by *" autofocus><input id="dispdate" type="date" value="'+today()+'" title="废弃日期"><button class="btn-primary" onclick="doDispose(\''+x.id+'\')">丢弃 Discard</button><button onclick="cancelDispose()">✕</button></span>';
+        if(disposeId===x.id)actCell='<span class="disp-form"><input id="dispinp" placeholder="丢弃人 discarded by *" value="'+esc(curName())+'"'+((cloudOn()&&!isAdmin())?' readonly':'')+'><input id="dispdate" type="date" value="'+today()+'" title="废弃日期"><button class="btn-primary" onclick="doDispose(\''+x.id+'\')">丢弃 Discard</button><button onclick="cancelDispose()">✕</button></span>';
         else actCell='<span class="rowact"><button class="iconb" title="Edit" onclick="edit(\''+x.id+'\')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4L19 9l-4-4L4 16z"/><path d="M14 6l4 4"/></svg></button><button class="iconb del" title="Discard (records who 丢弃)" onclick="askDispose(\''+x.id+'\')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M5 7h14M10 7V5h4v2M6 7l1 13h10l1-13"/></svg></button></span>';
       }
       var dupe=(x.cas&&casCount[x.cas]>1)?'<span class="dupe" title="Same CAS on more than one record">CAS×'+casCount[x.cas]+'</span>':'';
@@ -885,7 +940,7 @@
     function paintTgl(){$("tgl").innerHTML=effTheme()==="dark"?SUN:MOON;}
     paintTgl();
     $("tgl").addEventListener("click",function(){var next=effTheme()==="dark"?"light":"dark";root.setAttribute("data-theme",next);try{LS.setItem("lens-theme",next);}catch(e){}paintTgl();});
-    buildPicker();buildFlags();$("f_cat").innerHTML=catOptionsHTML("","form");load();render();suppressPush=false;startCloud();
+    buildPicker();buildFlags();$("f_cat").innerHTML=catOptionsHTML("","form");loadUser();load();render();suppressPush=false;startCloud();
     document.addEventListener("paste",function(e){if($("addpanel").hidden)return;var it=e.clipboardData&&e.clipboardData.items;if(!it)return;for(var i=0;i<it.length;i++){if(it[i].type&&it[i].type.indexOf("image")===0){var f=it[i].getAsFile();if(f){resizeImg(f,function(url){if(url){$("f_img").value=url;showImgPreview(url);}});e.preventDefault();}return;}}});
     if(!window.SmilesDrawer){var sdt=setInterval(function(){if(window.SmilesDrawer){clearInterval(sdt);drawStructures();}},200);setTimeout(function(){clearInterval(sdt);},5000);}
     var probe=new Image();probe.onload=function(){if(probe.width>0){USE_OFFICIAL=true;buildPicker();render();}};probe.onerror=function(){};probe.src="/ghs/"+GHSFILE.GHS02;
