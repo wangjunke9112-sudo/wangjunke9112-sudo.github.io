@@ -26,7 +26,7 @@
  *       LENS.token()
  */
 (function () {
-  var API_BASE = "https://lens-inventory-api.lens-laboratory.workers.dev";
+  var API_BASE = "https://api.lens-laboratory.com";
   var LS = window.localStorage;
 
   function tok()      { try { return LS.getItem("lens_token") || ""; } catch (e) { return ""; } }
