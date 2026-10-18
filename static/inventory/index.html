@@ -64,6 +64,7 @@
   .intern[data-s="warn"] i{background:#E7BB6A}
   .intern[data-s="local"] i{background:var(--hero-accent)}
   .loginwrap{position:fixed;inset:0;z-index:1000;background:var(--hero-bg);display:flex;align-items:center;justify-content:center;padding:20px}
+  .loginwrap[hidden]{display:none}
   .loginbox{width:100%;max-width:360px;background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:26px 24px;box-shadow:0 18px 50px rgba(0,0,0,.35)}
   .loginbrand{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin-bottom:4px}
   .loginbrand b{font-family:var(--font-d);font-weight:700;letter-spacing:.14em;font-size:20px;color:var(--fg)}
@@ -502,8 +503,8 @@
     try{window.addEventListener("focus",pollVersion);}catch(e){}
   }
   /* ---- sign-in overlay ---- */
-  function showLogin(){var o=$("loginwrap");if(!o)return;o.hidden=false;$("lg_err").textContent="";var f=$("lg_user");if(f)try{f.focus();}catch(e){}}
-  function hideLogin(){var o=$("loginwrap");if(o)o.hidden=true;}
+  function showLogin(){var o=$("loginwrap");if(!o)return;o.hidden=false;o.style.display="flex";$("lg_err").textContent="";var f=$("lg_user");if(f)try{f.focus();}catch(e){}}
+  function hideLogin(){var o=$("loginwrap");if(o){o.hidden=true;o.style.display="none";}}
   function applyUser(){var by=$("f_by");if(by){if(!editId)by.value=curName();by.readOnly=cloudOn()&&!isAdmin();}var ab=$("adminbtn");if(ab)ab.hidden=!isAdmin();}
   function doLogin(){var u=($("lg_user").value||"").trim(),pw=$("lg_pw").value||"";if(!u||!pw){$("lg_err").textContent="Enter your username and password.";return;}$("lg_err").textContent="Signing in…";$("lg_go").disabled=true;
     fetch(API_BASE+"/api/login",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({username:u,password:pw})}).then(function(r){return r.json().then(function(j){return{ok:r.ok,j:j};});}).then(function(res){$("lg_go").disabled=false;if(!res.ok){$("lg_err").textContent=(res.j&&res.j.error)||"Sign-in failed.";return;}setApiToken(res.j.token);saveUser({username:res.j.username,name:res.j.name,role:res.j.role});$("lg_pw").value="";$("lg_err").textContent="";_shItems={};_shCat={};_shVend="";_shLoc="";startCloud();}).catch(function(){$("lg_go").disabled=false;$("lg_err").textContent="Can't reach the server — check your connection.";});}
