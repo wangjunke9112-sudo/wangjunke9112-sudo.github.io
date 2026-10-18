@@ -382,8 +382,7 @@
      and polls a cheap version counter to pick up others' edits.
      Local storage is kept as an offline cache / fallback.
      ============================================================ */
-  var API_BASE=""; /* <-- after deploying the Worker, put its URL here, e.g.
-                        "https://lens-inventory-api.yourname.workers.dev"  */
+  var API_BASE="https://lens-inventory-api.lens-laboratory.workers.dev"; /* shared cloud storage Worker */
   var cloudVer=-1, suppressPush=true, cloudPoll=null, cloudBusy=false;
   var _shItems={}, _shCat={}, _shVend="", _shLoc="";
   function apiKey(){try{return LS.getItem("lens_api_key")||"";}catch(e){return "";}}
