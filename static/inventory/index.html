@@ -395,6 +395,7 @@
     if(!cloudConfigured()){label="Saved in this browser";cls="local";}
     else if(!apiKey()){label="Shared · tap to connect";cls="warn";}
     else if(state==="auth"){label="Shared · wrong key";cls="err";}
+    else if(state==="srv"){label="Shared · server error";cls="err";}
     else if(state===false){label="Shared · offline";cls="err";}
     else{label="Shared · synced";cls="ok";}
     t.innerHTML='<i></i>'+label;t.setAttribute("data-s",cls);}
@@ -411,7 +412,7 @@
   function resetShadows(){_shItems={};items.forEach(function(x){if(x&&x.id)_shItems[x.id]=JSON.stringify(x);});_shCat={};Object.keys(catalog).forEach(function(k){_shCat[k]=JSON.stringify(catalog[k]);});_shVend=JSON.stringify(vendorsList);_shLoc=JSON.stringify(locsList);}
   function pullState(cb){
     if(!cloudOn()){if(cb)cb();return;}
-    cloudFetch("/api/state",{method:"GET"}).then(function(r){if(r.status===401){setCloudStatus("auth");throw 0;}return r.json();}).then(function(j){
+    cloudFetch("/api/state",{method:"GET"}).then(function(r){if(r.status===401){setCloudStatus("auth");return null;}if(!r.ok){setCloudStatus("srv");return null;}return r.json();}).then(function(j){
       if(!j){if(cb)cb();return;}
       var serverEmpty=(!j.items||!j.items.length)&&(!j.catalog||!Object.keys(j.catalog).length);
       if(serverEmpty&&items&&items.length){
@@ -438,9 +439,10 @@
   }
   function pollVersion(){
     if(!cloudOn()||cloudBusy)return;cloudBusy=true;
-    cloudFetch("/api/version",{method:"GET"}).then(function(r){if(r.status===401){setCloudStatus("auth");throw 0;}return r.json();}).then(function(j){
+    cloudFetch("/api/version",{method:"GET"}).then(function(r){if(r.status===401){setCloudStatus("auth");return null;}if(!r.ok){setCloudStatus("srv");return null;}return r.json();}).then(function(j){
       cloudBusy=false;
-      if(j&&typeof j.version==="number"&&j.version!==cloudVer)pullState();else setCloudStatus(true);
+      if(!j)return;
+      if(typeof j.version==="number"&&j.version!==cloudVer)pullState();else setCloudStatus(true);
     }).catch(function(){cloudBusy=false;setCloudStatus(false);});
   }
   function startCloud(){
