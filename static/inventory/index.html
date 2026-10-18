@@ -385,6 +385,9 @@
   var API_BASE="https://lens-inventory-api.lens-laboratory.workers.dev"; /* shared cloud storage Worker */
   var cloudVer=-1, suppressPush=true, cloudPoll=null, cloudBusy=false;
   var _shItems={}, _shCat={}, _shVend="", _shLoc="";
+  var builtinSeed={}, cloudQ=[], cloudSending=false;
+  function enq(fn){cloudQ.push(fn);drainQ();}
+  function drainQ(){if(cloudSending||!cloudQ.length)return;cloudSending=true;var fn=cloudQ.shift();fn().then(function(){cloudSending=false;drainQ();},function(){cloudSending=false;drainQ();});}
   function apiKey(){try{return LS.getItem("lens_api_key")||"";}catch(e){return "";}}
   function setApiKey(k){try{LS.setItem("lens_api_key",k||"");}catch(e){}}
   function cloudConfigured(){return !!API_BASE;}
@@ -399,15 +402,15 @@
     else if(state===false){label="Shared · offline";cls="err";}
     else{label="Shared · synced";cls="ok";}
     t.innerHTML='<i></i>'+label;t.setAttribute("data-s",cls);}
-  function cloudAck(r){if(!r)return;if(r.status===401){setCloudStatus("auth");return;}r.json().then(function(j){if(j&&typeof j.version==="number")cloudVer=j.version;setCloudStatus(true);}).catch(function(){});}
+  function cloudAck(r){if(!r)return;if(r.status===401){setCloudStatus("auth");return;}if(!r.ok){setCloudStatus("srv");return;}return r.json().then(function(j){if(j&&typeof j.version==="number")cloudVer=j.version;setCloudStatus(true);},function(){});}
   function cloudFail(){setCloudStatus(false);}
-  function cloudPutItem(it){if(!cloudOn())return;cloudFetch("/api/item",{method:"POST",body:JSON.stringify(it)}).then(cloudAck).catch(cloudFail);}
-  function cloudDelItem(id){if(!cloudOn())return;cloudFetch("/api/item?id="+encodeURIComponent(id),{method:"DELETE"}).then(cloudAck).catch(cloudFail);}
-  function cloudPutCat(k,entry){if(!cloudOn())return;cloudFetch("/api/catalog",{method:"POST",body:JSON.stringify({k:k,entry:entry})}).then(cloudAck).catch(cloudFail);}
-  function cloudDelCat(k){if(!cloudOn())return;cloudFetch("/api/catalog?k="+encodeURIComponent(k),{method:"DELETE"}).then(cloudAck).catch(cloudFail);}
-  function cloudPutMeta(k,arr){if(!cloudOn())return;cloudFetch("/api/meta",{method:"POST",body:JSON.stringify({k:k,value:arr})}).then(cloudAck).catch(cloudFail);}
+  function cloudPutItem(it){if(!cloudOn())return;enq(function(){return cloudFetch("/api/item",{method:"POST",body:JSON.stringify(it)}).then(cloudAck,cloudFail);});}
+  function cloudDelItem(id){if(!cloudOn())return;enq(function(){return cloudFetch("/api/item?id="+encodeURIComponent(id),{method:"DELETE"}).then(cloudAck,cloudFail);});}
+  function cloudPutCat(k,entry){if(!cloudOn())return;enq(function(){return cloudFetch("/api/catalog",{method:"POST",body:JSON.stringify({k:k,entry:entry})}).then(cloudAck,cloudFail);});}
+  function cloudDelCat(k){if(!cloudOn())return;enq(function(){return cloudFetch("/api/catalog?k="+encodeURIComponent(k),{method:"DELETE"}).then(cloudAck,cloudFail);});}
+  function cloudPutMeta(k,arr){if(!cloudOn())return;enq(function(){return cloudFetch("/api/meta",{method:"POST",body:JSON.stringify({k:k,value:arr})}).then(cloudAck,cloudFail);});}
   function syncItems(){if(!cloudOn()||suppressPush)return;var cur={};items.forEach(function(x){if(x&&x.id)cur[x.id]=JSON.stringify(x);});Object.keys(cur).forEach(function(id){if(_shItems[id]!==cur[id])cloudPutItem(JSON.parse(cur[id]));});Object.keys(_shItems).forEach(function(id){if(!(id in cur))cloudDelItem(id);});_shItems=cur;}
-  function syncCatalog(){if(!cloudOn()||suppressPush)return;var cur={};Object.keys(catalog).forEach(function(k){cur[k]=JSON.stringify(catalog[k]);});Object.keys(cur).forEach(function(k){if(_shCat[k]!==cur[k])cloudPutCat(k,catalog[k]);});Object.keys(_shCat).forEach(function(k){if(!(k in cur))cloudDelCat(k);});_shCat=cur;}
+  function syncCatalog(){if(!cloudOn()||suppressPush)return;var cur={};Object.keys(catalog).forEach(function(k){cur[k]=JSON.stringify(catalog[k]);});Object.keys(cur).forEach(function(k){if(builtinSeed[k]===cur[k])return;if(_shCat[k]!==cur[k])cloudPutCat(k,catalog[k]);});Object.keys(_shCat).forEach(function(k){if(!(k in cur))cloudDelCat(k);});_shCat=cur;}
   function syncMeta(){if(!cloudOn()||suppressPush)return;var v=JSON.stringify(vendorsList),l=JSON.stringify(locsList);if(v!==_shVend){_shVend=v;cloudPutMeta("vendors",vendorsList);}if(l!==_shLoc){_shLoc=l;cloudPutMeta("locs",locsList);}}
   function resetShadows(){_shItems={};items.forEach(function(x){if(x&&x.id)_shItems[x.id]=JSON.stringify(x);});_shCat={};Object.keys(catalog).forEach(function(k){_shCat[k]=JSON.stringify(catalog[k]);});_shVend=JSON.stringify(vendorsList);_shLoc=JSON.stringify(locsList);}
   function pullState(cb){
@@ -617,7 +620,7 @@
 {n:"Formamidinium lead iodide",z:"",a:"FAPbI3",c:"1451592-07-6",f:"",m:"",s:"",k:"precursor"},
 {n:"Potassium benzenesulfonate",z:"",a:"PhSO3K",c:"934-55-4",f:"",m:"",s:"",k:"additive"}
 ];
-  function seedLibrary(){var changed=false;LIBRARY.forEach(function(e){var d={name:e.n,name_zh:e.z,cas:e.c};var k=catKey(d);if(catalog[k]){if(!catalog[k].category&&e.k){catalog[k].category=e.k;changed=true;}return;}catalog[k]={name:e.n,name_zh:e.z||"",iupac:e.n,cas:e.c||"",formula:e.f||"",mw:(e.m||computeMW(e.f))||"",smiles:e.s||"",img:"",ghs:[],flags:autoReg(e.c),aliases:(e.a?[e.a]:[]),category:e.k||""};changed=true;});if(changed)saveCatalog();}
+  function seedLibrary(){var changed=false;LIBRARY.forEach(function(e){var d={name:e.n,name_zh:e.z,cas:e.c};var k=catKey(d);if(catalog[k]){if(!catalog[k].category&&e.k){catalog[k].category=e.k;changed=true;}}else{catalog[k]={name:e.n,name_zh:e.z||"",iupac:e.n,cas:e.c||"",formula:e.f||"",mw:(e.m||computeMW(e.f))||"",smiles:e.s||"",img:"",ghs:[],flags:autoReg(e.c),aliases:(e.a?[e.a]:[]),category:e.k||""};changed=true;}builtinSeed[k]=JSON.stringify(catalog[k]);});if(changed)saveCatalog();}
   /* ---- editable chemical library (catalog) ---- */
   var libKey=null, libDelArm=null;
   function libAll(){return Object.keys(catalog).map(function(k){var c=catalog[k];c.__k=k;return c;}).sort(function(a,b){return (a.name||"").toLowerCase().localeCompare((b.name||"").toLowerCase());});}
