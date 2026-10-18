@@ -65,6 +65,7 @@
   .intern[data-s="local"] i{background:var(--hero-accent)}
   .loginwrap{position:fixed;inset:0;z-index:1000;background:var(--hero-bg);display:flex;align-items:center;justify-content:center;padding:20px}
   .loginwrap[hidden]{display:none}
+  input[readonly]{background:var(--surface-2,#eef1f5);color:var(--muted,#667);cursor:not-allowed}
   .loginbox{width:100%;max-width:360px;background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:26px 24px;box-shadow:0 18px 50px rgba(0,0,0,.35)}
   .loginbrand{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin-bottom:4px}
   .loginbrand b{font-family:var(--font-d);font-weight:700;letter-spacing:.14em;font-size:20px;color:var(--fg)}
@@ -201,7 +202,7 @@
 
 <div class="loginwrap" id="loginwrap" hidden>
   <div class="loginbox">
-    <div class="loginbrand"><b>LENS</b><span>Chemical inventory 化学品库</span></div>
+    <div class="loginbrand"><b>LENS</b><span>Lab</span></div>
     <p class="loginsub">Sign in with your lab account</p>
     <label for="lg_user">Username 用户名</label>
     <input id="lg_user" autocomplete="username" autocapitalize="off" spellcheck="false" onkeydown="if(event.key==='Enter')document.getElementById('lg_pw').focus()">
@@ -410,7 +411,7 @@
   var CATS=[{k:"precursor",label:"Essential precursors",zh:"核心前驱体"},{k:"HTL",label:"Hole transport layer",zh:"空穴传输层"},{k:"ETL",label:"Electron transport layer",zh:"电子传输层"},{k:"additive",label:"Additives / passivation",zh:"添加剂 / 钝化"},{k:"solvent",label:"Solvents",zh:"溶剂"},{k:"other",label:"Other",zh:"其他"}];
   function catLabel(k){for(var i=0;i<CATS.length;i++)if(CATS[i].k===k)return CATS[i].label;return "";}
   function catIndex(k){for(var i=0;i<CATS.length;i++)if(CATS[i].k===k)return i;return 99;}
-  var COLS=["name","name_zh","iupac","aliases","cas","formula","mw","smiles","ghs","flags","category","vendor","purity","amount","location","registered_by","date_added","status","archived","disposed_by","disposed_date"];
+  var COLS=["name","name_zh","iupac","aliases","cas","formula","mw","smiles","ghs","flags","category","vendor","purity","amount","location","registered_by","date_added","moved_by","moved_date","status","archived","disposed_by","disposed_date"];
   var items=[], editId=null, confirmId=null, disposeId=null, filter="current", sortBy="recent", locFilter="all", venFilter="all", catFilter="all", alignArmed=false;
   var LS=window.localStorage;
   var CASRE=/^\d{2,7}-\d{2}-\d$/;
@@ -505,7 +506,7 @@
   /* ---- sign-in overlay ---- */
   function showLogin(){var o=$("loginwrap");if(!o)return;o.hidden=false;o.style.display="flex";$("lg_err").textContent="";var f=$("lg_user");if(f)try{f.focus();}catch(e){}}
   function hideLogin(){var o=$("loginwrap");if(o){o.hidden=true;o.style.display="none";}}
-  function applyUser(){var by=$("f_by");if(by){if(!editId)by.value=curName();by.readOnly=cloudOn()&&!isAdmin();}var ab=$("adminbtn");if(ab)ab.hidden=!isAdmin();}
+  function applyUser(){var lock=cloudOn()&&!isAdmin();var by=$("f_by");if(by){if(!editId)by.value=curName();by.readOnly=lock;}var db=$("f_disp_by");if(db)db.readOnly=lock;var ab=$("adminbtn");if(ab)ab.hidden=!isAdmin();}
   function doLogin(){var u=($("lg_user").value||"").trim(),pw=$("lg_pw").value||"";if(!u||!pw){$("lg_err").textContent="Enter your username and password.";return;}$("lg_err").textContent="Signing in…";$("lg_go").disabled=true;
     fetch(API_BASE+"/api/login",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({username:u,password:pw})}).then(function(r){return r.json().then(function(j){return{ok:r.ok,j:j};});}).then(function(res){$("lg_go").disabled=false;if(!res.ok){$("lg_err").textContent=(res.j&&res.j.error)||"Sign-in failed.";return;}setApiToken(res.j.token);saveUser({username:res.j.username,name:res.j.name,role:res.j.role});$("lg_pw").value="";$("lg_err").textContent="";_shItems={};_shCat={};_shVend="";_shLoc="";startCloud();}).catch(function(){$("lg_go").disabled=false;$("lg_err").textContent="Can't reach the server — check your connection.";});}
   function logout(){setApiToken("");saveUser(null);if(cloudPoll)clearInterval(cloudPoll);items=[];render();showLogin();setCloudStatus();}
@@ -807,7 +808,7 @@
   var AMT_UNITS=["ug","mg","g","kg","uL","mL","L"];
   function setAmount(s){var m=(s||"").match(/^\s*([0-9.]+)?\s*([A-Za-zµ]+)?/);$("f_amount_val").value=m&&m[1]?m[1]:"";var u=m&&m[2]?m[2]:"";$("f_amount_unit").value=AMT_UNITS.indexOf(u)>=0?u:"";}
   function readForm(){return {name:$("f_name").value.trim(),name_zh:$("f_name_zh").value.trim(),iupac:$("f_iupac").value.trim(),aliases:($("f_aliases").value||"").split(/[,，、;；\s]+/).map(function(s){return s.trim();}).filter(Boolean),cas:$("f_cas").value.trim(),formula:$("f_formula").value.trim(),mw:$("f_mw").value.trim(),smiles:$("f_smiles").value.trim(),img:$("f_img").value||"",ghs:getGhs(),flags:getFlags(),vendor:$("f_vendor").value.trim(),purity:getPurity(),amount:getAmount(),location:$("f_location").value.trim(),registered_by:$("f_by").value.trim(),date_added:$("f_date").value.trim(),category:$("f_cat").value};}
-  function resetForm(){["f_name","f_name_zh","f_iupac","f_aliases","f_cas","f_formula","f_mw","f_smiles","f_img","f_vendor","f_grade","f_purity","f_amount_val","f_location","f_by","f_date","f_disp_date","f_disp_by","f_cat"].forEach(function(id){$(id).value="";});$("f_amount_unit").value="";$("dispedit").hidden=true;setGhs([]);setFlags([]);$("fetchnote").textContent="";$("loadhint").textContent="";$("findlinks").innerHTML="";$("vendorhint").innerHTML="";$("autotag").textContent="auto-assigned from CAS; adjust if needed";$("ghsnote").textContent="";autoName="";if(cloudOn()){$("f_by").value=curName();$("f_by").readOnly=!isAdmin();}else{$("f_by").readOnly=false;}previewStruct();}
+  function resetForm(){["f_name","f_name_zh","f_iupac","f_aliases","f_cas","f_formula","f_mw","f_smiles","f_img","f_vendor","f_grade","f_purity","f_amount_val","f_location","f_by","f_date","f_disp_date","f_disp_by","f_cat"].forEach(function(id){$(id).value="";});$("f_amount_unit").value="";$("dispedit").hidden=true;setGhs([]);setFlags([]);$("fetchnote").textContent="";$("loadhint").textContent="";$("findlinks").innerHTML="";$("vendorhint").innerHTML="";$("autotag").textContent="auto-assigned from CAS; adjust if needed";$("ghsnote").textContent="";autoName="";if(cloudOn()){$("f_by").value=curName();$("f_by").readOnly=!isAdmin();$("f_disp_by").readOnly=!isAdmin();}else{$("f_by").readOnly=false;$("f_disp_by").readOnly=false;}previewStruct();}
 
   function save(){
     var d=readForm();
@@ -828,12 +829,12 @@
     if(editingArch&&!($("f_disp_by").value.trim()||(editIt&&editIt.disposed_by))){$("formerr").textContent="Enter who discarded it (丢弃人).";$("formerr").hidden=false;return;}
     if(!d.iupac)d.iupac=d.name;
     var wasEdit=!!editId, nm=d.name;
-    if(editId){var it=editIt;if(it){if(!d.date_added)d.date_added=it.date_added||today();Object.assign(it,d);delete it._ex;if(it.archived){it.disposed_date=$("f_disp_date").value.trim()||it.disposed_date||today();it.disposed_by=$("f_disp_by").value.trim()||it.disposed_by||"";}}cancelEdit();}
-    else{d.id=uid();d.date_added=d.date_added||today();d.status="active";d.archived=false;d.disposed_by="";d.disposed_date="";if(!d.aliases)d.aliases=[];items.unshift(d);}
+    if(editId){var it=editIt;if(it){if(!d.date_added)d.date_added=it.date_added||today();var oldLoc=it.location||"";Object.assign(it,d);delete it._ex;var mv=curName();if(mv&&!it.archived&&d.location&&d.location!==oldLoc){it.moved_by=mv;it.moved_date=today();}if(it.archived){it.disposed_date=$("f_disp_date").value.trim()||it.disposed_date||today();it.disposed_by=$("f_disp_by").value.trim()||it.disposed_by||"";}}cancelEdit();}
+    else{d.id=uid();d.date_added=d.date_added||today();d.status="active";d.archived=false;d.moved_by="";d.moved_date="";d.disposed_by="";d.disposed_date="";if(!d.aliases)d.aliases=[];items.unshift(d);}
     upsertCatalog(d);noteVendor(d.vendor);noteLoc(d.location);persist();resetForm();render();if(window.requestAnimationFrame)requestAnimationFrame(drawStructures);
     tool((wasEdit?"Saved changes to ":"Added ")+nm+".");
   }
-  function edit(id){var it=items.find(function(x){return x.id===id;});if(!it)return;libKey=null;editId=id;$("addpanel").hidden=false;$("addbtn").textContent="Close form";loadFrom(it,false);$("formtitle").textContent="Edit chemical";$("savebtn").textContent="Save changes";$("editflag").hidden=false;$("loadhint").textContent="";try{$("addpanel").scrollIntoView({behavior:"smooth",block:"center"});}catch(e){}}
+  function edit(id){var it=items.find(function(x){return x.id===id;});if(!it)return;libKey=null;editId=id;$("addpanel").hidden=false;$("addbtn").textContent="Close form";loadFrom(it,false);applyUser();$("formtitle").textContent="Edit chemical";$("savebtn").textContent="Save changes";$("editflag").hidden=false;$("loadhint").textContent="";try{$("addpanel").scrollIntoView({behavior:"smooth",block:"center"});}catch(e){}}
   function cancelEdit(){editId=null;$("formtitle").textContent="Add a chemical";$("savebtn").textContent="Add to inventory";$("editflag").hidden=true;resetForm();}
   function openAdd(prefill){libKey=null;$("addpanel").hidden=false;$("addbtn").textContent="Close form";applyUser();if(prefill&&!editId){$("f_name").value=prefill;doLookup();}else{$("f_name").focus();}try{$("addpanel").scrollIntoView({behavior:"smooth",block:"center"});}catch(e){}}
   function closeAdd(){$("addpanel").hidden=true;$("addbtn").textContent="＋ Add chemical";if(libKey!==null)exitLib();else cancelEdit();}
@@ -916,7 +917,7 @@
       var dupe=(x.cas&&casCount[x.cas]>1)?'<span class="dupe" title="Same CAS on more than one record">CAS×'+casCount[x.cas]+'</span>':'';
       var abbr=(x.aliases||[]).filter(function(a){return a&&a.length<=12&&!/\s/.test(a);});
       var sub=esc(x.formula||"")+(x.mw?' · '+esc(x.mw)+' g/mol':'')+(abbr.length?' · <span class="abbr">'+esc(abbr.join(", "))+'</span>':'')+(x.name_zh?' · <span class="zh">'+esc(x.name_zh)+'</span>':'');
-      var logCell='<div class="logline"><span class="logtag">注册</span>'+esc(x.date_added||"—")+(x.registered_by?' · '+esc(x.registered_by):'')+'</div>'+(x.archived?'<div class="logline disc"><span class="logtag">丢弃</span>'+esc(x.disposed_date||"—")+(x.disposed_by?' · '+esc(x.disposed_by):'')+'</div>':'');
+      var logCell='<div class="logline"><span class="logtag">注册</span>'+esc(x.date_added||"—")+(x.registered_by?' · '+esc(x.registered_by):'')+'</div>'+(x.moved_by?'<div class="logline"><span class="logtag">移动</span>'+esc(x.moved_date||"—")+' · '+esc(x.moved_by)+'</div>':'')+(x.archived?'<div class="logline disc"><span class="logtag">丢弃</span>'+esc(x.disposed_date||"—")+(x.disposed_by?' · '+esc(x.disposed_by):'')+'</div>':'');
       var catTag=x.category?'<span class="cattag" title="'+esc(catLabel(x.category))+'">'+esc(catLabel(x.category))+'</span>':'';
       return '<tr class="'+(x.archived?"gone":"")+'"><td><span class="cn"><span class="nmedit" title="Click to edit this chemical" onclick="edit(\''+x.id+'\')">'+esc(x.name)+'</span>'+catTag+dupe+'<small>'+sub+'</small></span></td>'
         +'<td class="mono">'+esc(x.cas||"—")+'</td><td>'+esc(x.vendor||"—")+'</td><td>'+esc(x.amount||"—")+'</td><td>'+esc(x.purity||"—")+'</td><td>'+esc(x.location||"—")+'</td>'
@@ -932,7 +933,7 @@
   function copyCSV(){var rows=rowsForExport();var csv=toCSV(rows),btn=$("copybtn");function ok(){btn.textContent="Copied ✓";tool("Copied "+rows.length+" record"+(rows.length===1?"":"s")+" ("+filter+").");setTimeout(function(){btn.textContent="Copy view";},1500);}if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(csv).then(ok).catch(fb);}else fb();function fb(){var ta=document.createElement("textarea");ta.value=csv;ta.style.position="fixed";ta.style.left="-9999px";document.body.appendChild(ta);ta.select();try{document.execCommand("copy");ok();}catch(e){}ta.remove();}}
   function importCSV(){$("fileinput").click();}
   function onFile(e){var f=e.target.files[0];if(!f)return;var rd=new FileReader();rd.onload=function(){parseCSV(rd.result);e.target.value="";};rd.readAsText(f);}
-  function parseCSV(text){var rows=splitCSV(text);if(!rows.length)return;var head=rows[0].map(function(h){return h.trim().toLowerCase();});var added=0;function sl(v){return v?v.split(";").map(function(s){return s.trim();}).filter(Boolean):[];}for(var i=1;i<rows.length;i++){var r=rows[i];if(r.length===1&&r[0]==="")continue;var o={};head.forEach(function(h,j){o[h]=r[j]!=null?r[j]:"";});if(!o.name&&!o.name_zh)continue;items.unshift({id:uid(),name:o.name||o.name_zh,name_zh:o.name_zh||"",iupac:o.iupac||o.name||"",aliases:sl(o.aliases),cas:o.cas||"",formula:o.formula||"",mw:o.mw||"",smiles:o.smiles||"",ghs:sl(o.ghs),flags:sl(o.flags),category:o.category||"",vendor:o.vendor||"",purity:o.purity||"",amount:o.amount||"",location:o.location||"",registered_by:o.registered_by||"",date_added:o.date_added||today(),status:(o.status==="empty"?"empty":"active"),archived:/^(yes|true|1)$/i.test(o.archived||""),disposed_by:o.disposed_by||"",disposed_date:o.disposed_date||""});added++;}persist();render();tool("Imported "+added+" row"+(added===1?"":"s")+" from CSV.");}
+  function parseCSV(text){var rows=splitCSV(text);if(!rows.length)return;var head=rows[0].map(function(h){return h.trim().toLowerCase();});var added=0;function sl(v){return v?v.split(";").map(function(s){return s.trim();}).filter(Boolean):[];}for(var i=1;i<rows.length;i++){var r=rows[i];if(r.length===1&&r[0]==="")continue;var o={};head.forEach(function(h,j){o[h]=r[j]!=null?r[j]:"";});if(!o.name&&!o.name_zh)continue;items.unshift({id:uid(),name:o.name||o.name_zh,name_zh:o.name_zh||"",iupac:o.iupac||o.name||"",aliases:sl(o.aliases),cas:o.cas||"",formula:o.formula||"",mw:o.mw||"",smiles:o.smiles||"",ghs:sl(o.ghs),flags:sl(o.flags),category:o.category||"",vendor:o.vendor||"",purity:o.purity||"",amount:o.amount||"",location:o.location||"",registered_by:o.registered_by||"",date_added:o.date_added||today(),moved_by:o.moved_by||"",moved_date:o.moved_date||"",status:(o.status==="empty"?"empty":"active"),archived:/^(yes|true|1)$/i.test(o.archived||""),disposed_by:o.disposed_by||"",disposed_date:o.disposed_date||""});added++;}persist();render();tool("Imported "+added+" row"+(added===1?"":"s")+" from CSV.");}
   function splitCSV(text){var rows=[],row=[],cur="",q=false,i=0,ch;text=text.replace(/\r\n?/g,"\n");for(;i<text.length;i++){ch=text[i];if(q){if(ch==='"'){if(text[i+1]==='"'){cur+='"';i++;}else q=false;}else cur+=ch;}else{if(ch==='"')q=true;else if(ch===","){row.push(cur);cur="";}else if(ch==="\n"){row.push(cur);rows.push(row);row=[];cur="";}else cur+=ch;}}if(cur!==""||row.length){row.push(cur);rows.push(row);}return rows;}
 
   (function(){
