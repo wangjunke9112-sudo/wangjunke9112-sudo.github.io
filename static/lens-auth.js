@@ -144,14 +144,31 @@
       .catch(function () { cb("offline"); });
   }
 
+  function changePw() {
+    var u = getUser();
+    var pw = window.prompt("Set a new password for your account (" + ((u && u.name) || "") + "):", "");
+    if (pw == null) return;
+    pw = pw.trim();
+    if (pw.length < 4) { alert("Password must be at least 4 characters."); return; }
+    fetch(API_BASE + "/api/mypassword", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "X-LENS-Token": tok() },
+      body: JSON.stringify({ password: pw })
+    }).then(function (r) { return r.json().then(function (j) { return { ok: r.ok, j: j }; }); })
+      .then(function (res) { alert(res.ok && res.j && res.j.ok ? "Password changed — use it next time you sign in." : ((res.j && res.j.error) || "Could not change the password.")); })
+      .catch(function () { alert("Could not reach the server."); });
+  }
+
   function fillChip() {
     var c = document.getElementById("lens-userchip");
     if (!c) return;
     var u = getUser();
     c.innerHTML = u
       ? "Signed in as " + (u.name || u.username) +
-        ' · <a id="lens-signout">Sign out</a>'
+        ' · <a id="lens-pw">password</a> · <a id="lens-signout">Sign out</a>'
       : "";
+    var pwl = document.getElementById("lens-pw");
+    if (pwl) pwl.addEventListener("click", changePw);
     var so = document.getElementById("lens-signout");
     if (so) so.addEventListener("click", function () { LENS.logout(); });
   }
