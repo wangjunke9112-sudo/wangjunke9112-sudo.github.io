@@ -774,7 +774,7 @@
     $("f_name").value=it.name;$("f_name_zh").value=it.name_zh||"";$("f_iupac").value=it.iupac||"";
     $("f_cas").value=it.cas||"";$("f_formula").value=it.formula||"";$("f_mw").value=it.mw||computeMW(it.formula);$("f_smiles").value=it.smiles||"";$("f_img").value=it.img||"";$("f_aliases").value=(it.aliases||[]).join(", ");$("f_cat").value=it.category||"";
     setGhs(it.ghs||[]);setFlags(it.flags||[]);previewStruct();
-    if(!keepBottleBlank){$("f_vendor").value=it.vendor||"";setPurity(it.purity);setAmount(it.amount);$("f_location").value=it.location||"";$("f_by").value=it.registered_by||"";$("f_date").value=it.date_added||"";$("f_form").value=it.form||"";$("f_conc").value=it.conc||"";$("f_conc_unit").value=it.conc_unit||"";$("f_solvent").value=it.solvent||"";$("f_mn").value=it.mn||"";$("f_mn_method").value=it.mn_method||"";$("f_mwt").value=it.mwt||"";$("f_mw_method").value=it.mw_method||"";updateSpecHint();if(it.archived){$("dispedit").hidden=false;$("f_disp_date").value=it.disposed_date||"";$("f_disp_by").value=it.disposed_by||"";}else{$("dispedit").hidden=true;}}
+    if(!keepBottleBlank){$("f_vendor").value=it.vendor||"";setPurity(it.purity);setAmount(it.amount);$("f_location").value=it.location||"";$("f_by").value=it.registered_by||"";$("f_date").value=it.date_added||"";$("f_form").value=it.form||"";$("f_conc").value=it.conc||"";$("f_conc_unit").value=it.conc_unit||"";$("f_solvent").value=it.solvent||"";$("f_mn").value=it.mn||"";$("f_mn_method").value=it.mn_method||"";$("f_mwt").value=it.mwt||"";$("f_mw_method").value=it.mw_method||"";updateSpecHint();_svGhsAdded=[];_svFlagsAdded=[];if(it.archived){$("dispedit").hidden=false;$("f_disp_date").value=it.disposed_date||"";$("f_disp_by").value=it.disposed_by||"";}else{$("dispedit").hidden=true;}}
     autoName=norm(it.name);
     $("loadhint").textContent="Loaded a previous entry for "+it.name+" — fill in this bottle's vendor, amount and location.";updateFindLinks();
   }
@@ -802,17 +802,24 @@
   ];
   function ghsForText(s){s=(s||"").toLowerCase();for(var i=0;i<GHSKW.length;i++){if(GHSKW[i][0].test(s))return GHSKW[i][1].slice();}return [];}
   function guessGhs(){return ghsForText(($("f_name").value||"")+" "+($("f_iupac").value||"")+" "+($("f_aliases").value||"")+" "+($("f_formula").value||""));}
-  /* a dispersion/solution inherits its SOLVENT's hazards: union the solvent's GHS + 管控 into whatever is already set (the chemical's own or the bottle's), never removing. */
+  /* a dispersion/solution inherits its SOLVENT's hazards. We remember exactly what the
+     current solvent added, so switching solvents REMOVES the old solvent's GHS + 管控
+     and applies the new one's — while never touching the chemical's own or the bottle's picks. */
+  var _svGhsAdded=[], _svFlagsAdded=[];
   function applySolventHaz(){
     updateSpecHint();
-    var sv=$("f_solvent").value.trim();if(!sv)return;
+    if(_svGhsAdded.length)setGhs(getGhs().filter(function(c){return _svGhsAdded.indexOf(c)<0;}));
+    if(_svFlagsAdded.length)setFlags(getFlags().filter(function(v){return _svFlagsAdded.indexOf(v)<0;}));
+    _svGhsAdded=[];_svFlagsAdded=[];
+    var sv=$("f_solvent").value.trim();
+    if(!sv){$("ghsnote").textContent="";return;}
     var add=ghsForText(sv);var d=dget(sv);if(d&&d.ghs)add=add.concat(d.ghs);
-    var cur=getGhs(),merged=cur.slice(),addedG=[];
-    add.forEach(function(c){if(merged.indexOf(c)<0){merged.push(c);addedG.push(c);}});
-    if(addedG.length)setGhs(merged);
-    var addedF=[],cas=solventCas(sv);
-    if(cas){var fl=autoReg(cas),curf=getFlags(),mf=curf.slice();fl.forEach(function(v){if(mf.indexOf(v)<0){mf.push(v);addedF.push(v);}});if(addedF.length)setFlags(mf);}
-    if(addedG.length||addedF.length)$("ghsnote").textContent="Added "+sv+" hazards: "+addedG.map(function(c){return (GHS[c]&&GHS[c].en)||c;}).concat(addedF).join(", ")+" — verify against the bottle.";
+    var merged=getGhs().slice();
+    add.forEach(function(c){if(merged.indexOf(c)<0){merged.push(c);_svGhsAdded.push(c);}});
+    if(_svGhsAdded.length)setGhs(merged);
+    var cas=solventCas(sv);
+    if(cas){var fl=autoReg(cas),mf=getFlags().slice();fl.forEach(function(v){if(mf.indexOf(v)<0){mf.push(v);_svFlagsAdded.push(v);}});if(_svFlagsAdded.length)setFlags(mf);}
+    if(_svGhsAdded.length||_svFlagsAdded.length)$("ghsnote").textContent="Added "+sv+" hazards: "+_svGhsAdded.map(function(c){return (GHS[c]&&GHS[c].en)||c;}).concat(_svFlagsAdded).join(", ")+" — verify against the bottle.";
   }
   function applyGhsAuto(source){if(getGhs().length)return;var g=guessGhs();if(!g.length){if(source==="pubchem")$("ghsnote").textContent="PubChem had no pictograms — tap them from the bottle label.";return;}setGhs(g);$("ghsnote").textContent=(source==="pubchem"?"auto-filled from PubChem":"auto-suggested from the name")+" — please verify against the bottle label.";}
   /* best-effort authoritative GHS from PubChem's safety sheet (works on the live site; blocked in this preview) */
@@ -856,7 +863,7 @@
   var AMT_UNITS=["ug","mg","g","kg","uL","mL","L"];
   function setAmount(s){var m=(s||"").match(/^\s*([0-9.]+)?\s*([A-Za-zµ]+)?/);$("f_amount_val").value=m&&m[1]?m[1]:"";var u=m&&m[2]?m[2]:"";$("f_amount_unit").value=AMT_UNITS.indexOf(u)>=0?u:"";}
   function readForm(){return {name:$("f_name").value.trim(),name_zh:$("f_name_zh").value.trim(),iupac:$("f_iupac").value.trim(),aliases:($("f_aliases").value||"").split(/[,，、;；\s]+/).map(function(s){return s.trim();}).filter(Boolean),cas:$("f_cas").value.trim(),formula:$("f_formula").value.trim(),mw:$("f_mw").value.trim(),smiles:$("f_smiles").value.trim(),img:$("f_img").value||"",ghs:getGhs(),flags:getFlags(),vendor:$("f_vendor").value.trim(),purity:getPurity(),amount:getAmount(),location:$("f_location").value.trim(),registered_by:$("f_by").value.trim(),date_added:$("f_date").value.trim(),category:$("f_cat").value,form:$("f_form").value,conc:$("f_conc").value.trim(),conc_unit:$("f_conc_unit").value,solvent:$("f_solvent").value.trim(),mn:$("f_mn").value.trim(),mn_method:$("f_mn_method").value,mwt:$("f_mwt").value.trim(),mw_method:$("f_mw_method").value};}
-  function resetForm(){["f_name","f_name_zh","f_iupac","f_aliases","f_cas","f_formula","f_mw","f_smiles","f_img","f_vendor","f_grade","f_purity","f_amount_val","f_location","f_by","f_date","f_disp_date","f_disp_by","f_cat","f_form","f_conc","f_conc_unit","f_solvent","f_mn","f_mn_method","f_mwt","f_mw_method"].forEach(function(id){$(id).value="";});$("f_amount_unit").value="";if($("spechint"))$("spechint").textContent="";$("dispedit").hidden=true;setGhs([]);setFlags([]);$("fetchnote").textContent="";$("loadhint").textContent="";$("findlinks").innerHTML="";$("vendorhint").innerHTML="";$("autotag").textContent="auto-assigned from CAS; adjust if needed";$("ghsnote").textContent="";autoName="";if(cloudOn()){$("f_by").value=curName();$("f_by").readOnly=!isAdmin();$("f_disp_by").readOnly=!isAdmin();}else{$("f_by").readOnly=false;$("f_disp_by").readOnly=false;}previewStruct();}
+  function resetForm(){["f_name","f_name_zh","f_iupac","f_aliases","f_cas","f_formula","f_mw","f_smiles","f_img","f_vendor","f_grade","f_purity","f_amount_val","f_location","f_by","f_date","f_disp_date","f_disp_by","f_cat","f_form","f_conc","f_conc_unit","f_solvent","f_mn","f_mn_method","f_mwt","f_mw_method"].forEach(function(id){$(id).value="";});$("f_amount_unit").value="";if($("spechint"))$("spechint").textContent="";_svGhsAdded=[];_svFlagsAdded=[];$("dispedit").hidden=true;setGhs([]);setFlags([]);$("fetchnote").textContent="";$("loadhint").textContent="";$("findlinks").innerHTML="";$("vendorhint").innerHTML="";$("autotag").textContent="auto-assigned from CAS; adjust if needed";$("ghsnote").textContent="";autoName="";if(cloudOn()){$("f_by").value=curName();$("f_by").readOnly=!isAdmin();$("f_disp_by").readOnly=!isAdmin();}else{$("f_by").readOnly=false;$("f_disp_by").readOnly=false;}previewStruct();}
 
   function save(){
     var d=readForm();
@@ -930,7 +937,10 @@
   function buildCatFilter(){var sel=$("catfilter");if(!sel)return;sel.innerHTML=catOptionsHTML(catFilter==="all"?"":catFilter,"filter");sel.value=catFilter;}
   function buildVendorFilter(){var sel=$("venfilter");if(!sel)return;if(venFilter!=="all"&&vendorsList.indexOf(venFilter)<0)venFilter="all";sel.innerHTML='<option value="all">All vendors 供应商</option>'+vendorsList.map(function(v){return '<option'+(v===venFilter?" selected":"")+'>'+esc(v)+'</option>';}).join("");sel.value=venFilter;}
   function buildLocFilter(){var sel=$("locfilter");if(!sel)return;if(locFilter!=="all"&&locsList.indexOf(locFilter)<0)locFilter="all";sel.innerHTML='<option value="all">All locations 位置</option>'+locsList.map(function(v){return '<option'+(v===locFilter?" selected":"")+'>'+esc(v)+'</option>';}).join("");sel.value=locFilter;}
-  function buildChoiceDatalists(){var dv=$("vendors"),dl=$("locs");if(dv)dv.innerHTML=vendorsList.map(function(v){return '<option>'+esc(v)+'</option>';}).join("");if(dl)dl.innerHTML=locsList.map(function(v){return '<option>'+esc(v)+'</option>';}).join("");}
+  function buildChoiceDatalists(){var dv=$("vendors"),dl=$("locs");if(dv)dv.innerHTML=vendorsList.map(function(v){return '<option>'+esc(v)+'</option>';}).join("");if(dl)dl.innerHTML=locsList.map(function(v){return '<option>'+esc(v)+'</option>';}).join("");
+    var ds=$("solvents");if(ds){var common=["ethanol","H2O","IPA","chlorobenzene","DMF","DMSO","toluene","acetonitrile","methanol","2-methoxyethanol","NMP","THF","acetone","chloroform","ethyl acetate","anisole"];var seen={},out=[];common.concat(items.map(function(x){return x.solvent||"";})).forEach(function(s){s=(s||"").trim();if(s&&!seen[s.toLowerCase()]){seen[s.toLowerCase()]=1;out.push(s);}});ds.innerHTML=out.map(function(v){return '<option>'+esc(v)+'</option>';}).join("");}}
+  /* let a field reveal its WHOLE stored list on focus: clear it (so the datalist shows everything), restore if nothing is picked */
+  function comboAll(el){if(!el)return;el.addEventListener("focus",function(){if(el.value){el.dataset.prev=el.value;el.value="";}});el.addEventListener("blur",function(){if(!el.value&&el.dataset.prev)el.value=el.dataset.prev;el.dataset.prev="";});}
   function nkey(s){return (s||"").toLowerCase();}
   function srank(x){return x.archived?1:0;}
   function sortList(list){
@@ -972,7 +982,7 @@
       var spec=specStr(x);
       var locCell;
       if(x.archived)locCell='<td>'+esc(x.location||"—")+'</td>';
-      else if(moveId===x.id)locCell='<td><span class="disp-form"><input id="moveinp" list="locs" placeholder="新位置 location" value="'+esc(x.location||"")+'" onkeydown="if(event.key===\'Enter\')doMove(\''+x.id+'\')"><button class="btn-primary" onclick="doMove(\''+x.id+'\')">Move 移动</button><button onclick="cancelMove()">✕</button></span></td>';
+      else if(moveId===x.id)locCell='<td><span class="disp-form"><input id="moveinp" list="locs" placeholder="新位置 location" value="'+esc(x.location||"")+'" onfocus="this.dataset.prev=this.value;this.value=\'\';" onblur="if(!this.value&&this.dataset.prev)this.value=this.dataset.prev;this.dataset.prev=\'\';" onkeydown="if(event.key===\'Enter\')doMove(\''+x.id+'\')"><button class="btn-primary" onclick="doMove(\''+x.id+'\')">Move 移动</button><button onclick="cancelMove()">✕</button></span></td>';
       else locCell='<td><button class="loclink" title="Click to update location 更新位置" onclick="askMove(\''+x.id+'\')">'+esc(x.location||"— set 设置")+'</button></td>';
       return '<tr class="'+(x.archived?"gone":"")+'"><td><span class="cn"><span class="nmedit" title="Click to edit this chemical" onclick="edit(\''+x.id+'\')">'+esc(x.name)+'</span>'+(spec?'<span style="color:var(--muted);font-weight:400"> — '+esc(spec)+'</span>':'')+catTag+dupe+'<small>'+sub+'</small></span></td>'
         +'<td class="mono">'+esc(x.cas||"—")+'</td><td>'+esc(x.vendor||"—")+'</td><td>'+esc(x.amount||"—")+'</td><td>'+esc(x.purity||"—")+'</td>'+locCell+''
@@ -1000,7 +1010,7 @@
     function paintTgl(){$("tgl").innerHTML=effTheme()==="dark"?SUN:MOON;}
     paintTgl();
     $("tgl").addEventListener("click",function(){var next=effTheme()==="dark"?"light":"dark";root.setAttribute("data-theme",next);try{LS.setItem("lens-theme",next);}catch(e){}paintTgl();});
-    buildPicker();buildFlags();$("f_cat").innerHTML=catOptionsHTML("","form");loadUser();load();render();suppressPush=false;pickApiBase(function(){startCloud();});
+    buildPicker();buildFlags();$("f_cat").innerHTML=catOptionsHTML("","form");comboAll($("f_vendor"));comboAll($("f_location"));comboAll($("f_solvent"));loadUser();load();render();suppressPush=false;pickApiBase(function(){startCloud();});
     document.addEventListener("paste",function(e){if($("addpanel").hidden)return;var it=e.clipboardData&&e.clipboardData.items;if(!it)return;for(var i=0;i<it.length;i++){if(it[i].type&&it[i].type.indexOf("image")===0){var f=it[i].getAsFile();if(f){resizeImg(f,function(url){if(url){$("f_img").value=url;showImgPreview(url);}});e.preventDefault();}return;}}});
     if(!window.SmilesDrawer){var sdt=setInterval(function(){if(window.SmilesDrawer){clearInterval(sdt);drawStructures();}},200);setTimeout(function(){clearInterval(sdt);},5000);}
     var probe=new Image();probe.onload=function(){if(probe.width>0){USE_OFFICIAL=true;buildPicker();render();}};probe.onerror=function(){};probe.src="/ghs/"+GHSFILE.GHS02;
