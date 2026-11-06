@@ -63,8 +63,26 @@
       '#lens-gate .spin{width:28px;height:28px;border:3px solid rgba(255,255,255,.25);' +
       'border-top-color:#fff;border-radius:50%;animation:lensspin .8s linear infinite;}' +
       '@keyframes lensspin{to{transform:rotate(360deg);}}' +
-      '#lens-userchip{font-size:13px;opacity:.9;}' +
-      '#lens-userchip a{color:inherit;text-decoration:underline;cursor:pointer;opacity:.85;}';
+      '#lens-userchip{display:inline-flex;align-items:center;gap:7px;font-size:13px;opacity:.95;}' +
+      '#lens-userchip a{color:inherit;text-decoration:underline;cursor:pointer;opacity:.85;}' +
+      '.lens-dot{width:6px;height:6px;border-radius:50%;background:#49c17a;display:inline-block;flex:none}' +
+      '.lens-ovl{position:fixed;inset:0;z-index:2147483646;background:rgba(10,20,35,.5);display:flex;align-items:center;justify-content:center;padding:16px;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"PingFang SC","Microsoft YaHei",sans-serif;}' +
+      '.lens-ovl[hidden]{display:none}' +
+      '.lens-modal{width:100%;max-width:460px;background:#fff;color:#16202e;border-radius:14px;padding:20px;box-shadow:0 20px 60px rgba(0,0,0,.4);max-height:90vh;overflow:auto;box-sizing:border-box}' +
+      '.lens-modal h3{margin:0 0 12px;font-size:18px;color:#0b1f3a}' +
+      '.lens-ulist{border:1px solid #e3e8ef;border-radius:10px;padding:4px 10px;margin-bottom:14px;max-height:240px;overflow:auto}' +
+      '.lens-urow{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid #eef1f5;font-size:14px}' +
+      '.lens-urow:last-child{border-bottom:0}' +
+      '.lens-dim{color:#7a8699;font-size:12px}' +
+      '.lens-urow a{color:#1e4f8a;cursor:pointer;text-decoration:underline;font-size:12.5px}' +
+      '.lens-urow a.lens-del{color:#c0392b}' +
+      '.lens-add>b{display:block;font-size:13px;margin-bottom:8px;color:#16202e}' +
+      '.lens-add input,.lens-add select{width:100%;box-sizing:border-box;padding:9px 10px;font-size:14px;border:1px solid #cdd4de;border-radius:8px;margin-bottom:8px;background:#fff;color:#111}' +
+      '.lens-row{display:flex;gap:8px}.lens-row>*{flex:1}' +
+      '.lens-mbtns{display:flex;gap:8px;align-items:center;margin-top:4px}' +
+      '.lens-primary{padding:9px 14px;border:0;border-radius:8px;background:#1e4f8a;color:#fff;font-weight:600;cursor:pointer}' +
+      '.lens-btn{padding:9px 12px;border:1px solid #cdd4de;border-radius:8px;background:#fff;color:#16202e;cursor:pointer}' +
+      '.lens-msg{font-size:12.5px;color:#4a7}';
     (document.head || document.documentElement).appendChild(s);
   }
 
@@ -163,15 +181,68 @@
     var c = document.getElementById("lens-userchip");
     if (!c) return;
     var u = getUser();
+    var admin = !!(u && u.role === "admin");
     c.innerHTML = u
-      ? "Signed in as " + (u.name || u.username) +
-        ' · <a id="lens-pw">password</a> · <a id="lens-signout">Sign out</a>'
+      ? '<i class="lens-dot"></i>' + (u.name || u.username) +
+        (admin ? ' · <a id="lens-acct-link">accounts</a>' : '') +
+        ' · <a id="lens-pw">password</a> · <a id="lens-signout">sign out</a>'
       : "";
+    var al = document.getElementById("lens-acct-link");
+    if (al) al.addEventListener("click", openAccounts);
     var pwl = document.getElementById("lens-pw");
     if (pwl) pwl.addEventListener("click", changePw);
     var so = document.getElementById("lens-signout");
     if (so) so.addEventListener("click", function () { LENS.logout(); });
   }
+
+  /* ---------- admin: member accounts (shown on any gated page for admins) ---------- */
+  function esc(s){return String(s==null?"":s).replace(/[&<>"]/g,function(x){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[x];});}
+  function acctFetch(path, opts){ opts = opts || {}; opts.headers = { "Content-Type": "application/json", "X-LENS-Token": tok() }; return fetch(API_BASE + path, opts); }
+  function openAccounts(){
+    var ov = document.getElementById("lens-acct");
+    if (!ov){ ov = document.createElement("div"); ov.id = "lens-acct"; ov.className = "lens-ovl"; document.documentElement.appendChild(ov); ov.addEventListener("click", function(e){ if (e.target === ov) ov.hidden = true; }); }
+    ov.hidden = false;
+    ov.innerHTML =
+      '<div class="lens-modal"><h3>Accounts 账号管理</h3>' +
+      '<div id="lens-ulist" class="lens-ulist">Loading…</div>' +
+      '<div class="lens-add"><b>Add or update a member</b>' +
+        '<input id="la_user" placeholder="username (for login)" autocapitalize="off" autocorrect="off" spellcheck="false">' +
+        '<input id="la_name" placeholder="display name 姓名">' +
+        '<div class="lens-row"><select id="la_role"><option value="user">member</option><option value="admin">admin</option></select>' +
+        '<input id="la_pw" placeholder="password (required for new)" type="text"></div>' +
+        '<div class="lens-mbtns"><button class="lens-primary" id="la_add">Add / update</button><button class="lens-btn" id="la_close">Close</button><span id="la_msg" class="lens-msg"></span></div>' +
+      '</div></div>';
+    document.getElementById("la_close").addEventListener("click", function(){ ov.hidden = true; });
+    document.getElementById("la_add").addEventListener("click", addUser);
+    renderUsers();
+  }
+  function msgA(t, bad){ var m = document.getElementById("la_msg"); if (m){ m.textContent = t || ""; m.style.color = bad ? "#c0392b" : "#4a7"; } }
+  function renderUsers(){
+    acctFetch("/api/users", { method: "GET" }).then(function(r){ return r.ok ? r.json() : { users: [] }; }).then(function(j){
+      var box = document.getElementById("lens-ulist"); if (!box) return;
+      var us = j.users || [];
+      box.innerHTML = us.length ? us.map(function(u){
+        return '<div class="lens-urow"><div><b>' + esc(u.name) + '</b> <span class="lens-dim">' + esc(u.username) + (u.role === "admin" ? " · admin" : "") + '</span></div>' +
+          '<div><a class="lens-rp" data-u="' + esc(u.username) + '" data-n="' + esc(u.name) + '" data-r="' + esc(u.role || "user") + '">reset pw</a> · <a class="lens-del" data-u="' + esc(u.username) + '">delete</a></div></div>';
+      }).join("") : '<div class="lens-dim" style="padding:8px 0">No accounts yet.</div>';
+      [].forEach.call(box.querySelectorAll(".lens-del"), function(a){ a.addEventListener("click", function(){ delUserA(a.getAttribute("data-u")); }); });
+      [].forEach.call(box.querySelectorAll(".lens-rp"), function(a){ a.addEventListener("click", function(){ resetPwA(a.getAttribute("data-u"), a.getAttribute("data-n"), a.getAttribute("data-r")); }); });
+    }).catch(function(){ var box = document.getElementById("lens-ulist"); if (box) box.innerHTML = '<div class="lens-dim">Could not load accounts.</div>'; });
+  }
+  function addUser(){
+    var u = (document.getElementById("la_user").value || "").trim();
+    var n = (document.getElementById("la_name").value || "").trim();
+    var r = document.getElementById("la_role").value;
+    var pw = (document.getElementById("la_pw").value || "").trim();
+    if (!u || !n){ msgA("Username and name are required.", true); return; }
+    var body = { username: u, name: n, role: r }; if (pw) body.password = pw;
+    acctFetch("/api/users", { method: "POST", body: JSON.stringify(body) }).then(function(x){ return x.json().then(function(j){ return { ok: x.ok, j: j }; }); }).then(function(res){
+      if (!res.ok){ msgA((res.j && res.j.error) || "Could not save.", true); return; }
+      msgA("Saved."); document.getElementById("la_user").value = ""; document.getElementById("la_name").value = ""; document.getElementById("la_pw").value = ""; renderUsers();
+    }).catch(function(){ msgA("Network error.", true); });
+  }
+  function delUserA(un){ if (!window.confirm('Delete account "' + un + '"? Their past entries keep their recorded name.')) return; acctFetch("/api/users?username=" + encodeURIComponent(un), { method: "DELETE" }).then(function(){ renderUsers(); }); }
+  function resetPwA(un, n, r){ var pw = window.prompt("New password for " + n + ":", ""); if (pw == null) return; pw = pw.trim(); if (pw.length < 4){ alert("Password must be at least 4 characters."); return; } acctFetch("/api/users", { method: "POST", body: JSON.stringify({ username: un, name: n, role: r, password: pw }) }).then(function(x){ return x.json().then(function(j){ return { ok: x.ok, j: j }; }); }).then(function(res){ alert(res.ok ? "Password updated." : ((res.j && res.j.error) || "Could not update.")); }); }
 
   function reveal() {
     removeGate();
