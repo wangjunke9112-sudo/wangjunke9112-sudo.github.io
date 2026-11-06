@@ -158,7 +158,6 @@
     <label style="display:flex;align-items:center;gap:6px;font-size:13px;color:var(--muted)">Drag to book <select id="bktarget" class="btn" style="padding:7px 8px"></select></label>
     <button class="btn-primary" id="newbk">＋ New booking</button>
     <button class="btn" id="exportbtn" title="Download bookings as CSV">Export CSV</button>
-    <button class="btn" id="acctbtn" hidden>Accounts</button>
     <button class="btn" id="manage" hidden>Manage instruments</button>
   </div>
 
@@ -519,8 +518,6 @@
   function start(){
     if(started)return;started=true;
     $("manage").hidden=true;$("bk_by").value=myName();$("datepick").value=anchor;
-    $("acctbtn").hidden=!isAdmin();
-    $("acctbtn").addEventListener("click",function(){try{if(window.LENS&&LENS.accounts)LENS.accounts();}catch(e){}});
     wireDrag();wireTips();
     pickApiBase(function(){loadData();setInterval(poll,25000);try{window.addEventListener("focus",poll);}catch(e){}});
   }
