@@ -202,6 +202,7 @@
       api("/api/bookings?from="+from+"&to="+to).then(function(r){return r.json();})
     ]).then(function(res){
       EQUIP=(res[0].equipment||[]).filter(function(e){return e.active;});
+      $("manage").hidden=!(isAdmin()||(res[0].equipment||[]).some(function(e){return e.canManage;}));
       // default: show everything the first time
       if(Object.keys(SHOW).length===0)EQUIP.forEach(function(e){SHOW[e.id]=true;});
       BOOK=res[1].bookings||[];
@@ -342,27 +343,32 @@
 
   /* ---- admin: manage instruments ---- */
   function openManage(){
-    api("/api/users",{method:"GET"}).then(function(r){return r.ok?r.json():{users:[]};}).then(function(j){USERS=j.users||[];}).catch(function(){USERS=[];}).then(function(){renderEqList();$("mgovl").hidden=false;});
+    $("eqadd").style.display=isAdmin()?"":"none";
+    api("/api/members",{method:"GET"}).then(function(r){return r.ok?r.json():{members:[]};}).then(function(j){USERS=j.members||[];}).catch(function(){USERS=[];}).then(function(){renderEqList();$("mgovl").hidden=false;});
   }
   function renderEqList(){
     api("/api/equipment").then(function(r){return r.json();}).then(function(j){
-      var eqs=j.equipment||[];
-      $("eqlist").innerHTML=eqs.map(function(e,i){
-        var trained=e.trained||[];
-        var checks=USERS.map(function(u){return '<label><input type="checkbox" data-eq="'+e.id+'" value="'+esc(u.username)+'"'+(trained.indexOf(u.username)>=0?" checked":"")+'> '+esc(u.name)+'</label>';}).join("");
+      var eqs=(j.equipment||[]);
+      if(!isAdmin())eqs=eqs.filter(function(e){return e.canManage;});   // responsible person sees only their instrument(s)
+      $("eqlist").innerHTML=eqs.map(function(e){
+        var trained=e.trained||[], managers=e.managers||[];
+        var tChk=USERS.map(function(u){return '<label><input type="checkbox" class="t_chk" value="'+esc(u.username)+'"'+(trained.indexOf(u.username)>=0?" checked":"")+'> '+esc(u.name)+'</label>';}).join("");
+        var mChk=USERS.map(function(u){return '<label><input type="checkbox" class="m_chk" value="'+esc(u.username)+'"'+(managers.indexOf(u.username)>=0?" checked":"")+'> '+esc(u.name)+'</label>';}).join("");
         return '<div class="eqrow" data-id="'+e.id+'">'+
           '<input type="color" value="'+esc(e.color||"#2d6cdf")+'" class="e_color">'+
           '<input type="text" class="e_name" value="'+esc(e.name)+'" placeholder="name">'+
           '<input type="text" class="e_zh" value="'+esc(e.name_zh||"")+'" placeholder="中文" style="max-width:110px">'+
           '<label style="margin:0"><input type="checkbox" class="e_active"'+(e.active?" checked":"")+'> active</label>'+
-          '<button class="btn e_save">Save</button><button class="del e_del">delete</button>'+
-          '<div class="trainbox" style="flex-basis:100%">'+(USERS.length?('Trained: '+checks):'<span class="muted">No member accounts yet — add them in the inventory\'s Accounts panel.</span>')+'</div>'+
+          '<button class="btn e_save">Save</button>'+(isAdmin()?'<button class="del e_del">delete</button>':'')+
+          '<div class="trainbox" style="flex-basis:100%">'+(USERS.length?('<b>Trained 可预约:</b> '+tChk):'<span class="muted">No member accounts yet — add them in the inventory\'s Accounts panel.</span>')+'</div>'+
+          (isAdmin()?'<div class="trainbox" style="flex-basis:100%"><b>Responsible 负责人:</b> '+mChk+'</div>':'')+
           '</div>';
-      }).join("")||'<div class="muted">No instruments.</div>';
+      }).join("")||'<div class="muted">No instruments you manage.</div>';
       [].forEach.call($("eqlist").querySelectorAll(".eqrow"),function(row){
         var id=row.getAttribute("data-id");
         row.querySelector(".e_save").addEventListener("click",function(){saveEq(row,id,eqs);});
-        row.querySelector(".e_del").addEventListener("click",function(){
+        var del=row.querySelector(".e_del");
+        if(del)del.addEventListener("click",function(){
           if(!confirm("Delete this instrument and all its bookings?"))return;
           api("/api/equipment?id="+encodeURIComponent(id),{method:"DELETE"}).then(function(){renderEqList();loadWeek();});
         });
@@ -371,14 +377,15 @@
   }
   function saveEq(row,id,eqs){
     var ex=eqs.filter(function(e){return e.id===id;})[0]||{};
-    var trained=[].map.call(row.querySelectorAll('input[type=checkbox][data-eq]'),function(c){return c;}).filter(function(c){return c.checked;}).map(function(c){return c.value;});
+    var trained=[].slice.call(row.querySelectorAll(".t_chk")).filter(function(c){return c.checked;}).map(function(c){return c.value;});
     var body={id:id,name:row.querySelector(".e_name").value.trim(),name_zh:row.querySelector(".e_zh").value.trim(),color:row.querySelector(".e_color").value,active:row.querySelector(".e_active").checked?1:0,ord:ex.ord||0,trained:trained};
+    if(isAdmin())body.managers=[].slice.call(row.querySelectorAll(".m_chk")).filter(function(c){return c.checked;}).map(function(c){return c.value;});
     if(!body.name){alert("Name required");return;}
-    api("/api/equipment",{method:"POST",body:JSON.stringify(body)}).then(function(r){return r.json();}).then(function(){renderEqList();loadWeek();});
+    api("/api/equipment",{method:"POST",body:JSON.stringify(body)}).then(function(r){return r.json();}).then(function(res){if(res&&res.error){alert(res.error);return;}renderEqList();loadWeek();});
   }
   $("eqadd").addEventListener("click",function(){
     var name=prompt("New instrument name (English):","");if(!name)return;
-    api("/api/equipment",{method:"POST",body:JSON.stringify({name:name.trim(),color:"#"+Math.floor(Math.random()*0x9fffff+0x400000).toString(16),ord:(EQUIP.length+1),active:1,trained:[]})}).then(function(){renderEqList();loadWeek();});
+    api("/api/equipment",{method:"POST",body:JSON.stringify({name:name.trim(),color:"#"+Math.floor(Math.random()*0x9fffff+0x400000).toString(16),ord:(EQUIP.length+1),active:1,trained:[],managers:[]})}).then(function(){renderEqList();loadWeek();});
   });
   $("manage").addEventListener("click",openManage);
   $("mg_close").addEventListener("click",function(){$("mgovl").hidden=true;});
@@ -388,7 +395,7 @@
   var started=false;
   function start(){
     if(started)return; started=true;
-    $("manage").hidden=!isAdmin();
+    $("manage").hidden=true;
     $("bk_by").value=myName();
     pickApiBase(function(){ loadWeek(); setInterval(poll,25000); try{window.addEventListener("focus",poll);}catch(e){} });
   }
