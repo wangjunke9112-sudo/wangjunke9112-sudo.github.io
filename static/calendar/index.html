@@ -56,6 +56,11 @@
   .bk b{font-weight:700}
   .bk .who{opacity:.9;font-size:10px}
   .bk.mine{outline:2px solid rgba(255,255,255,.65);outline-offset:-2px}
+  .hnav{display:flex;flex-wrap:wrap;gap:14px;align-items:center}
+  .hnav a{color:var(--hero-dim);text-decoration:none;font-size:13px}
+  .hnav a:hover{color:var(--hero-fg);text-decoration:underline;text-underline-offset:3px}
+  .pv{position:absolute;left:1px;right:1px;border-radius:6px;opacity:.5;border:1.5px solid rgba(255,255,255,.75);pointer-events:none;z-index:3}
+  .daycol{cursor:crosshair}
   .empty{padding:40px 16px;text-align:center;color:var(--muted)}
   /* modal */
   .ovl{position:fixed;inset:0;z-index:50;background:rgba(10,20,35,.5);display:flex;align-items:center;justify-content:center;padding:16px}
@@ -82,6 +87,11 @@
   <div class="hwrap">
     <div class="topbar">
       <div class="lock">LENS <span>Light–Energy Nanophotonics &amp; Semiconductors</span></div>
+      <nav class="hnav">
+        <a href="https://lens-laboratory.com/hub/">Hub 主页</a>
+        <a href="https://lens-laboratory.com/inventory/">Chemical inventory 化学品库</a>
+        <a href="https://lens-laboratory.com/group-lit-feed/">Literature feed 文献</a>
+      </nav>
       <button class="tgl" id="tgl" title="Toggle theme" aria-label="Toggle theme"></button>
     </div>
     <h1>Equipment booking <small>设备预约</small></h1>
@@ -98,6 +108,7 @@
       <button class="btn" id="next" title="Next week">›</button>
     </div>
     <div class="wklabel" id="wklabel">—</div>
+    <label style="display:flex;align-items:center;gap:6px;font-size:13px;color:var(--muted)">Drag to book 拖拽预约 <select id="bktarget" class="btn" style="padding:7px 8px"></select></label>
     <button class="btn-primary" id="newbk">＋ New booking 预约</button>
     <div class="spacer"></div>
     <button class="btn" id="exportbtn" title="Download bookings as CSV">Export CSV</button>
@@ -208,7 +219,7 @@
       BOOK=res[1].bookings||[];
       calVer=res[1].version;
       setStatus("");
-      renderChips();renderGrid();
+      renderChips();renderGrid();populateTargets();
     }).catch(function(e){ if(String(e&&e.message)!=="unauthorized") setStatus("Can't reach the server — retrying…"); pickApiBase(function(){}); });
   }
   function poll(){api("/api/calversion").then(function(r){return r.json();}).then(function(j){if(j&&j.version!==calVer)loadWeek();}).catch(function(){});}
@@ -262,23 +273,13 @@
         var w=100/it._lanes, left=it._lane*w;
         var mine=b.username&&b.username===myUser();
         h+='<div class="bk'+(mine?" mine":"")+'" style="top:'+top+'px;height:'+hgt+'px;left:calc('+left+'% + 1px);width:calc('+w+'% - 2px);background:'+esc(eq.color)+'" data-bk="'+b.id+'" title="'+esc(eq.name)+' · '+mToHHMM(b.s)+'–'+mToHHMM(b.e)+' · '+esc(b.name)+(b.note?" · "+esc(b.note):"")+'">'+
-          '<b>'+esc(eq.name)+'</b><div>'+mToHHMM(b.s)+'–'+mToHHMM(b.e)+'</div><div class="who">'+esc(b.name||"")+'</div></div>';
+          '<b>'+esc(b.note||eq.name)+'</b><div class="who">'+mToHHMM(b.s)+'–'+mToHHMM(b.e)+' · '+esc(b.name||"")+'</div></div>';
       });
       h+='</div>';
     });
     $("grid").innerHTML=h;
     var y1=pedate(days[0]), y2=pedate(days[6]);
     $("wklabel").textContent=monLabel(days[0])+" "+dayNum(days[0])+" – "+monLabel(days[6])+" "+dayNum(days[6])+", "+y2.getUTCFullYear();
-    // wire day columns: click empty → new booking at that time
-    [].forEach.call($("grid").querySelectorAll(".daycol"),function(col){
-      col.addEventListener("click",function(ev){
-        if(ev.target.closest(".bk"))return;
-        var rect=col.getBoundingClientRect();
-        var y=ev.clientY-rect.top;
-        var m=DAY_START+Math.floor(y/ROW)*30; if(m<DAY_START)m=DAY_START; if(m>DAY_END-30)m=DAY_END-30;
-        openBooking(null,{date:col.getAttribute("data-day"),s:m,e:Math.min(m+60,DAY_END)});
-      });
-    });
     [].forEach.call($("grid").querySelectorAll(".bk"),function(el){
       el.addEventListener("click",function(ev){ev.stopPropagation();var b=BOOK.filter(function(x){return x.id===el.getAttribute("data-bk");})[0];if(b)openBooking(b);});
     });
@@ -286,6 +287,26 @@
 
   /* ---- booking modal ---- */
   function bookable(){return EQUIP.filter(function(e){return e.active&&(isAdmin()||e.canBook);});}
+  function eqColor(id){var e=EQUIP.filter(function(x){return x.id===id;})[0];return e?e.color:"#2d6cdf";}
+  function populateTargets(){var bk=bookable();var cur=$("bktarget").value;$("bktarget").innerHTML=bk.length?bk.map(function(e){return '<option value="'+e.id+'">'+esc(e.name)+'</option>';}).join(""):'<option value="">— none you can book —</option>';if(cur&&bk.some(function(e){return e.id===cur;}))$("bktarget").value=cur;}
+  function wireDrag(){
+    var grid=$("grid"), drag=null;
+    function snap(m){m=Math.round(m/30)*30;if(m<DAY_START)m=DAY_START;if(m>DAY_END)m=DAY_END;return m;}
+    function upd(){if(!drag)return;var a=Math.min(drag.a,drag.b),b=Math.max(drag.a,drag.b);drag.pv.style.top=((a-DAY_START)/30*ROW)+"px";drag.pv.style.height=Math.max((b-a)/30*ROW,3)+"px";}
+    grid.addEventListener("pointerdown",function(ev){
+      var col=ev.target.closest(".daycol");if(!col||ev.target.closest(".bk"))return;
+      var tgt=$("bktarget").value;if(!tgt)return;
+      var rect=col.getBoundingClientRect();var m=snap(DAY_START+(ev.clientY-rect.top)/ROW*30);
+      drag={day:col.getAttribute("data-day"),a:m,b:m,rect:rect};
+      var pv=document.createElement("div");pv.className="pv";pv.style.background=eqColor(tgt);col.appendChild(pv);drag.pv=pv;upd();
+      try{col.setPointerCapture(ev.pointerId);}catch(e){}
+      ev.preventDefault();
+    });
+    grid.addEventListener("pointermove",function(ev){if(!drag)return;drag.b=snap(DAY_START+(ev.clientY-drag.rect.top)/ROW*30);upd();});
+    function finish(){if(!drag)return;var s=Math.min(drag.a,drag.b),e=Math.max(drag.a,drag.b);if(e<=s)e=Math.min(s+60,DAY_END);var day=drag.day;if(drag.pv&&drag.pv.parentNode)drag.pv.parentNode.removeChild(drag.pv);drag=null;openBooking(null,{date:day,s:s,e:e,equip:$("bktarget").value});}
+    grid.addEventListener("pointerup",finish);
+    grid.addEventListener("pointercancel",function(){if(drag){if(drag.pv&&drag.pv.parentNode)drag.pv.parentNode.removeChild(drag.pv);drag=null;}});
+  }
   function openBooking(b,pre){
     editId=b?b.id:null;
     var canList=bookable();
@@ -397,6 +418,7 @@
     if(started)return; started=true;
     $("manage").hidden=true;
     $("bk_by").value=myName();
+    wireDrag();
     pickApiBase(function(){ loadWeek(); setInterval(poll,25000); try{window.addEventListener("focus",poll);}catch(e){} });
   }
   document.addEventListener("lensauth",start);
