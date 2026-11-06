@@ -277,6 +277,7 @@
     isAdmin: function () { var u = getUser(); return !!(u && u.role === "admin"); },
     token: tok,
     logout: function () { setTok(""); setUser(null); location.reload(); },
+    accounts: function () { var u = getUser(); if (u && u.role === "admin") openAccounts(); },
     require: gateNow
   };
 
