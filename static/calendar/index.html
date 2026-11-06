@@ -116,6 +116,15 @@
   .eqrow input[type=color]{width:38px;height:34px;padding:2px}
   .trainbox{display:flex;flex-wrap:wrap;gap:8px;margin:6px 0 2px;font-size:13px}
   .trainbox label{display:inline-flex;align-items:center;gap:4px;color:var(--ink);margin:0;font-weight:400}
+  .pklabel{font-size:11.5px;color:var(--muted);font-weight:600;margin:6px 0 4px}
+  .mpick{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+  .mchip2{display:inline-flex;align-items:center;gap:6px;background:var(--surface-2);border:1px solid var(--line);border-radius:14px;padding:3px 6px 3px 11px;font-size:12.5px;white-space:nowrap;color:var(--ink)}
+  .mchip2 .x{cursor:pointer;color:var(--muted);font-weight:700;text-decoration:none;font-size:15px;line-height:1}
+  .mchip2 .x:hover{color:#c0392b}
+  .mpick .addsel{width:auto;padding:5px 8px;border:1px solid var(--line);border-radius:8px;background:var(--surface);color:var(--ink);font-size:12.5px}
+  .bk .rz{position:absolute;left:0;right:0;height:7px;cursor:ns-resize;z-index:3}
+  .bk .rz-t{top:0}.bk .rz-b{bottom:0}
+  .bk.ed{cursor:grab}.bk.ed.dragging{cursor:grabbing}
   @media(max-width:560px){h1{font-size:21px}main{padding:12px}.wklabel{min-width:0;font-size:15px}}
 </style>
 
@@ -341,14 +350,16 @@
         var b=it.b,eq=eqById[b.equip],ed=b.edate||b.date,multi=(ed!==b.date);
         var top=(it.s)/30*ROW, hgt=Math.max((it.e-it.s)/30*ROW-2,15);
         var w=100/it._lanes,left=it._lane*w,mine=b.username&&b.username===myUser();
-        h+='<div class="bk'+(mine?" mine":"")+'" style="top:'+top+'px;height:'+hgt+'px;left:calc('+left+'% + 1px);width:calc('+w+'% - 2px);background:'+esc(eq.color)+'" data-bk="'+b.id+'"><b>'+esc(eq.name)+(multi?' ↕':'')+'</b>'+(b.note?'<div class="note">'+esc(b.note)+'</div>':'')+'<div class="who">'+mToHHMM(it.s)+'–'+mToHHMM(it.e)+' · '+esc(b.name||"")+'</div></div>';
+        var canEdit=isAdmin()||(b.username&&b.username===myUser()),ed1=canEdit&&!multi;
+        var rz=ed1?'<div class="rz rz-t"></div><div class="rz rz-b"></div>':'';
+        h+='<div class="bk'+(mine?" mine":"")+(ed1?" ed":"")+'" style="top:'+top+'px;height:'+hgt+'px;left:calc('+left+'% + 1px);width:calc('+w+'% - 2px);background:'+esc(eq.color)+'" data-bk="'+b.id+'">'+rz+'<b>'+esc(eq.name)+(multi?' ↕':'')+'</b>'+(b.note?'<div class="note">'+esc(b.note)+'</div>':'')+'<div class="who">'+mToHHMM(it.s)+'–'+mToHHMM(it.e)+' · '+esc(b.name||"")+'</div></div>';
       });
       if(d===today){var nm=nowMinLab();h+='<div class="nowline" style="top:'+(nm/30*ROW)+'px"></div>';}
       h+='</div>';
     });
     h+='</div>';
     $("grid").innerHTML=h;
-    [].forEach.call($("grid").querySelectorAll(".bk"),function(el){el.addEventListener("click",function(ev){ev.stopPropagation();var b=BOOK.filter(function(x){return x.id===el.getAttribute("data-bk");})[0];if(b)openBooking(b);});});
+    // opening a booking (click) and move/resize are both handled by wireDrag's pointer flow on #grid
     if(_scrollPending){$("grid").scrollTop=8*2*ROW;_scrollPending=false;} // 8:00 pinned to the top; scroll up for earlier hours
   }
 
@@ -417,23 +428,66 @@
 
   /* ---- drag to create (time views only) ---- */
   function wireDrag(){
-    var grid=$("grid"),drag=null;
+    var grid=$("grid"),drag=null,bd=null;
     function snap(m){m=Math.round(m/30)*30;if(m<0)m=0;if(m>1440)m=1440;return m;}
+    function snapd(m){return Math.round(m/30)*30;}
+    function clamp(v,lo,hi){return v<lo?lo:(v>hi?hi:v);}
     function colAt(x,y){var els=document.elementsFromPoint(x,y);for(var i=0;i<els.length;i++){var c=els[i].closest?els[i].closest(".col"):null;if(c)return c;}return null;}
     function clearPvs(){if(drag&&drag.pvs){drag.pvs.forEach(function(p){if(p.parentNode)p.parentNode.removeChild(p);});drag.pvs=[];}}
     function order(){var a={d:drag.sD,m:drag.sM},b={d:drag.cD,m:drag.cM};var lo=(a.d<b.d||(a.d===b.d&&a.m<=b.m))?a:b;return {lo:lo,hi:(lo===a?b:a)};}
     function drawPv(){if(!drag)return;clearPvs();var o=order(),tgt=$("bktarget").value;[].forEach.call(grid.querySelectorAll(".col"),function(c){var d=c.getAttribute("data-day");if(d<o.lo.d||d>o.hi.d)return;var ss=(d===o.lo.d?o.lo.m:0),ee=(d===o.hi.d?o.hi.m:1440);if(ee<ss)ee=ss;var pv=document.createElement("div");pv.className="pv";pv.style.background=eqColor(tgt);pv.style.top=(ss/30*ROW)+"px";pv.style.height=Math.max((ee-ss)/30*ROW,3)+"px";c.appendChild(pv);drag.pvs.push(pv);});}
+    // ---- live reposition of a booking being moved/resized ----
+    function applyLive(){
+      var el=bd.el;
+      el.style.top=(bd.curS/30*ROW)+"px";
+      el.style.height=Math.max((bd.curE-bd.curS)/30*ROW-2,15)+"px";
+      var pd=el.parentNode&&el.parentNode.getAttribute("data-day");
+      if(bd.curDay&&bd.curDay!==pd){var col=grid.querySelector('.col[data-day="'+bd.curDay+'"]');if(col){col.appendChild(el);el.style.left="1px";el.style.right="1px";el.style.width="auto";}}
+    }
     grid.addEventListener("pointerdown",function(ev){
-      var col=ev.target.closest(".col");if(!col||ev.target.closest(".bk"))return;
+      var bkEl=ev.target.closest(".bk");
+      if(bkEl){
+        var b=BOOK.filter(function(x){return x.id===bkEl.getAttribute("data-bk");})[0];if(!b)return;
+        var editable=isAdmin()||(b.username&&b.username===myUser());
+        var single=(b.edate||b.date)===b.date;
+        var kind=ev.target.closest(".rz-t")?"rt":(ev.target.closest(".rz-b")?"rb":"move");
+        bd={el:bkEl,b:b,editable:(editable&&single),kind:kind,startX:ev.clientX,startY:ev.clientY,origS:b.s,origE:b.e,origDay:b.date,curS:b.s,curE:b.e,curDay:b.date,moved:false};
+        if(bd.editable)bkEl.classList.add("dragging");
+        try{grid.setPointerCapture(ev.pointerId);}catch(e){}
+        ev.preventDefault();
+        return;
+      }
+      var col=ev.target.closest(".col");if(!col)return;
       if(!$("bktarget").value)return;
       var rect=col.getBoundingClientRect();var m=snap((ev.clientY-rect.top)/ROW*30);
       drag={sD:col.getAttribute("data-day"),sM:m,cD:col.getAttribute("data-day"),cM:m,pvs:[]};
       drawPv();try{grid.setPointerCapture(ev.pointerId);}catch(e){}ev.preventDefault();
     });
-    grid.addEventListener("pointermove",function(ev){if(!drag)return;var col=colAt(ev.clientX,ev.clientY);if(col){var rect=col.getBoundingClientRect();drag.cD=col.getAttribute("data-day");drag.cM=snap((ev.clientY-rect.top)/ROW*30);}drawPv();});
+    grid.addEventListener("pointermove",function(ev){
+      if(bd){
+        if(!bd.editable)return;
+        if(Math.abs(ev.clientX-bd.startX)>3||Math.abs(ev.clientY-bd.startY)>3)bd.moved=true;
+        if(!bd.moved)return;
+        var dy=snapd((ev.clientY-bd.startY)/ROW*30);
+        if(bd.kind==="rt"){bd.curS=clamp(bd.origS+dy,0,bd.origE-30);bd.curE=bd.origE;bd.curDay=bd.origDay;}
+        else if(bd.kind==="rb"){bd.curE=clamp(bd.origE+dy,bd.origS+30,1440);bd.curS=bd.origS;bd.curDay=bd.origDay;}
+        else{var dur=bd.origE-bd.origS;bd.curS=clamp(bd.origS+dy,0,1440-dur);bd.curE=bd.curS+dur;var c=colAt(ev.clientX,ev.clientY);bd.curDay=c?c.getAttribute("data-day"):bd.origDay;}
+        applyLive();return;
+      }
+      if(!drag)return;var col=colAt(ev.clientX,ev.clientY);if(col){var rect=col.getBoundingClientRect();drag.cD=col.getAttribute("data-day");drag.cM=snap((ev.clientY-rect.top)/ROW*30);}drawPv();
+    });
+    function finishBd(){
+      var m=bd;bd=null;if(m.el)m.el.classList.remove("dragging");
+      if(!m.editable||!m.moved){openBooking(m.b);return;}
+      var body={id:m.b.id,equip:m.b.equip,date:m.curDay,edate:m.curDay,s:m.curS,e:m.curE,note:m.b.note||""};
+      api("/api/booking",{method:"POST",body:JSON.stringify(body)}).then(function(r){return r.json().then(function(j){return {ok:r.ok,j:j};});}).then(function(res){
+        if(!res.ok)alert((res.j&&res.j.error)||"That overlaps an existing booking on this instrument — not saved.");
+        _scrollPending=false;loadData();
+      }).catch(function(){_scrollPending=false;loadData();});
+    }
     function finish(){if(!drag)return;var o=order();clearPvs();drag=null;var s=o.lo.m,e=o.hi.m;if(o.lo.d===o.hi.d&&e<=s)e=Math.min(s+60,1440);openBooking(null,{date:o.lo.d,edate:o.hi.d,s:s,e:e,equip:$("bktarget").value});}
-    grid.addEventListener("pointerup",finish);
-    grid.addEventListener("pointercancel",function(){clearPvs();drag=null;});
+    grid.addEventListener("pointerup",function(){if(bd){finishBd();return;}finish();});
+    grid.addEventListener("pointercancel",function(){if(bd){if(bd.el)bd.el.classList.remove("dragging");bd=null;_scrollPending=false;loadData();return;}clearPvs();drag=null;});
   }
 
   /* ---- hover balloon (full details, esp. for short bookings) ---- */
@@ -472,23 +526,25 @@
     $("eqadd").style.display=isAdmin()?"":"none";
     api("/api/members",{method:"GET"}).then(function(r){return r.ok?r.json():{members:[]};}).then(function(j){USERS=j.members||[];}).catch(function(){USERS=[];}).then(function(){renderEqList();$("mgovl").hidden=false;});
   }
+  var _eqstate={};
+  function uname(u){var m=USERS.filter(function(x){return x.username===u;})[0];return m?m.name:u;}
   function renderEqList(){
     api("/api/equipment").then(function(r){return r.json();}).then(function(j){
       var eqs=(j.equipment||[]);if(!isAdmin())eqs=eqs.filter(function(e){return e.canManage;});
+      _eqstate={};
       $("eqlist").innerHTML=eqs.map(function(e){
-        var trained=e.trained||[],managers=e.managers||[];
-        var tChk=USERS.map(function(u){return '<label><input type="checkbox" class="t_chk" value="'+esc(u.username)+'"'+(trained.indexOf(u.username)>=0?" checked":"")+'> '+esc(u.name)+'</label>';}).join("");
-        var mChk=USERS.map(function(u){return '<label><input type="checkbox" class="m_chk" value="'+esc(u.username)+'"'+(managers.indexOf(u.username)>=0?" checked":"")+'> '+esc(u.name)+'</label>';}).join("");
+        _eqstate[e.id]={trained:(e.trained||[]).slice(),managers:(e.managers||[]).slice()};
         return '<div class="eqrow" data-id="'+e.id+'">'+
           '<input type="color" value="'+esc(e.color||"#2d6cdf")+'" class="e_color">'+
           '<input type="text" class="e_name" value="'+esc(e.name)+'" placeholder="name">'+
           '<input type="text" class="e_zh" value="'+esc(e.name_zh||"")+'" placeholder="alt name" style="max-width:110px">'+
           '<label style="margin:0"><input type="checkbox" class="e_active"'+(e.active?" checked":"")+'> active</label>'+
           '<button class="btn e_save">Save</button>'+(isAdmin()?'<button class="del e_del">delete</button>':'')+
-          '<div class="trainbox" style="flex-basis:100%">'+(USERS.length?('<b>Trained:</b> '+tChk):'<span class="muted">No member accounts yet — add them in Accounts.</span>')+'</div>'+
-          (isAdmin()?'<div class="trainbox" style="flex-basis:100%"><b>Responsible:</b> '+mChk+'</div>':'')+
+          '<div style="flex-basis:100%"><div class="pklabel">Trained — can book</div><div class="mpick" data-eq="'+e.id+'" data-kind="trained"></div></div>'+
+          (isAdmin()?'<div style="flex-basis:100%"><div class="pklabel">Responsible — manages this instrument (auto-counts as trained)</div><div class="mpick" data-eq="'+e.id+'" data-kind="managers"></div></div>':'')+
           '</div>';
       }).join("")||'<div class="muted">No instruments you manage.</div>';
+      [].forEach.call($("eqlist").querySelectorAll(".mpick"),function(p){renderPicker(p);});
       [].forEach.call($("eqlist").querySelectorAll(".eqrow"),function(row){
         var id=row.getAttribute("data-id");
         row.querySelector(".e_save").addEventListener("click",function(){saveEq(row,id,eqs);});
@@ -497,11 +553,23 @@
       });
     });
   }
+  function renderPicker(p){
+    var eqid=p.getAttribute("data-eq"),kind=p.getAttribute("data-kind"),sel=(_eqstate[eqid]||{})[kind]||[];
+    var chips=sel.map(function(u){return '<span class="mchip2">'+esc(uname(u))+'<a class="x" data-u="'+esc(u)+'">×</a></span>';}).join("");
+    var avail=USERS.filter(function(m){return sel.indexOf(m.username)<0;});
+    var opts='<option value="">+ add member…</option>'+avail.map(function(m){return '<option value="'+esc(m.username)+'">'+esc(m.name)+'</option>';}).join("");
+    p.innerHTML=chips+'<select class="addsel">'+opts+'</select>'+(USERS.length?'':'<span class="muted">No member accounts yet.</span>');
+    var ad=p.querySelector(".addsel");if(ad)ad.addEventListener("change",function(){if(this.value)pickAdd(eqid,kind,this.value);});
+    [].forEach.call(p.querySelectorAll(".x"),function(a){a.addEventListener("click",function(){pickRemove(eqid,kind,a.getAttribute("data-u"));});});
+  }
+  function refreshPickers(eqid){[].forEach.call($("eqlist").querySelectorAll('.mpick[data-eq="'+eqid+'"]'),function(p){renderPicker(p);});}
+  function pickAdd(eqid,kind,u){var st=_eqstate[eqid];if(st[kind].indexOf(u)<0)st[kind].push(u);if(kind==="managers"&&st.trained.indexOf(u)<0)st.trained.push(u);refreshPickers(eqid);}
+  function pickRemove(eqid,kind,u){var st=_eqstate[eqid];st[kind]=st[kind].filter(function(x){return x!==u;});if(kind==="trained")st.managers=st.managers.filter(function(x){return x!==u;});refreshPickers(eqid);}
   function saveEq(row,id,eqs){
-    var ex=eqs.filter(function(e){return e.id===id;})[0]||{};
-    var trained=[].slice.call(row.querySelectorAll(".t_chk")).filter(function(c){return c.checked;}).map(function(c){return c.value;});
+    var ex=eqs.filter(function(e){return e.id===id;})[0]||{},st=_eqstate[id]||{trained:[],managers:[]};
+    var trained=st.trained.slice();st.managers.forEach(function(u){if(trained.indexOf(u)<0)trained.push(u);}); // responsible ⊆ trained
     var body={id:id,name:row.querySelector(".e_name").value.trim(),name_zh:row.querySelector(".e_zh").value.trim(),color:row.querySelector(".e_color").value,active:row.querySelector(".e_active").checked?1:0,ord:ex.ord||0,trained:trained};
-    if(isAdmin())body.managers=[].slice.call(row.querySelectorAll(".m_chk")).filter(function(c){return c.checked;}).map(function(c){return c.value;});
+    if(isAdmin())body.managers=st.managers.slice();
     if(!body.name){alert("Name required");return;}
     api("/api/equipment",{method:"POST",body:JSON.stringify(body)}).then(function(r){return r.json();}).then(function(res){if(res&&res.error){alert(res.error);return;}renderEqList();loadData();});
   }
