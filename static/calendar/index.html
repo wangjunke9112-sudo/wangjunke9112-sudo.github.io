@@ -2,34 +2,42 @@
 <title>Equipment booking</title>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%230b1f3a'/%3E%3Ctext x='50' y='70' font-size='56' font-family='Georgia,serif' fill='%23fff' text-anchor='middle'%3EW%3C/text%3E%3C/svg%3E">
+<link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%20512%20512%22%3E%3Crect%20width%3D%22512%22%20height%3D%22512%22%20rx%3D%2296%22%20fill%3D%22%23003A68%22/%3E%3Ctext%20x%3D%22256%22%20y%3D%22372%22%20font-family%3D%22Arial%2CHelvetica%2Csans-serif%22%20font-size%3D%22330%22%20font-weight%3D%22800%22%20text-anchor%3D%22middle%22%20fill%3D%22%23ffffff%22%3EW%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
 <style>
   :root{
-    --font:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"PingFang SC","Microsoft YaHei",sans-serif;
-    --font-m:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+    --font:"IBM Plex Sans","Segoe UI",Roboto,"Helvetica Neue",Arial,"PingFang SC","Microsoft YaHei",sans-serif;
+    --font-d:"Archivo","Segoe UI",sans-serif;
+    --font-m:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
     --bg:#f3f6fb;--surface:#fff;--surface-2:#eef2f8;--line:#e2e8f1;--line-soft:#eef2f7;--ink:#17202e;--muted:#64718a;
-    --accent:#1e5fd0;--accent-soft:#e8f0ff;--hero-bg:#0b1f3a;--hero-fg:#eaf0fa;--hero-dim:#9db1d6;--hero-accent:#5ea0ff;--weekend:#f7f9fc;--now:#e5484d;
+    --accent:#1e5fd0;--accent-soft:#e8f0ff;--hero-bg:#0A1B3C;--hero-fg:#F3F7FD;--hero-dim:#9DB1D6;--hero-accent:#3DD0E6;--hero-gold:#E7BB6A;--weekend:#f7f9fc;--now:#e5484d;
   }
   @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0d1320;--surface:#141c2b;--surface-2:#1b2434;--line:#28344a;--line-soft:#1f2838;--ink:#e7edf5;--muted:#93a1b5;--accent:#5ea0ff;--accent-soft:#17263f;--weekend:#121a28;--now:#ff6b6e;}}
   :root[data-theme="dark"]{--bg:#0d1320;--surface:#141c2b;--surface-2:#1b2434;--line:#28344a;--line-soft:#1f2838;--ink:#e7edf5;--muted:#93a1b5;--accent:#5ea0ff;--accent-soft:#17263f;--weekend:#121a28;--now:#ff6b6e;}
   *{box-sizing:border-box}
   body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font);font-size:15px;line-height:1.5}
   a{color:var(--accent)}
-  .hero{background:var(--hero-bg);color:var(--hero-fg);padding:20px 20px 18px}
+  h1,h2,h3{font-family:var(--font-d)}
+  .hero{background:var(--hero-bg);color:var(--hero-fg);padding:22px 20px 26px}
   .hwrap{max-width:1280px;margin:0 auto}
-  .topbar{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
-  .lock{font-weight:800;letter-spacing:.16em;font-size:17px}
-  .lock span{font-weight:400;letter-spacing:.02em;color:var(--hero-dim);font-size:12.5px;font-family:var(--font-m);margin-left:8px}
-  .hnav{display:flex;flex-wrap:wrap;gap:14px;align-items:center}
-  .hnav a{color:var(--hero-dim);text-decoration:none;font-size:13px}
-  .hnav a:hover{color:var(--hero-fg);text-decoration:underline;text-underline-offset:3px}
-  h1{margin:14px 0 4px;font-size:25px;letter-spacing:.2px}
-  h1 small{font-weight:400;color:var(--hero-dim);font-size:16px}
-  .labnote{color:var(--hero-dim);font-size:12.5px;font-family:var(--font-m);margin-top:2px}
-  #lens-userchip{display:inline-flex;align-items:center;gap:7px;font-family:var(--font-m);font-size:11.5px;letter-spacing:.03em;color:var(--hero-dim);border:1px solid rgba(157,177,214,.3);border-radius:20px;padding:5px 13px;margin-top:14px}
+  .topbar{display:flex;justify-content:space-between;align-items:center;gap:12px 20px;flex-wrap:wrap;margin-bottom:18px}
+  .lockup{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+  .lockup b{font-family:var(--font-d);font-weight:700;letter-spacing:.14em;font-size:19px;color:var(--hero-fg)}
+  .lockup span{font-family:var(--font-m);font-size:11.5px;color:var(--hero-dim)}
+  .htools{display:flex;align-items:center;gap:8px 16px;flex-wrap:wrap}
+  .hnav{display:flex;gap:16px;flex-wrap:wrap;min-width:0}
+  .hnav a{color:var(--hero-dim);text-decoration:none;font-size:13px;display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
+  .hnav a:hover{color:var(--hero-accent)}
+  .hnav svg{width:14px;height:14px}
+  .tgl{background:transparent;border:1px solid rgba(157,177,214,.35);color:var(--hero-dim);border-radius:9px;width:34px;height:34px;padding:0;line-height:0;display:grid;place-items:center;cursor:pointer;flex:none}
+  .tgl:hover{border-color:var(--hero-accent);color:var(--hero-accent)}
+  .eyebrow{font-family:var(--font-m);font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--hero-accent);margin:0}
+  .htitle{font-family:var(--font-d);font-weight:700;font-size:clamp(26px,4vw,36px);line-height:1.04;margin:7px 0 0;letter-spacing:-.015em}
+  .htitle .zh{font-weight:600;color:var(--hero-dim);font-size:.6em;margin-left:8px;letter-spacing:0}
+  .labnote{color:var(--hero-dim);font-size:11.5px;font-family:var(--font-m);margin-top:8px}
+  #lens-userchip{display:inline-flex;align-items:center;gap:7px;font-family:var(--font-m);font-size:11px;letter-spacing:.06em;color:var(--hero-dim);border:1px solid rgba(157,177,214,.3);border-radius:20px;padding:4px 12px;margin-top:14px}
   #lens-userchip:empty{display:none}
   #lens-userchip a{color:var(--hero-fg);cursor:pointer;text-decoration:underline;text-underline-offset:2px;opacity:.9}
-  .tgl{width:40px;height:40px;border:1px solid rgba(157,177,214,.35);border-radius:10px;background:transparent;color:var(--hero-fg);cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0;flex:none}
   main{max-width:1280px;margin:0 auto;padding:16px 20px 60px}
   .toolbar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:12px}
   .nav{display:flex;align-items:center;gap:4px}
@@ -51,7 +59,7 @@
   .spacer{flex:1}
 
   /* ---- time grid (day / week) ---- */
-  .cal{overflow:auto;max-height:74vh;border:1px solid var(--line);border-radius:14px;background:var(--surface);position:relative;box-shadow:0 1px 3px rgba(20,40,80,.05)}
+  .cal{overflow:auto;max-height:min(82vh,760px);border:1px solid var(--line);border-radius:14px;background:var(--surface);position:relative;box-shadow:0 1px 3px rgba(20,40,80,.05)}
   .calgrid{display:grid;position:relative}
   .ch{position:sticky;top:0;z-index:5;background:var(--surface);border-bottom:1px solid var(--line);padding:9px 4px 7px;text-align:center}
   .ch.corner{left:0;z-index:7;border-right:1px solid var(--line)}
@@ -109,17 +117,21 @@
 <div class="hero">
   <div class="hwrap">
     <div class="topbar">
-      <div class="lock">LENS <span>Light–Energy Nanophotonics &amp; Semiconductors</span></div>
-      <nav class="hnav">
-        <a href="https://lens-laboratory.com/hub/">Hub 主页</a>
-        <a href="https://lens-laboratory.com/inventory/">Chemical inventory 化学品库</a>
-        <a href="https://lens-laboratory.com/group-lit-feed/">Literature feed 文献</a>
-      </nav>
-      <button class="tgl" id="tgl" title="Toggle theme" aria-label="Toggle theme"></button>
+      <div class="lockup"><b>LENS</b><span>Light–Energy Nanophotonics &amp; Semiconductors</span></div>
+      <div class="htools">
+        <nav class="hnav">
+          <a href="https://lens-laboratory.com/hub/"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="3.5" width="7" height="7" rx="1.5"/><rect x="13.5" y="3.5" width="7" height="7" rx="1.5"/><rect x="3.5" y="13.5" width="7" height="7" rx="1.5"/><rect x="13.5" y="13.5" width="7" height="7" rx="1.5"/></svg>Group hub</a>
+          <a href="https://lens-laboratory.com/inventory/"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3h6M10 3v6.5L5.5 18a2 2 0 0 0 1.8 3h9.4a2 2 0 0 0 1.8-3L14 9.5V3"/><path d="M7.7 15h8.6"/></svg>Chemical inventory</a>
+          <a href="https://lens-laboratory.com/group-lit-feed/"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="5" cy="19" r="1.6"/><path d="M4 11a9 9 0 0 1 9 9M4 5a15 15 0 0 1 15 15"/></svg>Literature feed</a>
+          <a href="https://lens-laboratory.com"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a15 15 0 0 1 0 18M12 3a15 15 0 0 0 0 18"/></svg>Group website</a>
+        </nav>
+        <button class="tgl" id="tgl" title="Toggle theme" aria-label="Toggle theme"></button>
+      </div>
     </div>
-    <h1>Equipment booking <small>设备预约</small></h1>
-    <div class="labnote">Times are lab-local · Guangzhou (UTC+8)</div>
+    <p class="eyebrow">South China University of Technology</p>
+    <h1 class="htitle">Equipment booking</h1>
     <span id="lens-userchip"></span>
+    <div class="labnote">Times are lab-local · Guangzhou (UTC+8)</div>
   </div>
 </div>
 
@@ -127,21 +139,22 @@
   <div class="toolbar">
     <div class="nav">
       <button class="btn" id="prev" title="Previous">‹</button>
-      <button class="btn" id="today">Today 今天</button>
+      <button class="btn" id="today">Today</button>
       <button class="btn" id="next" title="Next">›</button>
     </div>
     <input type="date" id="datepick" class="btn" title="Jump to date">
     <div class="seg">
-      <button id="v_day">Day 日</button>
-      <button id="v_week" class="on">Week 周</button>
-      <button id="v_month">Month 月</button>
+      <button id="v_day">Day</button>
+      <button id="v_week" class="on">Week</button>
+      <button id="v_month">Month</button>
     </div>
     <div class="wklabel" id="wklabel">—</div>
     <div class="spacer"></div>
-    <label style="display:flex;align-items:center;gap:6px;font-size:13px;color:var(--muted)">Drag to book 拖拽预约 <select id="bktarget" class="btn" style="padding:7px 8px"></select></label>
-    <button class="btn-primary" id="newbk">＋ New booking 预约</button>
+    <label style="display:flex;align-items:center;gap:6px;font-size:13px;color:var(--muted)">Drag to book <select id="bktarget" class="btn" style="padding:7px 8px"></select></label>
+    <button class="btn-primary" id="newbk">＋ New booking</button>
     <button class="btn" id="exportbtn" title="Download bookings as CSV">Export CSV</button>
-    <button class="btn" id="manage" hidden>Manage instruments 设备管理</button>
+    <button class="btn" id="acctbtn" hidden>Accounts</button>
+    <button class="btn" id="manage" hidden>Manage instruments</button>
   </div>
 
   <div class="chips" id="chips"></div>
@@ -153,23 +166,23 @@
 <div class="ovl" id="bkovl" hidden>
   <div class="modal">
     <h3 id="bktitle">New booking</h3>
-    <label>Instrument 仪器</label>
+    <label>Instrument</label>
     <select id="bk_eq"></select>
-    <label>Date 日期</label>
+    <label>Date</label>
     <input type="date" id="bk_date">
     <div class="row2">
-      <div><label>Start 开始</label><select id="bk_s"></select></div>
-      <div><label>End 结束</label><select id="bk_e"></select></div>
+      <div><label>Start</label><select id="bk_s"></select></div>
+      <div><label>End</label><select id="bk_e"></select></div>
     </div>
-    <label>Note 备注 <span class="muted">— optional (sample, process…)</span></label>
+    <label>Note <span class="muted">— optional (sample, process…)</span></label>
     <input type="text" id="bk_note" placeholder="e.g. C60/BCP evaporation, 3 samples">
-    <label>Booked by 预约人</label>
+    <label>Booked by</label>
     <input type="text" id="bk_by" readonly>
     <div class="merr" id="bk_err"></div>
     <div class="mbtns">
-      <button class="btn-primary" id="bk_save">Save 保存</button>
+      <button class="btn-primary" id="bk_save">Save</button>
       <button class="btn" id="bk_cancel">Cancel</button>
-      <button class="del" id="bk_del" hidden>Cancel this booking 取消预约</button>
+      <button class="del" id="bk_del" hidden>Cancel this booking</button>
     </div>
   </div>
 </div>
@@ -177,7 +190,7 @@
 <!-- admin manage modal -->
 <div class="ovl" id="mgovl" hidden>
   <div class="modal" style="max-width:560px">
-    <h3>Manage instruments 设备管理</h3>
+    <h3>Manage instruments</h3>
     <div class="muted" style="margin-bottom:6px">Edit names, colour, who's trained (ticked members can book it). Admins can always book.</div>
     <div id="eqlist"></div>
     <div style="margin-top:14px"><button class="btn" id="eqadd">＋ Add instrument</button></div>
@@ -319,9 +332,8 @@
     h+='</div>';
     $("grid").innerHTML=h;
     [].forEach.call($("grid").querySelectorAll(".bk"),function(el){el.addEventListener("click",function(ev){ev.stopPropagation();var b=BOOK.filter(function(x){return x.id===el.getAttribute("data-bk");})[0];if(b)openBooking(b);});});
-    if(_scrollPending){var sc=$("grid");var target=(d_scrollTarget())/30*ROW-20;sc.scrollTop=Math.max(target,0);_scrollPending=false;}
+    if(_scrollPending){$("grid").scrollTop=8*2*ROW;_scrollPending=false;} // 8:00 pinned to the top; scroll up for earlier hours
   }
-  function d_scrollTarget(){var today=todayLab();var days=view==="day"?[anchor]:weekDates(sundayOf(anchor));if(days.indexOf(today)>=0){var nm=nowMinLab();return Math.max(nm-60,0);}return 8*60;}
 
   /* ---- month view ---- */
   function renderMonth(){
@@ -435,11 +447,11 @@
         return '<div class="eqrow" data-id="'+e.id+'">'+
           '<input type="color" value="'+esc(e.color||"#2d6cdf")+'" class="e_color">'+
           '<input type="text" class="e_name" value="'+esc(e.name)+'" placeholder="name">'+
-          '<input type="text" class="e_zh" value="'+esc(e.name_zh||"")+'" placeholder="中文" style="max-width:110px">'+
+          '<input type="text" class="e_zh" value="'+esc(e.name_zh||"")+'" placeholder="alt name" style="max-width:110px">'+
           '<label style="margin:0"><input type="checkbox" class="e_active"'+(e.active?" checked":"")+'> active</label>'+
           '<button class="btn e_save">Save</button>'+(isAdmin()?'<button class="del e_del">delete</button>':'')+
-          '<div class="trainbox" style="flex-basis:100%">'+(USERS.length?('<b>Trained 可预约:</b> '+tChk):'<span class="muted">No member accounts yet — add them in Accounts.</span>')+'</div>'+
-          (isAdmin()?'<div class="trainbox" style="flex-basis:100%"><b>Responsible 负责人:</b> '+mChk+'</div>':'')+
+          '<div class="trainbox" style="flex-basis:100%">'+(USERS.length?('<b>Trained:</b> '+tChk):'<span class="muted">No member accounts yet — add them in Accounts.</span>')+'</div>'+
+          (isAdmin()?'<div class="trainbox" style="flex-basis:100%"><b>Responsible:</b> '+mChk+'</div>':'')+
           '</div>';
       }).join("")||'<div class="muted">No instruments you manage.</div>';
       [].forEach.call($("eqlist").querySelectorAll(".eqrow"),function(row){
@@ -471,6 +483,8 @@
   function start(){
     if(started)return;started=true;
     $("manage").hidden=true;$("bk_by").value=myName();$("datepick").value=anchor;
+    $("acctbtn").hidden=!isAdmin();
+    $("acctbtn").addEventListener("click",function(){try{if(window.LENS&&LENS.accounts)LENS.accounts();}catch(e){}});
     wireDrag();
     pickApiBase(function(){loadData();setInterval(poll,25000);try{window.addEventListener("focus",poll);}catch(e){}});
   }
