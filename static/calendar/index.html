@@ -61,6 +61,31 @@
   /* ---- time grid (day / week) ---- */
   .cal{overflow:auto;flex:1 1 auto;min-height:260px;border:1px solid var(--line);border-radius:14px;background:var(--surface);position:relative;box-shadow:0 1px 3px rgba(20,40,80,.05);-webkit-overflow-scrolling:touch}
   .cal.month{flex:none}
+  .cal.gridv{flex:none}
+  /* equipment × week grid (resource view) */
+  .egrid{display:grid;grid-template-columns:minmax(96px,150px) repeat(7,minmax(72px,1fr))}
+  .eh{position:sticky;top:0;z-index:5;background:var(--surface);border-bottom:1px solid var(--line);border-left:1px solid var(--line);padding:7px 4px 6px;text-align:center}
+  .eh.corner2{position:sticky;left:0;z-index:7;border-left:0}
+  .eh .dn{font-size:11px;color:var(--muted);font-family:var(--font-m)}
+  .eh .dd{font-size:15px;font-weight:600}
+  .eh.today .dd{color:var(--accent)}
+  .eh.wknd{background:var(--weekend,rgba(0,0,0,.025))}
+  .eqname{position:sticky;left:0;z-index:4;background:var(--surface);border-top:1px solid var(--line);border-right:1px solid var(--line);padding:7px 8px;font-size:12.5px;font-weight:600;display:flex;align-items:center;gap:4px}
+  .ecell{border-top:1px solid var(--line);border-left:1px solid var(--line);padding:3px;min-height:42px;display:flex;flex-direction:column;gap:3px}
+  .ecell.bookable{cursor:pointer}
+  .ecell.bookable:hover{background:var(--accent-soft)}
+  .ecell.today{background:var(--accent-soft)}
+  .ecell.wknd{background:var(--weekend,rgba(0,0,0,.02))}
+  .ebk{font-size:11px;line-height:1.25;background:var(--surface-2);border-radius:5px;padding:2px 5px;cursor:pointer;word-break:break-word}
+  .ebk.mine{outline:1px solid var(--accent)}
+  .ebk .et{font-family:var(--font-m);color:var(--muted);font-size:10px}
+  .ebk .en{color:var(--muted)}
+  .egrid .erow-empty{grid-column:1/-1;padding:18px;text-align:center;color:var(--muted);font-size:13px}
+  .eh .dmo{font-size:11px;color:var(--muted);font-weight:400;font-family:var(--font-m)}
+  .egrid.one{grid-template-columns:minmax(96px,132px) 1fr}
+  .egrid.one .ecell{min-height:40px;padding:4px}
+  .egrid.one .ebk{font-size:12.5px;line-height:1.3;padding:3px 7px}
+  .egrid.one .ebk .et{font-size:11.5px}
   .calgrid{display:grid;position:relative}
   .ch{position:sticky;top:0;z-index:5;background:var(--surface);border-bottom:1px solid var(--line);padding:9px 4px 7px;text-align:center}
   .ch.corner{left:0;z-index:7;border-right:1px solid var(--line)}
@@ -140,6 +165,10 @@
     .cal{min-height:62vh}
     .ch .dd{font-size:16px}.ch.today .dd{width:28px;height:28px;line-height:28px;font-size:14px}
     .mcell{min-height:72px}
+    .cal.gridv{min-height:0}
+    .egrid{grid-template-columns:minmax(72px,88px) repeat(7,minmax(50px,1fr))}
+    .eqname{font-size:11.5px;padding:6px 6px}
+    .ebk{font-size:10px;padding:2px 4px}
   }
 </style>
 
@@ -173,6 +202,7 @@
     </div>
     <input type="date" id="datepick" class="btn" title="Jump to date">
     <div class="seg">
+      <button id="v_grid">Grid</button>
       <button id="v_day">Day</button>
       <button id="v_week" class="on">Week</button>
       <button id="v_month">Month</button>
@@ -321,17 +351,19 @@
   /* ---- render dispatch ---- */
   function renderView(){
     $("grid").classList.toggle("month",view==="month");
+    $("grid").classList.toggle("gridv",view==="grid");
     if(view==="month")renderMonth();
+    else if(view==="grid")renderGrid();
     else renderTime(view==="day"?[anchor]:weekDates(sundayOf(anchor)));
     updateLabel();updateViewButtons();
   }
   function updateLabel(){
     if(view==="month"){$("wklabel").textContent=monthYear(anchor);return;}
-    if(view==="day"){$("wklabel").textContent=pedate(anchor).toLocaleDateString("en-US",{weekday:"long",month:"short",day:"numeric",year:"numeric"});return;}
+    if(view==="day"||gridSingle()){$("wklabel").textContent=pedate(anchor).toLocaleDateString("en-US",{weekday:"long",month:"short",day:"numeric",year:"numeric"});return;}
     var ws=sundayOf(anchor),we=addDays(ws,6);
     $("wklabel").textContent=monLabel(ws)+" "+dayNum(ws)+" – "+monLabel(we)+" "+dayNum(we)+", "+pedate(we).getUTCFullYear();
   }
-  function updateViewButtons(){["day","week","month"].forEach(function(v){$("v_"+v).className=(view===v?"on":"");});}
+  function updateViewButtons(){["grid","day","week","month"].forEach(function(v){$("v_"+v).className=(view===v?"on":"");});}
 
   function layoutLanes(list){
     list.sort(function(a,b){return a.s-b.s||a.e-b.e;});
@@ -398,6 +430,48 @@
     h+='</div>';
     $("grid").innerHTML=h;
     [].forEach.call($("grid").querySelectorAll(".mcell"),function(c){c.addEventListener("click",function(){anchor=c.getAttribute("data-day");view="day";_scrollPending=true;loadData();});});
+  }
+
+  /* ---- grid view (equipment rows × days) ---- */
+  function isPhone(){return !!(window.matchMedia&&window.matchMedia("(max-width:640px)").matches);}
+  function gridSingle(){return view==="grid"&&isPhone();}
+  // default new-booking slot: 1 hour, starting right after the last booking that day (else now / 09:00)
+  function defaultSlot(eq,day){
+    var ends=BOOK.filter(function(b){var ed=b.edate||b.date;return b.equip===eq&&b.date<=day&&ed>=day;}).map(function(b){var ed=b.edate||b.date;return ed===day?b.e:1440;});
+    var s;
+    if(ends.length)s=Math.max.apply(null,ends);
+    else if(day===todayLab())s=Math.ceil(nowMinLab()/30)*30;
+    else s=540;
+    s=Math.round(s/30)*30;if(s<0)s=0;if(s>1380)s=1380;
+    return {s:s,e:Math.min(s+60,1440)};
+  }
+  function renderGrid(){
+    var today=todayLab(),one=isPhone(),days=one?[anchor]:weekDates(sundayOf(anchor));
+    var rows=EQUIP.filter(function(e){return SHOW[e.id];});
+    var h='<div class="egrid'+(one?" one":"")+'">';
+    h+='<div class="eh corner2"></div>';
+    days.forEach(function(d){var wk=(dow(d)===0||dow(d)===6);h+='<div class="eh'+(d===today?" today":"")+(wk?" wknd":"")+'"><div class="dn">'+DOW[dow(d)]+'</div><div class="dd">'+dayNum(d)+(one?'<span class="dmo"> · '+monLabel(d)+'</span>':'')+'</div></div>';});
+    if(!rows.length){h+='<div class="erow-empty">No instruments shown — tick some in the filter above.</div>';}
+    rows.forEach(function(e){
+      h+='<div class="eqname" style="border-left:3px solid '+esc(e.color)+'">'+esc(e.name)+(e.canBook?"":' <span title="You are not trained on this instrument">🔒</span>')+'</div>';
+      days.forEach(function(d){
+        var wk=(dow(d)===0||dow(d)===6),canBook=isAdmin()||e.canBook;
+        var list=BOOK.filter(function(b){var ed=b.edate||b.date;return b.equip===e.id&&b.date<=d&&ed>=d;}).sort(function(a,b){return (a.date===d?a.s:0)-(b.date===d?b.s:0);});
+        h+='<div class="ecell'+(d===today?" today":"")+(wk?" wknd":"")+(canBook?" bookable":"")+'" data-eq="'+esc(e.id)+'" data-day="'+d+'">';
+        list.forEach(function(b){
+          var ed=b.edate||b.date,multi=(ed!==b.date),mine=b.username&&b.username===myUser();
+          var segS=(b.date===d?b.s:0),segE=(ed===d?b.e:1440);
+          var label=one?(mToHHMM(segS)+"–"+mToHHMM(segE)+(multi?" ↕":"")):((b.date===d?mToHHMM(b.s):"↳")+(multi&&ed!==d?"…":""));
+          var note=b.note?(' <span class="en">· '+esc(b.note)+'</span>'):'';
+          h+='<div class="ebk'+(mine?" mine":"")+'" data-bk="'+b.id+'" title="'+esc(e.name+" · "+b.date+" "+mToHHMM(b.s)+" → "+ed+" "+mToHHMM(b.e)+" · "+(b.name||"")+(b.note?" · "+b.note:""))+'"><span class="et">'+label+'</span> '+esc(b.name||"")+note+'</div>';
+        });
+        h+='</div>';
+      });
+    });
+    h+='</div>';
+    $("grid").innerHTML=h;
+    [].forEach.call($("grid").querySelectorAll(".ebk"),function(el){el.addEventListener("click",function(ev){ev.stopPropagation();var b=BOOK.filter(function(x){return x.id===el.getAttribute("data-bk");})[0];if(b)openBooking(b);});});
+    [].forEach.call($("grid").querySelectorAll(".ecell.bookable"),function(c){c.addEventListener("click",function(){var eq=c.getAttribute("data-eq"),d=c.getAttribute("data-day"),sl=defaultSlot(eq,d);openBooking(null,{equip:eq,date:d,edate:d,s:sl.s,e:sl.e});});});
   }
 
   /* ---- booking modal ---- */
@@ -510,6 +584,17 @@
   }
 
   /* ---- hover balloon (full details, esp. for short bookings) ---- */
+  // phone: swipe the grid left → previous day, right → next day
+  function wireSwipe(){
+    var grid=$("grid"),x0=0,y0=0,t0=0,tracking=false;
+    grid.addEventListener("touchstart",function(ev){if(ev.touches.length!==1){tracking=false;return;}tracking=true;x0=ev.touches[0].clientX;y0=ev.touches[0].clientY;t0=Date.now();},{passive:true});
+    grid.addEventListener("touchend",function(ev){
+      if(!tracking)return;tracking=false;
+      if(view!=="grid"||!isPhone())return;
+      var t=ev.changedTouches[0],dx=t.clientX-x0,dy=t.clientY-y0,dt=Date.now()-t0;
+      if(Math.abs(dx)>50&&Math.abs(dx)>Math.abs(dy)*1.6&&dt<600){step(dx<0?-1:1);} // left→prev, right→next
+    },{passive:true});
+  }
   function wireTips(){
     var grid=$("grid"),tip=$("bktip");
     function fill(b){var eq=(EQUIP.filter(function(x){return x.id===b.equip;})[0])||{};var ed=b.edate||b.date;
@@ -524,12 +609,12 @@
   }
 
   /* ---- navigation ---- */
-  function step(n){if(view==="day")anchor=addDays(anchor,n);else if(view==="month")anchor=addMonths(anchor,n);else anchor=addDays(anchor,n*7);_scrollPending=true;loadData();}
+  function step(n){if(view==="day")anchor=addDays(anchor,n);else if(view==="month")anchor=addMonths(anchor,n);else if(view==="grid")anchor=addDays(anchor,n*(gridSingle()?1:7));else anchor=addDays(anchor,n*7);_scrollPending=true;loadData();}
   $("prev").addEventListener("click",function(){step(-1);});
   $("next").addEventListener("click",function(){step(1);});
   $("today").addEventListener("click",function(){anchor=todayLab();_scrollPending=true;loadData();});
   $("datepick").addEventListener("change",function(){if($("datepick").value){anchor=$("datepick").value;_scrollPending=true;loadData();}});
-  ["day","week","month"].forEach(function(v){$("v_"+v).addEventListener("click",function(){view=v;_scrollPending=true;$("datepick").value=anchor;loadData();});});
+  ["grid","day","week","month"].forEach(function(v){$("v_"+v).addEventListener("click",function(){view=v;_scrollPending=true;$("datepick").value=anchor;loadData();});});
 
   /* ---- CSV export ---- */
   $("exportbtn").addEventListener("click",function(){
@@ -605,7 +690,8 @@
   function start(){
     if(started)return;started=true;
     $("manage").hidden=true;$("bk_by").value=myName();$("datepick").value=anchor;
-    wireDrag();wireTips();
+    wireDrag();wireTips();wireSwipe();
+    try{var _rzT;window.addEventListener("resize",function(){clearTimeout(_rzT);_rzT=setTimeout(function(){if(view==="grid")renderView();},180);});}catch(e){}
     pickApiBase(function(){loadData();setInterval(poll,25000);try{window.addEventListener("focus",poll);}catch(e){}});
   }
   document.addEventListener("lensauth",start);
