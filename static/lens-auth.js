@@ -167,7 +167,7 @@
     var pw = window.prompt("Set a new password for your account (" + ((u && u.name) || "") + "):", "");
     if (pw == null) return;
     pw = pw.trim();
-    if (pw.length < 4) { alert("Password must be at least 4 characters."); return; }
+    if (pw.length < 8) { alert("Password must be at least 8 characters."); return; }
     fetch(API_BASE + "/api/mypassword", {
       method: "POST",
       headers: { "Content-Type": "application/json", "X-LENS-Token": tok() },
@@ -242,7 +242,7 @@
     }).catch(function(){ msgA("Network error.", true); });
   }
   function delUserA(un){ if (!window.confirm('Delete account "' + un + '"? Their past entries keep their recorded name.')) return; acctFetch("/api/users?username=" + encodeURIComponent(un), { method: "DELETE" }).then(function(){ renderUsers(); }); }
-  function resetPwA(un, n, r){ var pw = window.prompt("New password for " + n + ":", ""); if (pw == null) return; pw = pw.trim(); if (pw.length < 4){ alert("Password must be at least 4 characters."); return; } acctFetch("/api/users", { method: "POST", body: JSON.stringify({ username: un, name: n, role: r, password: pw }) }).then(function(x){ return x.json().then(function(j){ return { ok: x.ok, j: j }; }); }).then(function(res){ alert(res.ok ? "Password updated." : ((res.j && res.j.error) || "Could not update.")); }); }
+  function resetPwA(un, n, r){ var pw = window.prompt("New password for " + n + ":", ""); if (pw == null) return; pw = pw.trim(); if (pw.length < 8){ alert("Password must be at least 8 characters."); return; } acctFetch("/api/users", { method: "POST", body: JSON.stringify({ username: un, name: n, role: r, password: pw }) }).then(function(x){ return x.json().then(function(j){ return { ok: x.ok, j: j }; }); }).then(function(res){ alert(res.ok ? "Password updated." : ((res.j && res.j.error) || "Could not update.")); }); }
 
   function reveal() {
     removeGate();
