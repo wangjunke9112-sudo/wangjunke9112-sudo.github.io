@@ -171,6 +171,21 @@
   .iconb:hover{background:var(--surface-2);color:var(--fg);border:none}
   .iconb.del:hover{color:var(--danger)}
   .iconb svg{width:16px;height:16px}
+  /* accounts modal — same style as the equipment-booking page */
+  .acctovl{position:fixed;inset:0;z-index:1200;background:rgba(10,20,35,.5);display:flex;align-items:center;justify-content:center;padding:16px}
+  .acctovl[hidden]{display:none}
+  .acctmodal{width:100%;max-width:460px;background:var(--surface);color:var(--fg);border-radius:14px;padding:20px 20px 18px;box-shadow:0 20px 60px rgba(0,0,0,.4);max-height:90vh;overflow:auto;box-sizing:border-box}
+  .acctmodal h3{margin:0 0 4px;font-size:18px}
+  .acctmodal .amodesc{font-size:12px;color:var(--muted);margin:0 0 14px;line-height:1.5}
+  .acctulist{border:1px solid var(--border);border-radius:10px;margin-bottom:16px;max-height:300px;overflow:auto}
+  .acctact{white-space:nowrap;display:inline-flex;gap:8px;align-items:center}
+  .acctlink{color:var(--accent);cursor:pointer;font-size:12.5px;text-decoration:underline;text-underline-offset:2px}
+  .acctlink.del{color:var(--danger)}
+  .acctlink:hover{opacity:.8}
+  .acctadd>b{font-size:13px;display:block;margin-bottom:8px}
+  .acctgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px 10px}
+  .acctbtns{display:flex;gap:8px;align-items:center;margin-top:14px}
+  .acctbtns .acctmsg{font-size:12.5px;color:var(--muted)}
   .exrow{font-size:10px;font-family:var(--font-m);color:var(--muted);border:1px solid var(--border);border-radius:5px;padding:1px 5px;margin-left:6px}
   .dupe{font-size:10px;font-family:var(--font-m);color:var(--warn);margin-left:6px}
   .disp-form{display:flex;gap:5px;align-items:center;flex-wrap:wrap}
@@ -208,11 +223,11 @@
   <div class="loginbox">
     <div class="loginbrand"><b>LENS</b><span>Lab</span></div>
     <p class="loginsub">Sign in with your lab account</p>
-    <label for="lg_user">Username 用户名</label>
+    <label for="lg_user">Username</label>
     <input id="lg_user" autocomplete="username" autocapitalize="off" spellcheck="false" onkeydown="if(event.key==='Enter')document.getElementById('lg_pw').focus()">
-    <label for="lg_pw">Password 密码</label>
+    <label for="lg_pw">Password</label>
     <input id="lg_pw" type="password" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()">
-    <button class="btn-primary" id="lg_go" onclick="doLogin()">Sign in 登录</button>
+    <button class="btn-primary" id="lg_go" onclick="doLogin()">Sign in</button>
     <div class="lg_err" id="lg_err"></div>
     <p class="loginnote">Don't have an account? Ask the group admin to create one for you.</p>
   </div>
@@ -298,19 +313,23 @@
       </div>
     </section>
 
-    <section class="panel" id="adminpanel" hidden>
-      <h2><span>Accounts 账号管理</span><span style="margin-left:auto"><button onclick="closeAdmin()" style="font-size:13px;padding:5px 12px">Close</button></span></h2>
-      <div style="font-size:12px;color:var(--muted);margin-bottom:12px">Each person signs in with their own username and password; their name then fills in automatically when they register or dispose a chemical. Give <b>admin</b> only to people who should manage accounts. Usernames are lower-case and can't be changed later (make a new one instead).</div>
-      <div id="userlist" style="border:1px solid var(--border);border-radius:10px;margin-bottom:14px;max-height:300px;overflow:auto"></div>
-      <div class="formgrid" style="align-items:end">
-        <div><label for="u_name">Full name 姓名</label><input id="u_name" placeholder="e.g. 张三 / Zhang San"></div>
-        <div><label for="u_user">Username 用户名</label><input id="u_user" autocapitalize="off" spellcheck="false" placeholder="e.g. zhangsan"></div>
-        <div><label for="u_pw">Password 密码</label><input id="u_pw" type="text" placeholder="give them a code"></div>
-        <div><label for="u_role">Role 角色</label><select id="u_role"><option value="user">Member 成员</option><option value="admin">Admin 管理员</option></select></div>
-        <div><button class="btn-primary" onclick="addUser()" style="width:100%">Add / update 保存</button></div>
+    <div class="acctovl" id="adminpanel" hidden onclick="if(event.target===this)closeAdmin()">
+      <div class="acctmodal">
+        <h3>Accounts 账号管理</h3>
+        <p class="amodesc">Each person signs in with their own username and password; their name then fills in automatically when they register or dispose a chemical. Give <b>admin</b> only to people who should manage accounts. Usernames are lower-case and can't be changed later.</p>
+        <div id="userlist" class="acctulist"></div>
+        <div class="acctadd">
+          <b>Add or update a member</b>
+          <div class="acctgrid">
+            <div><label for="u_name">Full name 姓名</label><input id="u_name" placeholder="e.g. 张三 / Zhang San"></div>
+            <div><label for="u_user">Username 用户名</label><input id="u_user" autocapitalize="off" spellcheck="false" placeholder="e.g. zhangsan"></div>
+            <div><label for="u_pw">Password 密码 <span style="font-weight:400;text-transform:none">(8+ characters)</span></label><input id="u_pw" type="text" placeholder="give them a code"></div>
+            <div><label for="u_role">Role 角色</label><select id="u_role"><option value="user">Member 成员</option><option value="admin">Admin 管理员</option></select></div>
+          </div>
+          <div class="acctbtns"><button class="btn-primary" onclick="addUser()">Add / update 保存</button><button onclick="closeAdmin()">Close</button><span class="acctmsg" id="u_err"></span></div>
+        </div>
       </div>
-      <div class="lg_err" id="u_err" style="margin-top:8px"></div>
-    </section>
+    </div>
 
     <section class="panel" id="libpanel" hidden>
       <h2><span>Chemical library 化学品库 <span id="libcount" style="font-weight:400;font-size:13px;color:var(--muted)"></span></span><span style="margin-left:auto;display:flex;gap:10px;align-items:center"><button onclick="libAdd()" style="font-size:13px;padding:5px 12px">＋ New chemical</button><button onclick="closeLib()" style="font-size:13px;padding:5px 12px">Close</button></span></h2>
@@ -548,14 +567,15 @@
   function logout(){setApiToken("");saveUser(null);if(cloudPoll)clearInterval(cloudPoll);items=[];render();showLogin();setCloudStatus();}
   function changePw(){if(!cloudOn())return;var pw=window.prompt("Set a new password for your account ("+curName()+"):","");if(pw==null)return;pw=pw.trim();if(pw.length<8){tool("Password must be at least 8 characters.");return;}cloudFetch("/api/mypassword",{method:"POST",body:JSON.stringify({password:pw})}).then(function(r){if(r.status===401){onUnauthorized();return null;}return r.json();}).then(function(j){if(j&&j.ok)tool("Password changed — use it next time you sign in.");else tool((j&&j.error)||"Could not change the password.");}).catch(function(){tool("Could not reach the server.");});}
   /* ---- admin: manage accounts ---- */
-  function openAdmin(){if(!isAdmin())return;$("adminpanel").hidden=false;loadUsers();try{$("adminpanel").scrollIntoView({behavior:"smooth",block:"start"});}catch(e){}}
+  function openAdmin(){if(!isAdmin())return;loadUsers();$("adminpanel").hidden=false;}
   function closeAdmin(){$("adminpanel").hidden=true;}
   var _users=[];
-  function trashBtnHTML(i){return '<button class="iconb del" title="Remove account" onclick="askDelUser('+i+')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M5 7h14M10 7V5h4v2M6 7l1 13h10l1-13"/></svg></button>';}
+  function acctActHTML(i){return '<a class="acctlink" onclick="resetPwInv('+i+')">reset pw</a> · <a class="acctlink del" onclick="askDelUser('+i+')">delete</a>';}
+  function resetPwInv(i){if(!isAdmin())return;var u=_users[i];if(!u)return;var pw=window.prompt("New password for "+u.name+" ("+u.username+"):","");if(pw==null)return;pw=pw.trim();if(pw.length<8){tool("Password must be at least 8 characters.");return;}cloudFetch("/api/users",{method:"POST",body:JSON.stringify({username:u.username,name:u.name,role:u.role||"user",password:pw})}).then(function(r){if(r.status===401){onUnauthorized();return null;}return r.json();}).then(function(j){if(j&&j.ok)tool("Password updated for "+u.name+".");else tool((j&&j.error)||"Could not update the password.");}).catch(function(){tool("Could not reach the server.");});}
   function askDelUser(i){var c=$("uact_"+i);if(!c)return;c.innerHTML='<button class="iconb" title="Yes, delete" style="color:#16a34a" onclick="doDelUser('+i+')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"/></svg></button><button class="iconb" title="Cancel" style="color:#dc2626" onclick="cancelDelUser('+i+')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>';}
-  function cancelDelUser(i){var c=$("uact_"+i);if(c)c.innerHTML=trashBtnHTML(i);}
+  function cancelDelUser(i){var c=$("uact_"+i);if(c)c.innerHTML=acctActHTML(i);}
   function doDelUser(i){if(!isAdmin())return;var u=_users[i];if(!u)return;cloudFetch("/api/users?username="+encodeURIComponent(u.username),{method:"DELETE"}).then(function(r){if(r.status===401){onUnauthorized();return null;}return r.json();}).then(function(){loadUsers();tool("Account removed.");}).catch(function(){tool("Could not remove the account.");});}
-  function loadUsers(){cloudFetch("/api/users",{method:"GET"}).then(function(r){if(r.status===401){onUnauthorized();return null;}return r.ok?r.json():null;}).then(function(j){var box=$("userlist");if(!box)return;if(!j||!j.users){box.innerHTML='<div class="empty-state">Could not load accounts.</div>';return;}_users=j.users;box.innerHTML=j.users.map(function(u,i){return '<div class="librow"><div class="lmain"><div class="lname">'+esc(u.name)+(u.role==="admin"?' <span class="cattag">admin</span>':'')+'</div><div class="lmeta">'+esc(u.username)+'</div></div><span id="uact_'+i+'">'+trashBtnHTML(i)+'</span></div>';}).join("")||'<div class="empty-state">No accounts yet — add the first one below.</div>';}).catch(function(){var box=$("userlist");if(box)box.innerHTML='<div class="empty-state">Could not load accounts.</div>';});}
+  function loadUsers(){cloudFetch("/api/users",{method:"GET"}).then(function(r){if(r.status===401){onUnauthorized();return null;}return r.ok?r.json():null;}).then(function(j){var box=$("userlist");if(!box)return;if(!j||!j.users){box.innerHTML='<div class="empty-state">Could not load accounts.</div>';return;}_users=j.users;box.innerHTML=j.users.map(function(u,i){return '<div class="librow"><div class="lmain"><div class="lname">'+esc(u.name)+(u.role==="admin"?' <span class="cattag">admin</span>':'')+'</div><div class="lmeta">'+esc(u.username)+'</div></div><span class="acctact" id="uact_'+i+'">'+acctActHTML(i)+'</span></div>';}).join("")||'<div class="empty-state">No accounts yet — add the first one below.</div>';}).catch(function(){var box=$("userlist");if(box)box.innerHTML='<div class="empty-state">Could not load accounts.</div>';});}
   function addUser(){var name=($("u_name").value||"").trim(),un=($("u_user").value||"").trim().toLowerCase(),pw=$("u_pw").value||"",role=$("u_role").value||"user";if(!name||!un||!pw){$("u_err").textContent="Fill in name, username and a password.";return;}if(pw.length<8){$("u_err").textContent="Password must be at least 8 characters.";return;}$("u_err").textContent="Saving…";cloudFetch("/api/users",{method:"POST",body:JSON.stringify({name:name,username:un,password:pw,role:role})}).then(function(r){if(r.status===401){onUnauthorized();return null;}return r.json();}).then(function(j){if(j&&j.ok){$("u_name").value="";$("u_user").value="";$("u_pw").value="";$("u_err").textContent="Saved.";loadUsers();setTimeout(function(){$("u_err").textContent="";},1500);}else{$("u_err").textContent=(j&&j.error)||"Could not save.";}}).catch(function(){$("u_err").textContent="Could not reach the server.";});}
 
   function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,6);}
