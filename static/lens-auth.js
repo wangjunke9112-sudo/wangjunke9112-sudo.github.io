@@ -111,12 +111,12 @@
     makeGate(
       '<div class="card">' +
         '<h1>LENS Lab</h1>' +
-        '<p class="sub">Sign in to continue · 登录以继续</p>' +
-        '<label for="lgx_user">Username 用户名</label>' +
+        '<p class="sub">Sign in to continue</p>' +
+        '<label for="lgx_user">Username</label>' +
         '<input id="lgx_user" autocomplete="username" autocapitalize="off" spellcheck="false">' +
-        '<label for="lgx_pw">Password 密码</label>' +
+        '<label for="lgx_pw">Password</label>' +
         '<input id="lgx_pw" type="password" autocomplete="current-password">' +
-        '<button id="lgx_go">Sign in 登录</button>' +
+        '<button id="lgx_go">Sign in</button>' +
         '<div class="err" id="lgx_err">' + (msg || "") + '</div>' +
       '</div>'
     );
