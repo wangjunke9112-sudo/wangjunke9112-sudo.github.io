@@ -135,10 +135,13 @@
   .ovl[hidden]{display:none}
   .modal{width:100%;max-width:440px;background:var(--surface);border-radius:14px;padding:20px 20px 18px;box-shadow:0 20px 60px rgba(0,0,0,.35);max-height:90vh;overflow:auto}
   .modal h3{margin:0 0 14px;font-size:18px}
-  .modal label{display:block;font-size:12px;color:var(--muted);margin:12px 0 4px;font-weight:600}
-  .modal input,.modal select,.modal textarea{width:100%;padding:9px 10px;font-size:14px;border:1px solid var(--line);border-radius:8px;background:var(--surface);color:var(--ink);font-family:inherit}
+  .modal label{display:block;font-size:12px;color:var(--muted);margin:11px 0 4px;font-weight:600}
+  .modal input,.modal select,.modal textarea{width:100%;box-sizing:border-box;padding:8px 10px;font-size:13.5px;border:1px solid var(--line);border-radius:8px;background:var(--surface);color:var(--ink);font-family:inherit}
+  /* normalize native mobile date inputs and selects to the same height/width so the two columns line up */
+  .modal input[type=date],.modal select{height:40px;-webkit-appearance:none;appearance:none;text-align:left}
+  .modal select{background-image:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="%238a95a8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 9l4-4 4 4M8 15l4 4 4-4"/></svg>');background-repeat:no-repeat;background-position:right 9px center;padding-right:30px}
   .modal input[readonly]{background:var(--surface-2);color:var(--muted)}
-  .row2{display:flex;gap:10px}.row2>div{flex:1}
+  .row2{display:flex;gap:10px}.row2>div{flex:1;min-width:0}
   .mbtns{display:flex;gap:8px;margin-top:18px;align-items:center}
   .merr{color:#c0392b;font-size:13px;min-height:18px;margin-top:10px}
   .del{margin-left:auto;background:none;border:0;color:#c0392b;cursor:pointer;text-decoration:underline;font-size:13px}
@@ -484,7 +487,8 @@
     [].forEach.call($("grid").querySelectorAll(".ecell.bookable"),function(c){c.addEventListener("click",function(){var eq=c.getAttribute("data-eq"),d=c.getAttribute("data-day"),sl=defaultSlot(eq,d);openBooking(null,{equip:eq,date:d,edate:d,s:sl.s,e:sl.e});});});
   }
   function renderGrid(){$("grid").innerHTML=gridHTML();wireGrid();}
-  function maybeRefresh(){if(anchor<_loadedFrom||anchor>_loadedTo){_scrollPending=false;loadData();}}
+  function scrollY(){return window.pageYOffset||document.documentElement.scrollTop||0;}
+  function maybeRefresh(){if(anchor<_loadedFrom||anchor>_loadedTo){var sy=scrollY();_scrollPending=false;var p=loadData();if(p&&p.then)p.then(function(){try{window.scrollTo(0,sy);}catch(e){}});}}
   // slide the single-day grid like iCal/Google Calendar: dir +1 = next day (slides left), -1 = previous day (slides right)
   function slideDay(dir){
     if(!gridSingle()){step(dir);return;}
@@ -492,6 +496,7 @@
     var host=$("grid"),oldEl=host.querySelector(".egrid");
     if(!oldEl){step(dir);return;}
     _animating=true;
+    var sy=scrollY();
     anchor=addDays(anchor,dir);$("datepick").value=anchor;updateLabel();
     var tmp=document.createElement("div");tmp.innerHTML=gridHTML();var newEl=tmp.firstChild;
     oldEl.classList.add("sliding");newEl.classList.add("sliding");
@@ -509,7 +514,7 @@
       if(oldEl.parentNode)oldEl.parentNode.removeChild(oldEl);
       host.classList.remove("gridanim");host.style.height="";
       newEl.classList.remove("sliding");newEl.style.transition="";newEl.style.transform="";
-      wireGrid();maybeRefresh();
+      wireGrid();try{window.scrollTo(0,sy);}catch(e){}maybeRefresh();
     }
     newEl.addEventListener("transitionend",done);setTimeout(done,360);
   }
