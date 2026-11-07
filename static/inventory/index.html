@@ -40,8 +40,8 @@
 
   /* navy hero masthead — same family as the group hub, slightly simpler */
   header.hero{background:var(--hero-bg);color:var(--hero-fg)}
-  header.hero .wrap{padding-block:22px 26px}
-  .topbar{display:flex;justify-content:space-between;align-items:center;gap:12px 20px;flex-wrap:wrap;margin-bottom:18px}
+  header.hero .wrap{padding-block:16px 18px}
+  .topbar{display:flex;justify-content:space-between;align-items:center;gap:12px 20px;flex-wrap:wrap;margin-bottom:12px}
   .lockup{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
   .lockup b{font-family:var(--font-d);font-weight:700;letter-spacing:.14em;font-size:19px;color:var(--hero-fg)}
   .lockup span{font-family:var(--font-m);font-size:11.5px;color:var(--hero-dim)}
@@ -54,9 +54,10 @@
   .tgl svg{display:block}
   .tgl:hover{border-color:var(--hero-accent);color:var(--hero-accent)}
   .eyebrow{font-family:var(--font-m);font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--hero-accent);margin:0}
-  .htitle{font-family:var(--font-d);font-weight:700;font-size:clamp(26px,4vw,36px);line-height:1.04;margin:7px 0 0;letter-spacing:-.015em}
+  .htitle{font-family:var(--font-d);font-weight:700;font-size:clamp(23px,3.4vw,32px);line-height:1.04;margin:4px 0 0;letter-spacing:-.015em}
   .htitle .zh{font-weight:600;color:var(--hero-dim);font-size:.6em;margin-left:8px;letter-spacing:0}
-  .intern{display:inline-flex;align-items:center;gap:7px;margin-top:14px;font-family:var(--font-m);font-size:11px;letter-spacing:.06em;color:var(--hero-dim);border:1px solid rgba(157,177,214,.3);border-radius:20px;padding:4px 12px;cursor:pointer}
+  @media(max-width:640px){header.hero .wrap{padding-block:13px 14px}.lockup span{display:none}.hnav{gap:12px 14px}.hnav a{font-size:12px}}
+  .intern{display:inline-flex;align-items:center;gap:7px;margin-top:10px;font-family:var(--font-m);font-size:11px;letter-spacing:.06em;color:var(--hero-dim);border:1px solid rgba(157,177,214,.3);border-radius:20px;padding:4px 12px;cursor:pointer}
   .intern:hover{border-color:var(--hero-accent);color:var(--hero-accent)}
   .intern i{width:6px;height:6px;border-radius:50%;background:var(--hero-gold);display:inline-block}
   .intern[data-s="ok"] i{background:#4FBF8A}
