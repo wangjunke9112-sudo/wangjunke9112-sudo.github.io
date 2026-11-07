@@ -318,7 +318,7 @@
   function rangeFor(){
     if(view==="day")return {from:anchor,to:anchor};
     if(view==="month"){var gs=sundayOf(firstOfMonth(anchor));var weeks=Math.ceil((dow(firstOfMonth(anchor))+daysInMonth(anchor))/7);return {from:gs,to:addDays(gs,weeks*7-1)};}
-    if(view==="grid"){var g=sundayOf(anchor);return {from:addDays(g,-7),to:addDays(g,13)};} // ±1 week buffer so day-swipes are instant
+    if(view==="grid"){return {from:addDays(anchor,-7),to:addDays(anchor,13)};} // anchor-based ±1 week buffer so day-swipes are instant
     var ws=sundayOf(anchor);return {from:ws,to:addDays(ws,6)};
   }
 
@@ -370,7 +370,7 @@
   function updateLabel(){
     if(view==="month"){$("wklabel").textContent=monthYear(anchor);return;}
     if(view==="day"||gridSingle()){$("wklabel").textContent=pedate(anchor).toLocaleDateString("en-US",{weekday:"long",month:"short",day:"numeric",year:"numeric"});return;}
-    var ws=sundayOf(anchor),we=addDays(ws,6);
+    var ws=(view==="grid")?anchor:sundayOf(anchor),we=addDays(ws,6);
     $("wklabel").textContent=monLabel(ws)+" "+dayNum(ws)+" – "+monLabel(we)+" "+dayNum(we)+", "+pedate(we).getUTCFullYear();
   }
   function updateViewButtons(){["grid","day","week","month"].forEach(function(v){$("v_"+v).className=(view===v?"on":"");});}
@@ -456,7 +456,7 @@
     return {s:s,e:Math.min(s+60,1440)};
   }
   function gridHTML(){
-    var today=todayLab(),one=isPhone(),days=one?[anchor]:weekDates(sundayOf(anchor));
+    var today=todayLab(),one=isPhone(),days=one?[anchor]:weekDates(anchor); // laptop grid: a rolling 7 days starting at the anchor (today by default)
     var rows=EQUIP.filter(function(e){return SHOW[e.id];});
     var h='<div class="egrid'+(one?" one":"")+'">';
     h+='<div class="eh corner2"></div>';
