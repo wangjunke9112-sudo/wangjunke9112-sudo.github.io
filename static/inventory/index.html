@@ -185,7 +185,7 @@
 <header class="hero">
   <div class="wrap">
     <div class="topbar">
-      <div class="lockup"><b>LENS</b><span>Light–Energy Nanophotonics &amp; Semiconductors</span></div>
+      <div class="lockup"><b>LENS</b><span>Light–Energy Nanomaterials &amp; Semiconductors</span></div>
       <div class="htools">
         <nav class="hnav">
           <a href="https://lens-laboratory.com/hub/" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="3.5" width="7" height="7" rx="1.5"/><rect x="13.5" y="3.5" width="7" height="7" rx="1.5"/><rect x="3.5" y="13.5" width="7" height="7" rx="1.5"/><rect x="13.5" y="13.5" width="7" height="7" rx="1.5"/></svg>Group hub</a>
@@ -479,7 +479,12 @@
     else if(state==="srv"){label=nm+" · server error";cls="err";}
     else if(state===false){label=nm+" · offline";cls="err";}
     else{label=nm+" · synced";cls="ok";}
-    t.innerHTML='<i></i>'+esc(label)+(apiToken()?' · <a href="#" onclick="changePw();return false;" style="color:inherit;opacity:.85;text-decoration:underline">password</a> · <a href="#" onclick="logout();return false;" style="color:inherit;opacity:.85;text-decoration:underline">sign out</a>':'');t.setAttribute("data-s",cls);}
+    var lnk='color:inherit;opacity:.85;text-decoration:underline';
+    t.innerHTML='<i></i>'+esc(label)+(apiToken()?(
+      (isAdmin()?' · <a href="#" onclick="openAdmin();return false;" style="'+lnk+'">accounts</a>':'')
+      +' · <a href="#" onclick="changePw();return false;" style="'+lnk+'">password</a>'
+      +' · <a href="#" onclick="logout();return false;" style="'+lnk+'">sign out</a>'):'');
+    t.setAttribute("data-s",cls);}
   function cloudAck(r){if(!r)return;if(r.status===401){onUnauthorized();return;}if(!r.ok){setCloudStatus("srv");return;}return r.json().then(function(j){if(j&&typeof j.version==="number")cloudVer=j.version;setCloudStatus(true);},function(){});}
   function cloudFail(){setCloudStatus(false);}
   function cloudPutItem(it){if(!cloudOn())return;enq(function(){return cloudFetch("/api/item",{method:"POST",body:JSON.stringify(it)}).then(cloudAck,cloudFail);});}
