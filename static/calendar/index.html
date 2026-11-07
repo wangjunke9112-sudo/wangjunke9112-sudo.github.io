@@ -551,6 +551,7 @@
     var body={equip:$("bk_eq").value,date:sd,edate:ed,s:parseInt($("bk_s").value,10),e:parseInt($("bk_e").value,10),note:$("bk_note").value.trim()};
     if(editId)body.id=editId;
     if(epochDayC(ed)*1440+body.e<=epochDayC(sd)*1440+body.s){$("bk_err").textContent="End must be after start.";return;}
+    if(!isAdmin()&&(epochDayC(sd)-epochDayC(todayLab()))>7){$("bk_err").textContent="You can book up to 7 days ahead — ask an admin to book further out.";return;}
     $("bk_save").disabled=true;$("bk_err").textContent="Saving…";
     api("/api/booking",{method:"POST",body:JSON.stringify(body)}).then(function(r){return r.json().then(function(j){return {ok:r.ok,j:j};});}).then(function(res){
       $("bk_save").disabled=false;
