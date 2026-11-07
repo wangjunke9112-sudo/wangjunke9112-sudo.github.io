@@ -86,6 +86,11 @@
   .egrid.one .ecell{min-height:40px;padding:4px}
   .egrid.one .ebk{font-size:12.5px;line-height:1.3;padding:3px 7px}
   .egrid.one .ebk .et{font-size:11.5px}
+  .eadd{margin-top:auto;min-height:20px;display:flex;align-items:center;justify-content:center;color:var(--muted);opacity:.3;font-size:16px;line-height:1;border-radius:6px;cursor:pointer;transition:background .12s,opacity .12s}
+  .ecell.bookable:hover .eadd{opacity:.9;background:var(--accent-soft)}
+  .egrid.one .eadd{min-height:26px}
+  .cal.gridanim{overflow:hidden}
+  .egrid.sliding{position:absolute;top:0;left:0;width:100%;will-change:transform}
   .calgrid{display:grid;position:relative}
   .ch{position:sticky;top:0;z-index:5;background:var(--surface);border-bottom:1px solid var(--line);padding:9px 4px 7px;text-align:center}
   .ch.corner{left:0;z-index:7;border-right:1px solid var(--line)}
@@ -305,10 +310,12 @@
 
   /* ---- state ---- */
   var _narrow=(window.matchMedia&&window.matchMedia("(max-width:640px)").matches);
-  var view=_narrow?"day":"week", anchor=todayLab(), EQUIP=[], BOOK=[], SHOW={}, calVer=-1, USERS=[], editId=null, _scrollPending=true;
+  var view="grid", anchor=todayLab(), EQUIP=[], BOOK=[], SHOW={}, calVer=-1, USERS=[], editId=null, _scrollPending=true;
+  var _animating=false,_loadedFrom="",_loadedTo="";
   function rangeFor(){
     if(view==="day")return {from:anchor,to:anchor};
     if(view==="month"){var gs=sundayOf(firstOfMonth(anchor));var weeks=Math.ceil((dow(firstOfMonth(anchor))+daysInMonth(anchor))/7);return {from:gs,to:addDays(gs,weeks*7-1)};}
+    if(view==="grid"){var g=sundayOf(anchor);return {from:addDays(g,-7),to:addDays(g,13)};} // ±1 week buffer so day-swipes are instant
     var ws=sundayOf(anchor);return {from:ws,to:addDays(ws,6)};
   }
 
@@ -331,7 +338,7 @@
       EQUIP=all.filter(function(e){return e.active;});
       $("manage").hidden=!(isAdmin()||all.some(function(e){return e.canManage;}));
       if(Object.keys(SHOW).length===0)EQUIP.forEach(function(e){SHOW[e.id]=true;});
-      BOOK=res[1].bookings||[];calVer=res[1].version;setStatus("");
+      BOOK=res[1].bookings||[];calVer=res[1].version;_loadedFrom=r.from;_loadedTo=r.to;setStatus("");
       renderChips();renderView();populateTargets();
     }).catch(function(e){if(String(e&&e.message)!=="unauthorized")setStatus("Can't reach the server — retrying…");pickApiBase(function(){});});
   }
@@ -445,7 +452,7 @@
     s=Math.round(s/30)*30;if(s<0)s=0;if(s>1380)s=1380;
     return {s:s,e:Math.min(s+60,1440)};
   }
-  function renderGrid(){
+  function gridHTML(){
     var today=todayLab(),one=isPhone(),days=one?[anchor]:weekDates(sundayOf(anchor));
     var rows=EQUIP.filter(function(e){return SHOW[e.id];});
     var h='<div class="egrid'+(one?" one":"")+'">';
@@ -461,17 +468,50 @@
         list.forEach(function(b){
           var ed=b.edate||b.date,multi=(ed!==b.date),mine=b.username&&b.username===myUser();
           var segS=(b.date===d?b.s:0),segE=(ed===d?b.e:1440);
-          var label=one?(mToHHMM(segS)+"–"+mToHHMM(segE)+(multi?" ↕":"")):((b.date===d?mToHHMM(b.s):"↳")+(multi&&ed!==d?"…":""));
+          var label=mToHHMM(segS)+"–"+mToHHMM(segE)+(multi?" ↕":""); // always show start–end (wraps to a second line if narrow)
           var note=b.note?(' <span class="en">· '+esc(b.note)+'</span>'):'';
           h+='<div class="ebk'+(mine?" mine":"")+'" data-bk="'+b.id+'" title="'+esc(e.name+" · "+b.date+" "+mToHHMM(b.s)+" → "+ed+" "+mToHHMM(b.e)+" · "+(b.name||"")+(b.note?" · "+b.note:""))+'"><span class="et">'+label+'</span> '+esc(b.name||"")+note+'</div>';
         });
+        if(canBook)h+='<div class="eadd" title="Tap to add a booking">+</div>'; // always-present blank tap area for a new booking
         h+='</div>';
       });
     });
     h+='</div>';
-    $("grid").innerHTML=h;
+    return h;
+  }
+  function wireGrid(){
     [].forEach.call($("grid").querySelectorAll(".ebk"),function(el){el.addEventListener("click",function(ev){ev.stopPropagation();var b=BOOK.filter(function(x){return x.id===el.getAttribute("data-bk");})[0];if(b)openBooking(b);});});
     [].forEach.call($("grid").querySelectorAll(".ecell.bookable"),function(c){c.addEventListener("click",function(){var eq=c.getAttribute("data-eq"),d=c.getAttribute("data-day"),sl=defaultSlot(eq,d);openBooking(null,{equip:eq,date:d,edate:d,s:sl.s,e:sl.e});});});
+  }
+  function renderGrid(){$("grid").innerHTML=gridHTML();wireGrid();}
+  function maybeRefresh(){if(anchor<_loadedFrom||anchor>_loadedTo){_scrollPending=false;loadData();}}
+  // slide the single-day grid like iCal/Google Calendar: dir +1 = next day (slides left), -1 = previous day (slides right)
+  function slideDay(dir){
+    if(!gridSingle()){step(dir);return;}
+    if(_animating)return;
+    var host=$("grid"),oldEl=host.querySelector(".egrid");
+    if(!oldEl){step(dir);return;}
+    _animating=true;
+    anchor=addDays(anchor,dir);$("datepick").value=anchor;updateLabel();
+    var tmp=document.createElement("div");tmp.innerHTML=gridHTML();var newEl=tmp.firstChild;
+    oldEl.classList.add("sliding");newEl.classList.add("sliding");
+    newEl.style.transform="translateX("+(dir>0?"100%":"-100%")+")";
+    host.classList.add("gridanim");host.appendChild(newEl);
+    host.style.height=Math.max(oldEl.offsetHeight,newEl.offsetHeight)+"px";
+    void newEl.offsetWidth;
+    var tr="transform .28s cubic-bezier(.4,0,.2,1)";
+    oldEl.style.transition=tr;newEl.style.transition=tr;
+    oldEl.style.transform="translateX("+(dir>0?"-100%":"100%")+")";
+    newEl.style.transform="translateX(0)";
+    var finished=false;
+    function done(){
+      if(finished)return;finished=true;_animating=false;
+      if(oldEl.parentNode)oldEl.parentNode.removeChild(oldEl);
+      host.classList.remove("gridanim");host.style.height="";
+      newEl.classList.remove("sliding");newEl.style.transition="";newEl.style.transform="";
+      wireGrid();maybeRefresh();
+    }
+    newEl.addEventListener("transitionend",done);setTimeout(done,360);
   }
 
   /* ---- booking modal ---- */
@@ -592,7 +632,7 @@
       if(!tracking)return;tracking=false;
       if(view!=="grid"||!isPhone())return;
       var t=ev.changedTouches[0],dx=t.clientX-x0,dy=t.clientY-y0,dt=Date.now()-t0;
-      if(Math.abs(dx)>50&&Math.abs(dx)>Math.abs(dy)*1.6&&dt<600){step(dx<0?-1:1);} // left→prev, right→next
+      if(Math.abs(dx)>50&&Math.abs(dx)>Math.abs(dy)*1.6&&dt<600){slideDay(dx<0?1:-1);} // swipe left→next day, right→previous (iCal/Google convention)
     },{passive:true});
   }
   function wireTips(){
@@ -610,8 +650,8 @@
 
   /* ---- navigation ---- */
   function step(n){if(view==="day")anchor=addDays(anchor,n);else if(view==="month")anchor=addMonths(anchor,n);else if(view==="grid")anchor=addDays(anchor,n*(gridSingle()?1:7));else anchor=addDays(anchor,n*7);_scrollPending=true;loadData();}
-  $("prev").addEventListener("click",function(){step(-1);});
-  $("next").addEventListener("click",function(){step(1);});
+  $("prev").addEventListener("click",function(){slideDay(-1);});
+  $("next").addEventListener("click",function(){slideDay(1);});
   $("today").addEventListener("click",function(){anchor=todayLab();_scrollPending=true;loadData();});
   $("datepick").addEventListener("change",function(){if($("datepick").value){anchor=$("datepick").value;_scrollPending=true;loadData();}});
   ["grid","day","week","month"].forEach(function(v){$("v_"+v).addEventListener("click",function(){view=v;_scrollPending=true;$("datepick").value=anchor;loadData();});});
