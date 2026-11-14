@@ -144,6 +144,8 @@
   .row2{display:flex;gap:10px}.row2>div{flex:1;min-width:0}
   .mbtns{display:flex;gap:8px;margin-top:18px;align-items:center}
   .merr{color:#c0392b;font-size:13px;min-height:18px;margin-top:10px}
+  #bk_buddyrow{border:1px solid var(--hero-accent,#3DD0E6);background:rgba(61,208,230,.07);border-radius:10px;padding:4px 12px 11px;margin-top:12px}
+  .buddyhint{font-size:11.5px;color:var(--muted);line-height:1.45;margin-top:6px}
   .del{margin-left:auto;background:none;border:0;color:#c0392b;cursor:pointer;text-decoration:underline;font-size:13px}
   .eqrow{display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid var(--line);flex-wrap:wrap}
   .eqrow input[type=text]{width:auto;flex:1;min-width:120px}
@@ -246,6 +248,12 @@
     </div>
     <label>Note <span class="muted">— optional (sample, process…)</span></label>
     <input type="text" id="bk_note" placeholder="e.g. C60/BCP evaporation, 3 samples">
+    <div id="bk_buddyrow" hidden>
+      <label>Buddy <span class="muted">— required for night work (21:00–07:00)</span></label>
+      <input type="text" id="bk_buddy" list="bk_memberlist" placeholder="who'll be in the lab or building with you">
+      <datalist id="bk_memberlist"></datalist>
+      <div class="buddyhint">Night work can't be done alone. Name one person who will be in the lab with you, or in the building and aware you're working, for the whole booking.</div>
+    </div>
     <label>Booked by</label>
     <input type="text" id="bk_by" readonly>
     <div class="merr" id="bk_err"></div>
@@ -412,7 +420,7 @@
         var w=100/it._lanes,left=it._lane*w,mine=b.username&&b.username===myUser();
         var canEdit=isAdmin()||(b.username&&b.username===myUser());
         var rz=canEdit?((b.date===d?'<div class="rz rz-t"></div>':'')+(ed===d?'<div class="rz rz-b"></div>':'')):'';
-        h+='<div class="bk'+(mine?" mine":"")+(canEdit?" ed":"")+'" style="top:'+top+'px;height:'+hgt+'px;left:calc('+left+'% + 1px);width:calc('+w+'% - 2px);background:'+esc(eq.color)+'" data-bk="'+b.id+'">'+rz+'<b>'+esc(eq.name)+(multi?' ↕':'')+'</b>'+(b.note?'<div class="note">'+esc(b.note)+'</div>':'')+'<div class="who">'+mToHHMM(it.s)+'–'+mToHHMM(it.e)+' · '+esc(b.name||"")+'</div></div>';
+        h+='<div class="bk'+(mine?" mine":"")+(canEdit?" ed":"")+'" style="top:'+top+'px;height:'+hgt+'px;left:calc('+left+'% + 1px);width:calc('+w+'% - 2px);background:'+esc(eq.color)+'" data-bk="'+b.id+'">'+rz+'<b>'+esc(eq.name)+(multi?' ↕':'')+'</b>'+(b.note?'<div class="note">'+esc(b.note)+'</div>':'')+(b.buddy?'<div class="note">🤝 '+esc(b.buddy)+'</div>':'')+'<div class="who">'+mToHHMM(it.s)+'–'+mToHHMM(it.e)+' · '+esc(b.name||"")+'</div></div>';
       });
       if(d===today){var nm=nowMinLab();h+='<div class="nowline" style="top:'+(nm/30*ROW)+'px"></div>';}
       h+='</div>';
@@ -473,7 +481,8 @@
           var segS=(b.date===d?b.s:0),segE=(ed===d?b.e:1440);
           var label=mToHHMM(segS)+"–"+mToHHMM(segE)+(multi?" ↕":""); // always show start–end (wraps to a second line if narrow)
           var note=b.note?(' <span class="en">· '+esc(b.note)+'</span>'):'';
-          h+='<div class="ebk'+(mine?" mine":"")+'" data-bk="'+b.id+'" title="'+esc(e.name+" · "+b.date+" "+mToHHMM(b.s)+" → "+ed+" "+mToHHMM(b.e)+" · "+(b.name||"")+(b.note?" · "+b.note:""))+'"><span class="et">'+label+'</span> '+esc(b.name||"")+note+'</div>';
+          var buddy=b.buddy?(' <span class="en">· 🤝 '+esc(b.buddy)+'</span>'):'';
+          h+='<div class="ebk'+(mine?" mine":"")+'" data-bk="'+b.id+'" title="'+esc(e.name+" · "+b.date+" "+mToHHMM(b.s)+" → "+ed+" "+mToHHMM(b.e)+" · "+(b.name||"")+(b.note?" · "+b.note:"")+(b.buddy?" · buddy: "+b.buddy:""))+'"><span class="et">'+label+'</span> '+esc(b.name||"")+note+buddy+'</div>';
         });
         if(canBook)h+='<div class="eadd" title="Tap to add a booking">+</div>'; // always-present blank tap area for a new booking
         h+='</div>';
@@ -538,20 +547,30 @@
     fillTimeSelect($("bk_s"),0,1410,s);
     fillTimeSelect($("bk_e"),0,1440,e);
     $("bk_note").value=b?(b.note||""):"";
+    $("bk_buddy").value=b?(b.buddy||""):"";
+    $("bk_memberlist").innerHTML=USERS.map(function(u){return '<option value="'+esc(u.name)+'">';}).join("");
     $("bk_by").value=b?(b.name||""):myName();
     $("bk_err").textContent="";
     $("bk_del").hidden=!(b&&(isAdmin()||b.username===myUser()));
+    updateBuddyVis();
     $("bkovl").hidden=false;
   }
-  $("bk_s").addEventListener("change",function(){if($("bk_date").value===$("bk_edate").value){var s=parseInt($("bk_s").value,10),e=parseInt($("bk_e").value,10);if(e<=s)fillTimeSelect($("bk_e"),0,1440,Math.min(s+60,1440));}});
+  // buddy field appears whenever the chosen time touches the nightly 21:00–07:00 window
+  function nightOverlapC(sd,s,ed,e){var sab=epochDayC(sd)*1440+s,eab=epochDayC(ed)*1440+e;for(var d=Math.floor(sab/1440)*1440;d<eab;d+=1440){var ls=Math.max(sab,d)-d,le=Math.min(eab,d+1440)-d;if(ls<420||le>1260)return true;}return false;}
+  function updateBuddyVis(){var sd=$("bk_date").value,ed=$("bk_edate").value||sd,s=parseInt($("bk_s").value,10),e=parseInt($("bk_e").value,10);var night=(sd&&ed&&!isNaN(s)&&!isNaN(e)&&nightOverlapC(sd,s,ed,e));$("bk_buddyrow").hidden=!night;}
+  $("bk_date").addEventListener("change",updateBuddyVis);
+  $("bk_edate").addEventListener("change",updateBuddyVis);
+  $("bk_e").addEventListener("change",updateBuddyVis);
+  $("bk_s").addEventListener("change",function(){if($("bk_date").value===$("bk_edate").value){var s=parseInt($("bk_s").value,10),e=parseInt($("bk_e").value,10);if(e<=s)fillTimeSelect($("bk_e"),0,1440,Math.min(s+60,1440));}updateBuddyVis();});
   $("bk_cancel").addEventListener("click",function(){$("bkovl").hidden=true;});
   $("newbk").addEventListener("click",function(){openBooking(null,{date:view==="week"?todayLab():anchor});});
   $("bk_save").addEventListener("click",function(){
     var sd=$("bk_date").value, ed=$("bk_edate").value||sd;
-    var body={equip:$("bk_eq").value,date:sd,edate:ed,s:parseInt($("bk_s").value,10),e:parseInt($("bk_e").value,10),note:$("bk_note").value.trim()};
+    var body={equip:$("bk_eq").value,date:sd,edate:ed,s:parseInt($("bk_s").value,10),e:parseInt($("bk_e").value,10),note:$("bk_note").value.trim(),buddy:$("bk_buddy").value.trim()};
     if(editId)body.id=editId;
     if(epochDayC(ed)*1440+body.e<=epochDayC(sd)*1440+body.s){$("bk_err").textContent="End must be after start.";return;}
     if(!isAdmin()&&(epochDayC(sd)-epochDayC(todayLab()))>7){$("bk_err").textContent="You can book up to 7 days ahead — ask an admin to book further out.";return;}
+    if(nightOverlapC(sd,body.s,ed,body.e)&&!body.buddy){$("bk_err").textContent="Night work (21:00–07:00) needs a buddy — add someone who'll be in the lab or building with you.";return;}
     $("bk_save").disabled=true;$("bk_err").textContent="Saving…";
     api("/api/booking",{method:"POST",body:JSON.stringify(body)}).then(function(r){return r.json().then(function(j){return {ok:r.ok,j:j};});}).then(function(res){
       $("bk_save").disabled=false;
@@ -644,7 +663,7 @@
   function wireTips(){
     var grid=$("grid"),tip=$("bktip");
     function fill(b){var eq=(EQUIP.filter(function(x){return x.id===b.equip;})[0])||{};var ed=b.edate||b.date;
-      tip.innerHTML='<b>'+esc(eq.name||"")+'</b><div>'+esc(b.date+" "+mToHHMM(b.s)+" → "+ed+" "+mToHHMM(b.e))+'</div><div class="tdim">'+esc(b.name||"")+'</div>'+(b.note?'<div class="tnote">'+esc(b.note)+'</div>':'');}
+      tip.innerHTML='<b>'+esc(eq.name||"")+'</b><div>'+esc(b.date+" "+mToHHMM(b.s)+" → "+ed+" "+mToHHMM(b.e))+'</div><div class="tdim">'+esc(b.name||"")+'</div>'+(b.note?'<div class="tnote">'+esc(b.note)+'</div>':'')+(b.buddy?'<div class="tnote">🤝 Buddy: '+esc(b.buddy)+'</div>':'');}
     function pos(ev){var pad=14,w=tip.offsetWidth,h=tip.offsetHeight,x=ev.clientX+pad,y=ev.clientY+pad;if(x+w>window.innerWidth-8)x=ev.clientX-w-pad;if(y+h>window.innerHeight-8)y=ev.clientY-h-pad;tip.style.left=Math.max(x,6)+"px";tip.style.top=Math.max(y,6)+"px";}
     grid.addEventListener("mousemove",function(ev){
       var el=ev.target.closest&&ev.target.closest(".bk");
