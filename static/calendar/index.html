@@ -250,9 +250,8 @@
     <input type="text" id="bk_note" placeholder="e.g. C60/BCP evaporation, 3 samples">
     <div id="bk_buddyrow" hidden>
       <label>Buddy <span class="muted">— required for night work (21:00–07:00)</span></label>
-      <input type="text" id="bk_buddy" list="bk_memberlist" placeholder="who'll be in the lab or building with you">
-      <datalist id="bk_memberlist"></datalist>
-      <div class="buddyhint">Night work can't be done alone. Name one person who will be in the lab with you, or in the building and aware you're working, for the whole booking.</div>
+      <select id="bk_buddy"></select>
+      <div class="buddyhint">Night work can't be done alone. Choose a registered lab member who will be in the lab with you, or in the building and aware you're working, for the whole booking.</div>
     </div>
     <label>Booked by</label>
     <input type="text" id="bk_by" readonly>
@@ -291,6 +290,7 @@
   function isAdmin(){try{return !!(window.LENS&&LENS.isAdmin());}catch(e){return false;}}
   function myName(){try{var u=window.LENS&&LENS.user();return u?(u.name||u.username):"";}catch(e){return "";}}
   function myUser(){try{var u=window.LENS&&LENS.user();return u?u.username:"";}catch(e){return "";}}
+  function memberName(u){if(!u)return "";var m=USERS.filter(function(x){return x.username===u;})[0];return m?m.name:u;}
   function hdr(){return {"Content-Type":"application/json","X-LENS-Token":tok()};}
   function api(path,opts){opts=opts||{};opts.headers=hdr();return fetch(API_BASE+path,opts).then(function(r){if(r.status===401){try{LENS.logout();}catch(e){}throw new Error("unauthorized");}return r;});}
 
@@ -420,7 +420,7 @@
         var w=100/it._lanes,left=it._lane*w,mine=b.username&&b.username===myUser();
         var canEdit=isAdmin()||(b.username&&b.username===myUser());
         var rz=canEdit?((b.date===d?'<div class="rz rz-t"></div>':'')+(ed===d?'<div class="rz rz-b"></div>':'')):'';
-        h+='<div class="bk'+(mine?" mine":"")+(canEdit?" ed":"")+'" style="top:'+top+'px;height:'+hgt+'px;left:calc('+left+'% + 1px);width:calc('+w+'% - 2px);background:'+esc(eq.color)+'" data-bk="'+b.id+'">'+rz+'<b>'+esc(eq.name)+(multi?' ↕':'')+'</b>'+(b.note?'<div class="note">'+esc(b.note)+'</div>':'')+(b.buddy?'<div class="note">🤝 '+esc(b.buddy)+'</div>':'')+'<div class="who">'+mToHHMM(it.s)+'–'+mToHHMM(it.e)+' · '+esc(b.name||"")+'</div></div>';
+        h+='<div class="bk'+(mine?" mine":"")+(canEdit?" ed":"")+'" style="top:'+top+'px;height:'+hgt+'px;left:calc('+left+'% + 1px);width:calc('+w+'% - 2px);background:'+esc(eq.color)+'" data-bk="'+b.id+'">'+rz+'<b>'+esc(eq.name)+(multi?' ↕':'')+'</b>'+(b.note?'<div class="note">'+esc(b.note)+'</div>':'')+(b.buddy?'<div class="note">(🤝 '+esc(memberName(b.buddy))+')</div>':'')+'<div class="who">'+mToHHMM(it.s)+'–'+mToHHMM(it.e)+' · '+esc(b.name||"")+'</div></div>';
       });
       if(d===today){var nm=nowMinLab();h+='<div class="nowline" style="top:'+(nm/30*ROW)+'px"></div>';}
       h+='</div>';
@@ -481,8 +481,8 @@
           var segS=(b.date===d?b.s:0),segE=(ed===d?b.e:1440);
           var label=mToHHMM(segS)+"–"+mToHHMM(segE)+(multi?" ↕":""); // always show start–end (wraps to a second line if narrow)
           var note=b.note?(' <span class="en">· '+esc(b.note)+'</span>'):'';
-          var buddy=b.buddy?(' <span class="en">· 🤝 '+esc(b.buddy)+'</span>'):'';
-          h+='<div class="ebk'+(mine?" mine":"")+'" data-bk="'+b.id+'" title="'+esc(e.name+" · "+b.date+" "+mToHHMM(b.s)+" → "+ed+" "+mToHHMM(b.e)+" · "+(b.name||"")+(b.note?" · "+b.note:"")+(b.buddy?" · buddy: "+b.buddy:""))+'"><span class="et">'+label+'</span> '+esc(b.name||"")+note+buddy+'</div>';
+          var bud=memberName(b.buddy),buddy=bud?(' <span class="en">(🤝 '+esc(bud)+')</span>'):'';
+          h+='<div class="ebk'+(mine?" mine":"")+'" data-bk="'+b.id+'" title="'+esc(e.name+" · "+b.date+" "+mToHHMM(b.s)+" → "+ed+" "+mToHHMM(b.e)+" · "+(b.name||"")+(b.note?" · "+b.note:"")+(bud?" · buddy: "+bud:""))+'"><span class="et">'+label+'</span> '+esc(b.name||"")+note+buddy+'</div>';
         });
         if(canBook)h+='<div class="eadd" title="Tap to add a booking">+</div>'; // always-present blank tap area for a new booking
         h+='</div>';
@@ -547,8 +547,9 @@
     fillTimeSelect($("bk_s"),0,1410,s);
     fillTimeSelect($("bk_e"),0,1440,e);
     $("bk_note").value=b?(b.note||""):"";
+    var ownerU=b?b.username:myUser();
+    $("bk_buddy").innerHTML='<option value="">— choose a lab member —</option>'+USERS.filter(function(u){return u.username!==ownerU;}).map(function(u){return '<option value="'+esc(u.username)+'">'+esc(u.name)+'</option>';}).join("");
     $("bk_buddy").value=b?(b.buddy||""):"";
-    $("bk_memberlist").innerHTML=USERS.map(function(u){return '<option value="'+esc(u.name)+'">';}).join("");
     $("bk_by").value=b?(b.name||""):myName();
     $("bk_err").textContent="";
     $("bk_del").hidden=!(b&&(isAdmin()||b.username===myUser()));
@@ -663,7 +664,7 @@
   function wireTips(){
     var grid=$("grid"),tip=$("bktip");
     function fill(b){var eq=(EQUIP.filter(function(x){return x.id===b.equip;})[0])||{};var ed=b.edate||b.date;
-      tip.innerHTML='<b>'+esc(eq.name||"")+'</b><div>'+esc(b.date+" "+mToHHMM(b.s)+" → "+ed+" "+mToHHMM(b.e))+'</div><div class="tdim">'+esc(b.name||"")+'</div>'+(b.note?'<div class="tnote">'+esc(b.note)+'</div>':'')+(b.buddy?'<div class="tnote">🤝 Buddy: '+esc(b.buddy)+'</div>':'');}
+      tip.innerHTML='<b>'+esc(eq.name||"")+'</b><div>'+esc(b.date+" "+mToHHMM(b.s)+" → "+ed+" "+mToHHMM(b.e))+'</div><div class="tdim">'+esc(b.name||"")+'</div>'+(b.note?'<div class="tnote">'+esc(b.note)+'</div>':'')+(b.buddy?'<div class="tnote">🤝 Buddy: '+esc(memberName(b.buddy))+'</div>':'');}
     function pos(ev){var pad=14,w=tip.offsetWidth,h=tip.offsetHeight,x=ev.clientX+pad,y=ev.clientY+pad;if(x+w>window.innerWidth-8)x=ev.clientX-w-pad;if(y+h>window.innerHeight-8)y=ev.clientY-h-pad;tip.style.left=Math.max(x,6)+"px";tip.style.top=Math.max(y,6)+"px";}
     grid.addEventListener("mousemove",function(ev){
       var el=ev.target.closest&&ev.target.closest(".bk");
