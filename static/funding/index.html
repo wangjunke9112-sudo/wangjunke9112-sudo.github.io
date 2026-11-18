@@ -187,10 +187,10 @@
         <div><label for="e_cat">Category *</label><select id="e_cat"></select></div>
         <div><label for="e_date">Date</label><input type="date" id="e_date"></div>
         <div class="f-wide"><label for="e_item">Item 物品 *</label><input id="e_item" placeholder="e.g. PbI2 99.99%, 5 g"></div>
-        <div><label for="e_unit">Unit price 单价</label><input id="e_unit" type="number" step="0.01" min="0" inputmode="decimal" placeholder="0" oninput="calcTotal()"></div>
-        <div><label for="e_qty">Quantity 数量</label><input id="e_qty" type="number" step="1" min="0" inputmode="decimal" placeholder="1" oninput="calcTotal()"></div>
-        <div><label>Line total</label><input id="e_total" readonly></div>
-        <div><label for="e_invoice">Invoice no. 发票号</label><input id="e_invoice" placeholder="shared across items on one invoice"></div>
+        <div><label for="e_unit">Unit price 单价 <span class="muted" style="font-weight:400">— optional</span></label><input id="e_unit" type="number" step="any" min="0" inputmode="decimal" placeholder="per item" oninput="calcTotal()"></div>
+        <div><label for="e_qty">Quantity 数量 <span class="muted" style="font-weight:400">— optional</span></label><input id="e_qty" type="number" step="any" min="0" inputmode="decimal" placeholder="e.g. 2" oninput="calcTotal()"></div>
+        <div><label for="e_total">Amount 实付金额 * <span class="muted" style="font-weight:400">— actual ¥ paid</span></label><input id="e_total" type="number" step="any" min="0" inputmode="decimal" placeholder="total paid"></div>
+        <div><label for="e_invoice">Invoice no. 发票号 <span class="muted" style="font-weight:400">— can add later</span></label><input id="e_invoice" placeholder="leave blank, fill in later in bulk"></div>
         <div><label for="e_vendor">Vendor 供应商</label><input id="e_vendor" placeholder="supplier / shop"></div>
         <div class="chk"><input type="checkbox" id="e_online"><label for="e_online" style="margin:0">Online purchase 网购</label></div>
         <div class="f-wide"><label for="e_note">Note 备注</label><input id="e_note" placeholder="optional"></div>
@@ -205,6 +205,12 @@
         <select id="fl_year" onchange="renderTable()"></select>
         <select id="fl_cat" onchange="renderTable()"></select>
         <input id="fl_q" placeholder="search item / invoice / vendor" oninput="renderTable()">
+        <label style="display:flex;align-items:center;gap:6px;font-size:13px;color:var(--muted)"><input type="checkbox" id="fl_noinv" style="width:auto" onchange="renderTable()"> no invoice yet</label>
+      </div>
+      <div class="filters" style="margin-top:-4px">
+        <button onclick="bulkInvoice()">Set invoice no. for selected</button>
+        <button onclick="bulkInvoiceClear()">Clear invoice</button>
+        <span id="selcount" style="font-size:12.5px;color:var(--muted);align-self:center"></span>
       </div>
       <div style="overflow:auto"><table class="ftable" id="exptable"></table></div>
     </section>
@@ -361,21 +367,23 @@
     $("e_year").value=cy;
   }
   function todayStr(){var d=new Date(Date.now()+8*3600*1000);return d.toISOString().slice(0,10);}
-  function calcTotal(){var u=Number($("e_unit").value)||0,q=Number($("e_qty").value)||0;$("e_total").value=fmt(Math.round(u*q*100)/100,curOf($("e_grant").value));}
+  function calcTotal(){var u=Number($("e_unit").value)||0,q=Number($("e_qty").value)||0;if(u>0&&q>0)$("e_total").value=Math.round(u*q*100)/100;} // auto-fills the amount, but you can type the actual amount directly
   function resetExpense(){editId=null;$("exptitle").textContent="Add an expense";$("expedit").hidden=true;$("e_save").textContent="Add expense";$("e_cancel").hidden=true;
-    $("e_item").value="";$("e_unit").value="";$("e_qty").value="";$("e_total").value="";$("e_note").value="";$("e_err").textContent="";calcTotal();}
+    $("e_item").value="";$("e_unit").value="";$("e_qty").value="";$("e_total").value="";$("e_note").value="";$("e_err").textContent="";}
   function editExpense(id){var e=null;FUND.expenses.forEach(function(x){if(x.id===id)e=x;});if(!e)return;editId=id;
     $("exptitle").textContent="Edit expense";$("expedit").hidden=false;$("e_save").textContent="Save changes";$("e_cancel").hidden=false;
     $("e_grant").value=e.grant_id;onGrantPick();$("e_year").value=e.year;$("e_cat").value=e.category;$("e_date").value=e.date||"";
-    $("e_item").value=e.item||"";$("e_unit").value=e.unit_price||"";$("e_qty").value=e.qty||"";$("e_invoice").value=e.invoice||"";
-    $("e_vendor").value=e.vendor||"";$("e_online").checked=!!e.online;$("e_note").value=e.note||"";calcTotal();
+    $("e_item").value=e.item||"";$("e_unit").value=e.unit_price||"";$("e_qty").value=e.qty||"";$("e_total").value=(e.amount||e.amount===0)?e.amount:"";$("e_invoice").value=e.invoice||"";
+    $("e_vendor").value=e.vendor||"";$("e_online").checked=!!e.online;$("e_note").value=e.note||"";
     try{$("exptitle").scrollIntoView({behavior:"smooth",block:"center"});}catch(_){}}
   function saveExpense(){
+    var amt=Number($("e_total").value)||0;
     var body={id:editId||undefined,grant_id:$("e_grant").value,year:parseInt($("e_year").value,10),category:$("e_cat").value,
-      date:$("e_date").value,item:$("e_item").value.trim(),unit_price:Number($("e_unit").value)||0,qty:Number($("e_qty").value)||0,
+      date:$("e_date").value,item:$("e_item").value.trim(),unit_price:Number($("e_unit").value)||0,qty:Number($("e_qty").value)||0,amount:amt,
       invoice:$("e_invoice").value.trim(),vendor:$("e_vendor").value.trim(),online:$("e_online").checked?1:0,note:$("e_note").value.trim()};
     if(!body.grant_id){$("e_err").textContent="Pick a grant.";return;}
     if(!body.item){$("e_err").textContent="Enter the item name.";return;}
+    if(!(amt>0)){$("e_err").textContent="Enter the amount paid (¥).";return;}
     $("e_err").textContent="Saving…";
     cloudFetch("/api/expense",{method:"POST",body:JSON.stringify(body)}).then(function(r){if(r.status===401){onUnauthorized();return null;}return r.json();}).then(function(j){
       if(j&&j.ok){var keepG=body.grant_id,keepY=body.year,keepC=body.category,keepInv=body.invoice,keepV=body.vendor,wasEdit=!!editId;resetExpense();
@@ -395,29 +403,38 @@
     var keepC=$("fl_cat").value;$("fl_cat").innerHTML='<option value="">All categories</option>'+CATS.map(function(c){return '<option value="'+c+'">'+esc(CATLAB[c])+'</option>';}).join("");if(keepC)$("fl_cat").value=keepC;
   }
   function filteredExpenses(){
-    var fg=$("fl_grant").value,fy=$("fl_year").value,fc=$("fl_cat").value,q=($("fl_q").value||"").trim().toLowerCase();
+    var fg=$("fl_grant").value,fy=$("fl_year").value,fc=$("fl_cat").value,q=($("fl_q").value||"").trim().toLowerCase(),noinv=$("fl_noinv")&&$("fl_noinv").checked;
     return FUND.expenses.filter(function(e){
       if(fg&&e.grant_id!==fg)return false;if(fy&&e.year!=fy)return false;if(fc&&e.category!==fc)return false;
+      if(noinv&&(e.invoice||"").trim())return false;
       if(q){var hay=((e.item||"")+" "+(e.invoice||"")+" "+(e.vendor||"")+" "+(e.note||"")).toLowerCase();if(hay.indexOf(q)<0)return false;}
       return true;});
   }
   function renderTable(){
-    var rows=filteredExpenses(),canEdit=true;
-    var h='<tr><th>Date</th><th>Grant</th><th>Year</th><th>Category</th><th>Item</th><th class="num">Unit</th><th class="num">Qty</th><th class="num">Amount</th><th>Invoice</th><th>Vendor</th><th>By</th><th></th></tr>';
-    if(!rows.length){$("exptable").innerHTML=h+'<tr><td colspan="12" class="empty">No expenses'+(FUND.expenses.length?' match the filters.':' yet — add the first one above.')+'</td></tr>';return;}
+    var rows=filteredExpenses();
+    var h='<tr><th style="width:26px"><input type="checkbox" id="xall" style="width:auto" onclick="toggleAllSel(this)"></th><th>Date</th><th>Grant</th><th>Year</th><th>Category</th><th>Item</th><th class="num">Unit</th><th class="num">Qty</th><th class="num">Amount</th><th>Invoice</th><th>Vendor</th><th>By</th><th></th></tr>';
+    if(!rows.length){$("exptable").innerHTML=h+'<tr><td colspan="13" class="empty">No expenses'+(FUND.expenses.length?' match the filters.':' yet — add the first one above.')+'</td></tr>';updateSelCount();return;}
     var tot=0;
     rows.forEach(function(e){tot+=Number(e.amount)||0;var cur=curOf(e.grant_id);var g=grantById(e.grant_id);
-      h+='<tr><td>'+esc(e.date||"")+'</td><td>'+esc(g?g.name:"?")+'</td><td>'+esc(String(e.year||""))+'</td>'
+      h+='<tr><td><input type="checkbox" class="xsel" style="width:auto" data-id="'+e.id+'" onclick="updateSelCount()"></td>'
+        +'<td>'+esc(e.date||"")+'</td><td>'+esc(g?g.name:"?")+'</td><td>'+esc(String(e.year||""))+'</td>'
         +'<td>'+esc((CATLAB[e.category]||e.category||"").split(" ")[0])+'</td>'
         +'<td>'+esc(e.item||"")+(e.online?' <span class="tag online">online</span>':'')+(e.note?'<br><span style="color:var(--muted);font-size:11.5px">'+esc(e.note)+'</span>':'')+'</td>'
-        +'<td class="num">'+esc(fmt(e.unit_price,cur))+'</td><td class="num">'+esc(String(e.qty||""))+'</td>'
-        +'<td class="num">'+esc(fmt(e.amount,cur))+'</td>'
-        +'<td>'+esc(e.invoice||"")+'</td><td>'+esc(e.vendor||"")+'</td><td>'+esc(nameOf(e.username))+'</td>'
-        +'<td class="act">'+(canEdit?'<a onclick="editExpense(\''+e.id+'\')">edit</a><a class="del" onclick="delExpense(\''+e.id+'\')">del</a>':'')+'</td></tr>';
+        +'<td class="num">'+(e.unit_price?esc(fmt(e.unit_price,cur)):'<span style="color:var(--muted)">—</span>')+'</td><td class="num">'+esc(String(e.qty||""))+'</td>'
+        +'<td class="num" style="font-weight:600">'+esc(fmt(e.amount,cur))+'</td>'
+        +'<td>'+(e.invoice?esc(e.invoice):'<span style="color:var(--warn)">— none —</span>')+'</td><td>'+esc(e.vendor||"")+'</td><td>'+esc(nameOf(e.username))+'</td>'
+        +'<td class="act"><a onclick="editExpense(\''+e.id+'\')">edit</a><a class="del" onclick="delExpense(\''+e.id+'\')">del</a></td></tr>';
     });
-    h+='<tr><td colspan="7" style="text-align:right;font-weight:600">Total ('+rows.length+')</td><td class="num" style="font-weight:700">'+esc(fmt(tot,"¥"))+'</td><td colspan="4"></td></tr>';
-    $("exptable").innerHTML=h;
+    h+='<tr><td colspan="8" style="text-align:right;font-weight:600">Total ('+rows.length+')</td><td class="num" style="font-weight:700">'+esc(fmt(tot,"¥"))+'</td><td colspan="4"></td></tr>';
+    $("exptable").innerHTML=h;updateSelCount();
   }
+  function toggleAllSel(cb){[].forEach.call($("exptable").querySelectorAll(".xsel"),function(x){x.checked=cb.checked;});updateSelCount();}
+  function selectedIds(){var a=[];[].forEach.call($("exptable").querySelectorAll(".xsel:checked"),function(x){a.push(x.getAttribute("data-id"));});return a;}
+  function updateSelCount(){var n=selectedIds().length;$("selcount").textContent=n?(n+" selected"):"";}
+  function bulkInvoice(){var ids=selectedIds();if(!ids.length){tool("Tick some rows first.");return;}var inv=window.prompt("Invoice number to set on the "+ids.length+" selected item(s):","");if(inv==null)return;inv=inv.trim();if(!inv){tool("No invoice number entered.");return;}
+    cloudFetch("/api/expense-invoice",{method:"POST",body:JSON.stringify({ids:ids,invoice:inv})}).then(function(r){if(r.status===401){onUnauthorized();return null;}return r.json();}).then(function(j){if(j&&j.ok){loadFunding();tool("Invoice set on "+ids.length+" item(s).");}else{tool((j&&j.error)||"Could not update.");}}).catch(function(){tool("Could not reach the server.");});}
+  function bulkInvoiceClear(){var ids=selectedIds();if(!ids.length){tool("Tick some rows first.");return;}if(!confirm("Clear the invoice number on "+ids.length+" selected item(s)?"))return;
+    cloudFetch("/api/expense-invoice",{method:"POST",body:JSON.stringify({ids:ids,invoice:""})}).then(function(r){return r.json();}).then(function(){loadFunding();tool("Cleared.");}).catch(function(){tool("Could not reach the server.");});}
   function nameOf(u){var m=FUND.members.filter(function(x){return x.username===u;})[0];return m?m.name:(u||"");}
 
   function exportCSV(){
