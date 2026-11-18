@@ -1,0 +1,509 @@
+<title>LENS Funding</title>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%20512%20512%22%3E%3Crect%20width%3D%22512%22%20height%3D%22512%22%20rx%3D%2296%22%20fill%3D%22%23003A68%22/%3E%3Ctext%20x%3D%22256%22%20y%3D%22372%22%20font-family%3D%22Arial%2CHelvetica%2Csans-serif%22%20font-size%3D%22330%22%20font-weight%3D%22800%22%20text-anchor%3D%22middle%22%20fill%3D%22%23ffffff%22%3EW%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+  :root{
+    --hero-bg:#0A1B3C; --hero-fg:#F3F7FD; --hero-dim:#9DB1D6; --hero-accent:#3DD0E6; --hero-gold:#E7BB6A;
+    --bg:#F7F9FB; --surface:#FFFFFF; --surface-2:#EEF2F6; --fg:#1A2433; --muted:#5B6676;
+    --border:#E2E8F0; --accent:#174C77; --accent-soft:#E6EEF5;
+    --danger:#C0392B; --danger-soft:#FBEBE8; --ok:#1C7A4D; --ok-soft:#E2F3EA; --warn:#8A5E12; --warn-soft:#FBF0DB;
+    --font-d:"Archivo","Segoe UI",sans-serif; --font-b:"IBM Plex Sans","Segoe UI",sans-serif; --font-m:"IBM Plex Mono",ui-monospace,monospace;
+    --radius:12px;
+  }
+  @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+    --bg:#0C141E; --surface:#141E2B; --surface-2:#0F1823; --fg:#E7ECF4; --muted:#93A0B5;
+    --border:#243141; --accent:#5B9BD5; --accent-soft:#12293B;
+    --danger:#E8766A; --danger-soft:#2A1512; --ok:#4FBF8A; --ok-soft:#10271D; --warn:#E0B55F; --warn-soft:#2A2314; color-scheme:dark;
+  }}
+  :root[data-theme="dark"]{
+    --bg:#0C141E; --surface:#141E2B; --surface-2:#0F1823; --fg:#E7ECF4; --muted:#93A0B5;
+    --border:#243141; --accent:#5B9BD5; --accent-soft:#12293B;
+    --danger:#E8766A; --danger-soft:#2A1512; --ok:#4FBF8A; --ok-soft:#10271D; --warn:#E0B55F; --warn-soft:#2A2314; color-scheme:dark;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--font-b);line-height:1.55;-webkit-font-smoothing:antialiased;font-size:15px}
+  .wrap{max-width:1340px;margin:0 auto;padding-left:max(18px,env(safe-area-inset-left,0px));padding-right:max(18px,env(safe-area-inset-right,0px))}
+  h1,h2,h3{font-family:var(--font-d);font-weight:600}
+  input,select,button,textarea{font-family:inherit;font-size:14px;color:var(--fg)}
+  input,select,textarea{width:100%;background:var(--surface);border:1px solid var(--border);border-radius:9px;padding:8px 10px}
+  input:focus,select:focus,textarea:focus{outline:2px solid var(--accent);outline-offset:0;border-color:var(--accent)}
+  label{display:block;font-size:12px;color:var(--muted);margin-bottom:4px}
+  button{cursor:pointer;background:var(--surface);border:1px solid var(--border);border-radius:9px;padding:8px 14px}
+  button:hover{border-color:var(--accent)}
+  .btn-primary{background:var(--accent);color:#fff;border-color:var(--accent);font-weight:600}
+  .btn-primary:hover{filter:brightness(1.07)}
+  .del{color:var(--danger);border-color:var(--danger-soft)}
+  .del:hover{border-color:var(--danger)}
+  a{color:var(--accent)}
+
+  header.hero{background:var(--hero-bg);color:var(--hero-fg)}
+  header.hero .wrap{padding-block:16px 18px}
+  .topbar{display:flex;justify-content:space-between;align-items:center;gap:12px 20px;flex-wrap:wrap;margin-bottom:12px}
+  .lockup{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+  .lockup b{font-family:var(--font-d);font-weight:700;letter-spacing:.14em;font-size:19px;color:var(--hero-fg)}
+  .lockup span{font-family:var(--font-m);font-size:11.5px;color:var(--hero-dim)}
+  .htools{display:flex;align-items:center;gap:8px 16px;flex-wrap:wrap}
+  .hnav{display:flex;gap:16px;flex-wrap:wrap;min-width:0}
+  .hnav a{color:var(--hero-dim);text-decoration:none;font-size:13px;display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
+  .hnav a:hover{color:var(--hero-accent)}
+  .hnav svg{width:14px;height:14px}
+  .tgl{background:transparent;border:1px solid rgba(157,177,214,.35);color:var(--hero-dim);border-radius:9px;width:34px;height:34px;padding:0;line-height:0;display:grid;place-items:center;cursor:pointer;flex:none}
+  .tgl:hover{border-color:var(--hero-accent);color:var(--hero-accent)}
+  .eyebrow{font-family:var(--font-m);font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--hero-accent);margin:0}
+  .htitle{font-family:var(--font-d);font-weight:700;font-size:clamp(23px,3.4vw,32px);line-height:1.04;margin:4px 0 0;letter-spacing:-.015em}
+  @media(max-width:640px){header.hero .wrap{padding-block:13px 14px}.lockup span{display:none}.hnav{gap:12px 14px}.hnav a{font-size:12px}}
+  .intern{display:inline-flex;align-items:center;gap:7px;margin-top:10px;font-family:var(--font-m);font-size:11px;letter-spacing:.06em;color:var(--hero-dim);border:1px solid rgba(157,177,214,.3);border-radius:20px;padding:4px 12px;cursor:default}
+  .intern i{width:6px;height:6px;border-radius:50%;background:var(--hero-gold);display:inline-block}
+  .intern[data-s="ok"] i{background:#4FBF8A}.intern[data-s="err"] i{background:#E8766A}.intern[data-s="warn"] i{background:#E7BB6A}
+
+  .loginwrap{position:fixed;inset:0;z-index:1000;background:var(--hero-bg);display:flex;align-items:center;justify-content:center;padding:20px}
+  .loginwrap[hidden]{display:none}
+  .loginbox{width:100%;max-width:360px;background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:26px 24px;box-shadow:0 18px 50px rgba(0,0,0,.35)}
+  .loginbrand{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin-bottom:4px}
+  .loginbrand b{font-family:var(--font-d);font-weight:700;letter-spacing:.14em;font-size:20px;color:var(--fg)}
+  .loginbrand span{font-family:var(--font-m);font-size:11.5px;color:var(--muted)}
+  .loginsub{margin:0 0 16px;color:var(--muted);font-size:13.5px}
+  .loginbox label{display:block;font-size:12px;color:var(--muted);margin:10px 0 4px}
+  .loginbox .btn-primary{width:100%;margin-top:16px;padding:10px}
+  .lg_err{color:var(--danger);font-size:13px;min-height:1.2em;margin-top:8px}
+  .loginnote{margin:14px 0 0;font-size:12px;color:var(--muted)}
+
+  main .wrap{padding-block:20px 48px}
+  .noaccess{text-align:center;padding:64px 20px;color:var(--muted)}
+  .noaccess b{display:block;font-family:var(--font-d);font-size:20px;color:var(--fg);margin-bottom:8px}
+  .panel{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:18px;margin-bottom:20px}
+  .panel h2{margin:0 0 14px;font-size:16px;display:flex;align-items:center;gap:10px}
+  .editflag{font-family:var(--font-m);font-size:11px;color:var(--accent)}
+  .formgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}
+  .f-wide{grid-column:1/-1}
+  .mbtns{display:flex;gap:8px;align-items:center;margin-top:14px;flex-wrap:wrap}
+  .mbtns .msg{font-size:13px;color:var(--muted)}
+  .chk{display:flex;align-items:center;gap:7px;margin-top:22px}
+  .chk input{width:auto}
+
+  .grantbar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+  .gchip{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:6px 14px;font-size:13.5px;cursor:pointer;white-space:nowrap}
+  .gchip:hover{border-color:var(--accent)}
+  .gchip.on{background:var(--accent);color:#fff;border-color:var(--accent);font-weight:600}
+
+  .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-bottom:18px}
+  .stat{background:var(--surface-2);border-radius:10px;padding:12px 14px}
+  .stat .n{font-family:var(--font-d);font-size:21px;font-weight:600;font-variant-numeric:tabular-nums}
+  .stat .l{font-size:11.5px;color:var(--muted);font-family:var(--font-m);letter-spacing:.03em}
+  .stat.neg .n{color:var(--danger)}
+
+  table.mx{width:100%;border-collapse:collapse;font-size:13px}
+  table.mx th,table.mx td{border:1px solid var(--border);padding:7px 9px;text-align:right;font-variant-numeric:tabular-nums}
+  table.mx th{font-family:var(--font-m);font-size:10.5px;letter-spacing:.03em;color:var(--muted);text-transform:uppercase;font-weight:500;background:var(--surface-2)}
+  table.mx th.rowh,table.mx td.rowh{text-align:left;font-family:var(--font-b);font-weight:600;text-transform:none;font-size:13px;color:var(--fg)}
+  table.mx td .sp{font-weight:600}
+  table.mx td .bd{color:var(--muted);font-size:11px;display:block;font-family:var(--font-m)}
+  table.mx td.over{background:var(--danger-soft)}
+  table.mx tr.totrow td,table.mx td.totcol{background:var(--surface-2);font-weight:700}
+
+  .filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+  .filters select,.filters input{width:auto;min-width:120px;flex:0 1 auto}
+  .ftable{width:100%;border-collapse:collapse;font-size:13px}
+  .ftable th,.ftable td{padding:7px 8px;border-bottom:1px solid var(--border);text-align:left;vertical-align:top}
+  .ftable th{font-family:var(--font-m);font-size:10.5px;letter-spacing:.03em;color:var(--muted);text-transform:uppercase;font-weight:500;white-space:nowrap}
+  .ftable td.num,.ftable th.num{text-align:right;font-variant-numeric:tabular-nums;font-family:var(--font-m);white-space:nowrap}
+  .ftable tr:hover td{background:var(--surface-2)}
+  .ftable .act a{cursor:pointer;color:var(--accent);text-decoration:underline;font-size:12px;margin-right:8px}
+  .ftable .act a.del{color:var(--danger)}
+  .tag{display:inline-block;font-family:var(--font-m);font-size:10px;padding:1px 6px;border-radius:5px;background:var(--surface-2);border:1px solid var(--border);color:var(--muted)}
+  .online{background:var(--accent-soft);color:var(--accent);border-color:var(--accent-soft)}
+  .empty{color:var(--muted);text-align:center;padding:22px;font-size:13.5px}
+
+  .grow{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border);flex-wrap:wrap}
+  .grow .gn{font-weight:600;flex:1;min-width:120px}
+  .grow .gm{font-size:12px;color:var(--muted);font-family:var(--font-m)}
+  .grow a{cursor:pointer;color:var(--accent);text-decoration:underline;font-size:12.5px}
+  .grow a.del{color:var(--danger)}
+  .bgrid{width:100%;border-collapse:collapse;font-size:13px;margin-top:8px}
+  .bgrid th,.bgrid td{border:1px solid var(--border);padding:5px 7px;text-align:center}
+  .bgrid th{font-family:var(--font-m);font-size:10.5px;color:var(--muted);text-transform:uppercase;background:var(--surface-2)}
+  .bgrid input{width:94px;text-align:right;padding:5px 7px;font-family:var(--font-m)}
+  .bgrid td.rowh{font-weight:600}
+  .edlist{display:flex;flex-wrap:wrap;gap:8px}
+  .edchip{display:inline-flex;align-items:center;gap:7px;background:var(--surface-2);border:1px solid var(--border);border-radius:16px;padding:5px 12px;font-size:13px;cursor:pointer}
+  .edchip.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+  .toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(16px);background:#1A2433;color:#fff;padding:10px 18px;border-radius:10px;font-size:13.5px;opacity:0;pointer-events:none;transition:.25s;z-index:1500;max-width:90vw;text-align:center}
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+</style>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="topbar">
+      <div class="lockup"><b>LENS</b><span>Light–Energy Nanomaterials &amp; Semiconductors</span></div>
+      <div class="htools">
+        <nav class="hnav">
+          <a href="https://lens-laboratory.com/hub/" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="3.5" width="7" height="7" rx="1.5"/><rect x="13.5" y="3.5" width="7" height="7" rx="1.5"/><rect x="3.5" y="13.5" width="7" height="7" rx="1.5"/><rect x="13.5" y="13.5" width="7" height="7" rx="1.5"/></svg>Group hub</a>
+          <a href="https://lens-laboratory.com/inventory/" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3h6M10 3v6.5L5.5 18a2 2 0 0 0 1.8 3h9.4a2 2 0 0 0 1.8-3L14 9.5V3"/><path d="M7.7 15h8.6"/></svg>Chemical inventory</a>
+          <a href="https://lens-laboratory.com/calendar/" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="5" width="17" height="15.5" rx="2"/><path d="M3.5 9.5h17M8 3.5v3M16 3.5v3"/></svg>Equipment booking</a>
+          <a href="https://lens-laboratory.com/group-lit-feed/" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="5" cy="19" r="1.6"/><path d="M4 11a9 9 0 0 1 9 9M4 5a15 15 0 0 1 15 15"/></svg>Literature feed</a>
+          <a href="https://lens-laboratory.com" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a15 15 0 0 1 0 18M12 3a15 15 0 0 0 0 18"/></svg>Group website</a>
+        </nav>
+        <button class="tgl" id="tgl" aria-label="Toggle theme" title="Toggle theme"></button>
+      </div>
+    </div>
+    <p class="eyebrow">South China University of Technology</p>
+    <h1 class="htitle">Funding tracker</h1>
+    <span class="intern" id="cloudtag"><i></i>Connecting…</span>
+  </div>
+</header>
+
+<div class="loginwrap" id="loginwrap" hidden>
+  <div class="loginbox">
+    <div class="loginbrand"><b>LENS</b><span>Lab</span></div>
+    <p class="loginsub">Sign in with your lab account</p>
+    <label for="lg_user">Username</label>
+    <input id="lg_user" autocomplete="username" autocapitalize="off" spellcheck="false" onkeydown="if(event.key==='Enter')document.getElementById('lg_pw').focus()">
+    <label for="lg_pw">Password</label>
+    <input id="lg_pw" type="password" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()">
+    <button class="btn-primary" id="lg_go" onclick="doLogin()">Sign in</button>
+    <div class="lg_err" id="lg_err"></div>
+    <p class="loginnote">Don't have an account? Ask the group admin to create one for you.</p>
+  </div>
+</div>
+
+<main><div class="wrap">
+  <div class="noaccess" id="noaccess" hidden><b>No access to funding</b>This page is limited to the PI and assigned funding editors. Ask Junke to add you.</div>
+
+  <div id="app" hidden>
+    <div class="grantbar" id="grantbar"></div>
+    <div class="stats" id="ov"></div>
+
+    <section class="panel">
+      <h2>Budget vs. spending — <span id="mxgrant" style="font-weight:400;color:var(--muted)"></span></h2>
+      <div style="overflow:auto"><div id="matrix"></div></div>
+    </section>
+
+    <section class="panel">
+      <h2><span id="exptitle">Add an expense</span><span class="editflag" id="expedit" hidden>— editing</span></h2>
+      <div class="formgrid">
+        <div><label for="e_grant">Grant *</label><select id="e_grant" onchange="onGrantPick()"></select></div>
+        <div><label for="e_year">Budget year *</label><select id="e_year"></select></div>
+        <div><label for="e_cat">Category *</label><select id="e_cat"></select></div>
+        <div><label for="e_date">Date</label><input type="date" id="e_date"></div>
+        <div class="f-wide"><label for="e_item">Item 物品 *</label><input id="e_item" placeholder="e.g. PbI2 99.99%, 5 g"></div>
+        <div><label for="e_unit">Unit price 单价</label><input id="e_unit" type="number" step="0.01" min="0" inputmode="decimal" placeholder="0" oninput="calcTotal()"></div>
+        <div><label for="e_qty">Quantity 数量</label><input id="e_qty" type="number" step="1" min="0" inputmode="decimal" placeholder="1" oninput="calcTotal()"></div>
+        <div><label>Line total</label><input id="e_total" readonly></div>
+        <div><label for="e_invoice">Invoice no. 发票号</label><input id="e_invoice" placeholder="shared across items on one invoice"></div>
+        <div><label for="e_vendor">Vendor 供应商</label><input id="e_vendor" placeholder="supplier / shop"></div>
+        <div class="chk"><input type="checkbox" id="e_online"><label for="e_online" style="margin:0">Online purchase 网购</label></div>
+        <div class="f-wide"><label for="e_note">Note 备注</label><input id="e_note" placeholder="optional"></div>
+      </div>
+      <div class="mbtns"><button class="btn-primary" id="e_save" onclick="saveExpense()">Add expense</button><button id="e_cancel" onclick="resetExpense()" hidden>Cancel edit</button><span class="msg" id="e_err"></span></div>
+    </section>
+
+    <section class="panel">
+      <h2>Expenses<span style="margin-left:auto;font-weight:400;font-size:13px"><button onclick="exportCSV()">Export CSV</button></span></h2>
+      <div class="filters">
+        <select id="fl_grant" onchange="renderTable()"></select>
+        <select id="fl_year" onchange="renderTable()"></select>
+        <select id="fl_cat" onchange="renderTable()"></select>
+        <input id="fl_q" placeholder="search item / invoice / vendor" oninput="renderTable()">
+      </div>
+      <div style="overflow:auto"><table class="ftable" id="exptable"></table></div>
+    </section>
+
+    <section class="panel" id="grantadmin" hidden>
+      <h2>Grants &amp; budgets <span style="font-weight:400;font-size:12px;color:var(--muted)">— admin</span></h2>
+      <div id="grantlist"></div>
+      <div class="formgrid" style="margin-top:14px">
+        <div class="f-wide"><label for="g_name">New grant name *</label><input id="g_name" placeholder="e.g. 海外优青启动经费 / NSFC General"></div>
+        <div><label for="g_agency">Agency / number</label><input id="g_agency" placeholder="optional"></div>
+        <div><label for="g_cur">Currency</label><input id="g_cur" value="¥" maxlength="4"></div>
+        <div style="display:flex;align-items:flex-end"><button class="btn-primary" onclick="addGrant()" style="width:100%">Add grant</button></div>
+      </div>
+      <div id="g_err" class="msg" style="font-size:13px;color:var(--muted);margin-top:8px"></div>
+      <div id="budgetedit" hidden style="margin-top:18px;border-top:1px solid var(--border);padding-top:16px"></div>
+    </section>
+
+    <section class="panel" id="editadmin" hidden>
+      <h2>Funding editors <span style="font-weight:400;font-size:12px;color:var(--muted)">— admin</span></h2>
+      <p style="margin:0 0 10px;font-size:13px;color:var(--muted)">Tap a member to let them record expenses. You (admins) always have full access.</p>
+      <div class="edlist" id="edlist"></div>
+      <div class="mbtns"><button class="btn-primary" onclick="saveEditors()">Save editors</button><span class="msg" id="ed_msg"></span></div>
+    </section>
+  </div>
+</div></main>
+
+<div class="toast" id="toast"></div>
+
+<script>
+  var CATS=["materials","equipment","conference","staff","invitation"];
+  var CATLAB={materials:"Materials 材料费",equipment:"Equipment 设备费",conference:"Conference / travel 会议差旅",staff:"Staff 劳务费",invitation:"Invitation 招待费"};
+  function $(id){return document.getElementById(id);}
+  function esc(s){return (s==null?"":String(s)).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];});}
+  var LS=(function(){try{return window.localStorage;}catch(e){return {getItem:function(){return null;},setItem:function(){},removeItem:function(){}};}})();
+  function tool(m){var t=$("toast");if(!t)return;t.textContent=m||"";if(m){t.classList.add("show");clearTimeout(tool._t);tool._t=setTimeout(function(){t.classList.remove("show");},2800);}}
+
+  /* ===================== auth (shared sign-in with the other LENS pages) ===================== */
+  var API_BASES=["https://api.lens-laboratory.com","https://lens-inventory-api.lens-laboratory.workers.dev"];
+  var API_BASE=(function(){try{return LS.getItem("lens_apibase")||API_BASES[0];}catch(e){return API_BASES[0];}})();
+  function probeBase(base){return new Promise(function(res){var ctl=(typeof AbortController!=="undefined")?new AbortController():null;var t=setTimeout(function(){if(ctl)try{ctl.abort();}catch(e){}res(false);},3500);fetch(base+"/api/version",ctl?{method:"GET",signal:ctl.signal}:{method:"GET"}).then(function(){clearTimeout(t);res(true);}).catch(function(){clearTimeout(t);res(false);});});}
+  function pickApiBase(cb){(function go(i){if(i>=API_BASES.length){if(cb)cb();return;}probeBase(API_BASES[i]).then(function(ok){if(ok){API_BASE=API_BASES[i];try{LS.setItem("lens_apibase",API_BASE);}catch(e){}if(cb)cb();}else go(i+1);});})(0);}
+  var CUR=null;
+  function apiToken(){try{return LS.getItem("lens_token")||"";}catch(e){return "";}}
+  function setApiToken(t){try{if(t)LS.setItem("lens_token",t);else LS.removeItem("lens_token");}catch(e){}}
+  function loadUser(){try{CUR=JSON.parse(LS.getItem("lens_user")||"null");}catch(e){CUR=null;}}
+  function saveUser(u){CUR=u;try{if(u)LS.setItem("lens_user",JSON.stringify(u));else LS.removeItem("lens_user");}catch(e){}}
+  function curName(){return CUR&&CUR.name?CUR.name:"";}
+  function isAdmin(){return !!(CUR&&CUR.role==="admin");}
+  function cloudHeaders(){return {"Content-Type":"application/json","X-LENS-Token":apiToken()};}
+  function cloudFetch(path,opts){opts=opts||{};opts.headers=cloudHeaders();return fetch(API_BASE+path,opts);}
+  function onUnauthorized(){setApiToken("");saveUser(null);showLogin();setChip();}
+  function setChip(state){var t=$("cloudtag");if(!t)return;var nm=curName(),label,cls;
+    if(!apiToken()){label="Not signed in";cls="warn";}
+    else if(state==="err"){label=nm+" · server error";cls="err";}
+    else if(state===false){label=nm+" · offline";cls="err";}
+    else{label=nm+" · synced";cls="ok";}
+    var lnk='color:inherit;opacity:.85;text-decoration:underline';
+    t.innerHTML='<i></i>'+esc(label)+(apiToken()?(' · <a href="#" onclick="changePw();return false;" style="'+lnk+'">password</a> · <a href="#" onclick="logout();return false;" style="'+lnk+'">sign out</a>'):'');
+    t.setAttribute("data-s",cls);}
+  function showLogin(){var o=$("loginwrap");if(!o)return;o.hidden=false;o.style.display="flex";$("lg_err").textContent="";var f=$("lg_user");if(f)try{f.focus();}catch(e){}}
+  function hideLogin(){var o=$("loginwrap");if(o){o.hidden=true;o.style.display="none";}}
+  function doLogin(){var u=($("lg_user").value||"").trim(),pw=$("lg_pw").value||"";if(!u||!pw){$("lg_err").textContent="Enter your username and password.";return;}$("lg_err").textContent="Signing in…";$("lg_go").disabled=true;
+    fetch(API_BASE+"/api/login",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({username:u,password:pw})}).then(function(r){return r.json().then(function(j){return{ok:r.ok,j:j};});}).then(function(res){$("lg_go").disabled=false;if(!res.ok){$("lg_err").textContent=(res.j&&res.j.error)||"Sign-in failed.";return;}setApiToken(res.j.token);saveUser({username:res.j.username,name:res.j.name,role:res.j.role});$("lg_pw").value="";$("lg_err").textContent="";start();}).catch(function(){$("lg_go").disabled=false;pickApiBase(function(){});$("lg_err").textContent="Network hiccup — tap Sign in again.";});}
+  function logout(){setApiToken("");saveUser(null);if(_poll)clearInterval(_poll);showLogin();setChip();}
+  function changePw(){var pw=window.prompt("Set a new password for your account ("+curName()+"):\n(at least 8 characters)","");if(pw==null)return;pw=pw.trim();if(pw.length<8){alert("Password NOT changed — it must be at least 8 characters.");return;}cloudFetch("/api/mypassword",{method:"POST",body:JSON.stringify({password:pw})}).then(function(r){if(r.status===401){onUnauthorized();return null;}return r.json();}).then(function(j){if(j&&j.ok)alert("Password changed — use it next time you sign in.");else if(j)alert("Password NOT changed: "+(j.error||"could not change."));}).catch(function(){alert("Could not reach the server.");});}
+
+  /* ===================== funding state + loading ===================== */
+  var FUND={grants:[],budgets:[],expenses:[],isAdmin:false,editors:[],members:[],me:"",version:-1};
+  var selGrant="", editId=null, _poll=null;
+  function fmt(n,cur){cur=cur||"¥";n=Math.round((Number(n)||0)*100)/100;return cur+n.toLocaleString(undefined,{maximumFractionDigits:2});}
+  function grantById(id){for(var i=0;i<FUND.grants.length;i++)if(FUND.grants[i].id===id)return FUND.grants[i];return null;}
+  function curOf(id){var g=grantById(id);return g?(g.currency||"¥"):"¥";}
+  function yearsOf(gid){var s={};FUND.budgets.forEach(function(b){if(b.grant_id===gid)s[b.year]=1;});FUND.expenses.forEach(function(e){if(e.grant_id===gid)s[e.year]=1;});var ys=Object.keys(s).map(Number).sort(function(a,b){return a-b;});return ys;}
+  function budgetCell(gid,yr,cat){var t=0;FUND.budgets.forEach(function(b){if(b.grant_id===gid&&b.year==yr&&b.category===cat)t+=Number(b.amount)||0;});return t;}
+  function spentCell(gid,yr,cat){var t=0;FUND.expenses.forEach(function(e){if(e.grant_id===gid&&e.year==yr&&e.category===cat)t+=Number(e.amount)||0;});return t;}
+  function grantTotals(gid){var bud=0,sp=0;FUND.budgets.forEach(function(b){if(b.grant_id===gid)bud+=Number(b.amount)||0;});FUND.expenses.forEach(function(e){if(e.grant_id===gid)sp+=Number(e.amount)||0;});return {bud:bud,sp:sp};}
+
+  function loadFunding(cb){
+    cloudFetch("/api/funding",{method:"GET"}).then(function(r){
+      if(r.status===401){onUnauthorized();return null;}
+      if(r.status===403){$("app").hidden=true;$("noaccess").hidden=false;setChip(true);return null;}
+      if(!r.ok){setChip("err");return null;}
+      return r.json();
+    }).then(function(j){
+      if(!j){if(cb)cb();return;}
+      $("noaccess").hidden=true;$("app").hidden=false;
+      FUND.grants=j.grants||[];FUND.budgets=j.budgets||[];FUND.expenses=j.expenses||[];
+      FUND.isAdmin=!!j.isAdmin;FUND.editors=j.editors||[];FUND.members=j.members||[];FUND.me=j.me||"";FUND.version=j.version;
+      if(!selGrant||!grantById(selGrant))selGrant=FUND.grants.length?FUND.grants[0].id:"";
+      renderAll();setChip(true);
+      if(cb)cb();
+    }).catch(function(){setChip(false);pickApiBase(function(){});if(cb)cb();});
+  }
+  function poll(){cloudFetch("/api/funding",{method:"GET"}).then(function(r){return r.ok?r.json():null;}).then(function(j){if(j&&typeof j.version==="number"&&j.version!==FUND.version)loadFunding();}).catch(function(){});}
+
+  /* ===================== rendering ===================== */
+  function renderAll(){renderGrantBar();renderOverview();renderMatrix();fillFormSelects();renderFilters();renderTable();renderAdmin();}
+
+  function renderGrantBar(){
+    var b=$("grantbar");
+    if(!FUND.grants.length){b.innerHTML='<span style="color:var(--muted);font-size:13.5px">No grants yet'+(FUND.isAdmin?' — add one below.':' — ask an admin to set one up.')+'</span>';return;}
+    b.innerHTML=FUND.grants.map(function(g){return '<span class="gchip'+(g.id===selGrant?' on':'')+'" onclick="pickGrant(\''+g.id+'\')">'+esc(g.name)+'</span>';}).join("");
+  }
+  function pickGrant(id){selGrant=id;renderGrantBar();renderOverview();renderMatrix();}
+
+  function renderOverview(){
+    var g=grantById(selGrant);var o=$("ov");
+    if(!g){o.innerHTML="";return;}
+    var t=grantTotals(g.id),rem=t.bud-t.sp,cur=g.currency||"¥";
+    o.innerHTML=''
+      +'<div class="stat"><div class="n">'+esc(fmt(t.bud,cur))+'</div><div class="l">TOTAL BUDGET</div></div>'
+      +'<div class="stat"><div class="n">'+esc(fmt(t.sp,cur))+'</div><div class="l">SPENT</div></div>'
+      +'<div class="stat'+(rem<0?' neg':'')+'"><div class="n">'+esc(fmt(rem,cur))+'</div><div class="l">REMAINING</div></div>'
+      +'<div class="stat"><div class="n">'+(t.bud>0?Math.round(t.sp/t.bud*100):0)+'%</div><div class="l">USED</div></div>';
+  }
+
+  function renderMatrix(){
+    var g=grantById(selGrant);var box=$("matrix");$("mxgrant").textContent=g?g.name:"";
+    if(!g){box.innerHTML="";return;}
+    var cur=g.currency||"¥",years=yearsOf(g.id);
+    if(!years.length){box.innerHTML='<div class="empty">No budget or expenses yet for this grant.'+(FUND.isAdmin?' Set a budget under “Grants &amp; budgets” below.':'')+'</div>';return;}
+    var h='<table class="mx"><tr><th class="rowh">Year</th>';
+    CATS.forEach(function(c){h+='<th>'+esc(CATLAB[c])+'</th>';});
+    h+='<th class="rowh" style="text-align:right">Total</th></tr>';
+    var colSp={},colBd={};CATS.forEach(function(c){colSp[c]=0;colBd[c]=0;});var gSp=0,gBd=0;
+    years.forEach(function(yr){
+      h+='<tr><td class="rowh">'+yr+'</td>';var rSp=0,rBd=0;
+      CATS.forEach(function(c){var bd=budgetCell(g.id,yr,c),sp=spentCell(g.id,yr,c);rSp+=sp;rBd+=bd;colSp[c]+=sp;colBd[c]+=bd;
+        var over=bd>0&&sp>bd;
+        h+='<td'+(over?' class="over"':'')+'>'+(sp||bd?'<span class="sp">'+esc(fmt(sp,cur))+'</span><span class="bd">of '+esc(fmt(bd,cur))+'</span>':'<span style="color:var(--muted)">—</span>')+'</td>';});
+      gSp+=rSp;gBd+=rBd;
+      h+='<td class="totcol"><span class="sp">'+esc(fmt(rSp,cur))+'</span><span class="bd">of '+esc(fmt(rBd,cur))+'</span></td></tr>';
+    });
+    h+='<tr class="totrow"><td class="rowh">Total</td>';
+    CATS.forEach(function(c){h+='<td><span class="sp">'+esc(fmt(colSp[c],cur))+'</span><span class="bd">of '+esc(fmt(colBd[c],cur))+'</span></td>';});
+    h+='<td><span class="sp">'+esc(fmt(gSp,cur))+'</span><span class="bd">of '+esc(fmt(gBd,cur))+'</span></td></tr>';
+    h+='</table>';
+    box.innerHTML=h;
+  }
+
+  /* ---- expense form ---- */
+  function fillFormSelects(){
+    var gs=FUND.grants.map(function(g){return '<option value="'+g.id+'">'+esc(g.name)+'</option>';}).join("");
+    $("e_grant").innerHTML=gs||'<option value="">(no grants)</option>';
+    $("e_cat").innerHTML=CATS.map(function(c){return '<option value="'+c+'">'+esc(CATLAB[c])+'</option>';}).join("");
+    if(selGrant)$("e_grant").value=selGrant;
+    onGrantPick();
+    if(!$("e_date").value)$("e_date").value=todayStr();
+  }
+  function onGrantPick(){
+    var gid=$("e_grant").value,ys=yearsOf(gid),cy=new Date().getFullYear();
+    if(ys.indexOf(cy)<0)ys.push(cy);ys.sort(function(a,b){return a-b;});
+    $("e_year").innerHTML=ys.map(function(y){return '<option value="'+y+'">'+y+'</option>';}).join("");
+    $("e_year").value=cy;
+  }
+  function todayStr(){var d=new Date(Date.now()+8*3600*1000);return d.toISOString().slice(0,10);}
+  function calcTotal(){var u=Number($("e_unit").value)||0,q=Number($("e_qty").value)||0;$("e_total").value=fmt(Math.round(u*q*100)/100,curOf($("e_grant").value));}
+  function resetExpense(){editId=null;$("exptitle").textContent="Add an expense";$("expedit").hidden=true;$("e_save").textContent="Add expense";$("e_cancel").hidden=true;
+    $("e_item").value="";$("e_unit").value="";$("e_qty").value="";$("e_total").value="";$("e_note").value="";$("e_err").textContent="";calcTotal();}
+  function editExpense(id){var e=null;FUND.expenses.forEach(function(x){if(x.id===id)e=x;});if(!e)return;editId=id;
+    $("exptitle").textContent="Edit expense";$("expedit").hidden=false;$("e_save").textContent="Save changes";$("e_cancel").hidden=false;
+    $("e_grant").value=e.grant_id;onGrantPick();$("e_year").value=e.year;$("e_cat").value=e.category;$("e_date").value=e.date||"";
+    $("e_item").value=e.item||"";$("e_unit").value=e.unit_price||"";$("e_qty").value=e.qty||"";$("e_invoice").value=e.invoice||"";
+    $("e_vendor").value=e.vendor||"";$("e_online").checked=!!e.online;$("e_note").value=e.note||"";calcTotal();
+    try{$("exptitle").scrollIntoView({behavior:"smooth",block:"center"});}catch(_){}}
+  function saveExpense(){
+    var body={id:editId||undefined,grant_id:$("e_grant").value,year:parseInt($("e_year").value,10),category:$("e_cat").value,
+      date:$("e_date").value,item:$("e_item").value.trim(),unit_price:Number($("e_unit").value)||0,qty:Number($("e_qty").value)||0,
+      invoice:$("e_invoice").value.trim(),vendor:$("e_vendor").value.trim(),online:$("e_online").checked?1:0,note:$("e_note").value.trim()};
+    if(!body.grant_id){$("e_err").textContent="Pick a grant.";return;}
+    if(!body.item){$("e_err").textContent="Enter the item name.";return;}
+    $("e_err").textContent="Saving…";
+    cloudFetch("/api/expense",{method:"POST",body:JSON.stringify(body)}).then(function(r){if(r.status===401){onUnauthorized();return null;}return r.json();}).then(function(j){
+      if(j&&j.ok){var keepG=body.grant_id,keepY=body.year,keepC=body.category,keepInv=body.invoice,keepV=body.vendor,wasEdit=!!editId;resetExpense();
+        loadFunding(function(){$("e_grant").value=keepG;onGrantPick();$("e_year").value=keepY;$("e_cat").value=keepC;$("e_invoice").value=keepInv;$("e_vendor").value=keepV;});
+        tool(wasEdit?"Expense updated.":"Expense added.");
+      }else{$("e_err").textContent=(j&&j.error)||"Could not save.";}
+    }).catch(function(){$("e_err").textContent="Could not reach the server.";});
+  }
+  function delExpense(id){if(!confirm("Delete this expense line?"))return;cloudFetch("/api/expense?id="+encodeURIComponent(id),{method:"DELETE"}).then(function(r){if(r.status===401){onUnauthorized();return null;}return r.json();}).then(function(){loadFunding();tool("Deleted.");}).catch(function(){tool("Could not delete.");});}
+
+  /* ---- filters + expenses table ---- */
+  function renderFilters(){
+    var gy=FUND.grants.map(function(g){return '<option value="'+g.id+'">'+esc(g.name)+'</option>';}).join("");
+    var keepG=$("fl_grant").value;$("fl_grant").innerHTML='<option value="">All grants</option>'+gy;if(keepG)$("fl_grant").value=keepG;
+    var yrs={};FUND.expenses.forEach(function(e){yrs[e.year]=1;});var ys=Object.keys(yrs).map(Number).sort(function(a,b){return b-a;});
+    var keepY=$("fl_year").value;$("fl_year").innerHTML='<option value="">All years</option>'+ys.map(function(y){return '<option value="'+y+'">'+y+'</option>';}).join("");if(keepY)$("fl_year").value=keepY;
+    var keepC=$("fl_cat").value;$("fl_cat").innerHTML='<option value="">All categories</option>'+CATS.map(function(c){return '<option value="'+c+'">'+esc(CATLAB[c])+'</option>';}).join("");if(keepC)$("fl_cat").value=keepC;
+  }
+  function filteredExpenses(){
+    var fg=$("fl_grant").value,fy=$("fl_year").value,fc=$("fl_cat").value,q=($("fl_q").value||"").trim().toLowerCase();
+    return FUND.expenses.filter(function(e){
+      if(fg&&e.grant_id!==fg)return false;if(fy&&e.year!=fy)return false;if(fc&&e.category!==fc)return false;
+      if(q){var hay=((e.item||"")+" "+(e.invoice||"")+" "+(e.vendor||"")+" "+(e.note||"")).toLowerCase();if(hay.indexOf(q)<0)return false;}
+      return true;});
+  }
+  function renderTable(){
+    var rows=filteredExpenses(),canEdit=true;
+    var h='<tr><th>Date</th><th>Grant</th><th>Year</th><th>Category</th><th>Item</th><th class="num">Unit</th><th class="num">Qty</th><th class="num">Amount</th><th>Invoice</th><th>Vendor</th><th>By</th><th></th></tr>';
+    if(!rows.length){$("exptable").innerHTML=h+'<tr><td colspan="12" class="empty">No expenses'+(FUND.expenses.length?' match the filters.':' yet — add the first one above.')+'</td></tr>';return;}
+    var tot=0;
+    rows.forEach(function(e){tot+=Number(e.amount)||0;var cur=curOf(e.grant_id);var g=grantById(e.grant_id);
+      h+='<tr><td>'+esc(e.date||"")+'</td><td>'+esc(g?g.name:"?")+'</td><td>'+esc(String(e.year||""))+'</td>'
+        +'<td>'+esc((CATLAB[e.category]||e.category||"").split(" ")[0])+'</td>'
+        +'<td>'+esc(e.item||"")+(e.online?' <span class="tag online">online</span>':'')+(e.note?'<br><span style="color:var(--muted);font-size:11.5px">'+esc(e.note)+'</span>':'')+'</td>'
+        +'<td class="num">'+esc(fmt(e.unit_price,cur))+'</td><td class="num">'+esc(String(e.qty||""))+'</td>'
+        +'<td class="num">'+esc(fmt(e.amount,cur))+'</td>'
+        +'<td>'+esc(e.invoice||"")+'</td><td>'+esc(e.vendor||"")+'</td><td>'+esc(nameOf(e.username))+'</td>'
+        +'<td class="act">'+(canEdit?'<a onclick="editExpense(\''+e.id+'\')">edit</a><a class="del" onclick="delExpense(\''+e.id+'\')">del</a>':'')+'</td></tr>';
+    });
+    h+='<tr><td colspan="7" style="text-align:right;font-weight:600">Total ('+rows.length+')</td><td class="num" style="font-weight:700">'+esc(fmt(tot,"¥"))+'</td><td colspan="4"></td></tr>';
+    $("exptable").innerHTML=h;
+  }
+  function nameOf(u){var m=FUND.members.filter(function(x){return x.username===u;})[0];return m?m.name:(u||"");}
+
+  function exportCSV(){
+    var rows=filteredExpenses();var head=["date","grant","year","category","item","unit_price","qty","amount","invoice","vendor","online","note","recorded_by"];
+    var lines=[head.join(",")];
+    rows.forEach(function(e){var g=grantById(e.grant_id);var r=[e.date||"",g?g.name:"",e.year||"",e.category||"",e.item||"",e.unit_price||0,e.qty||0,e.amount||0,e.invoice||"",e.vendor||"",e.online?"yes":"",e.note||"",nameOf(e.username)];
+      lines.push(r.map(function(v){v=String(v);return /[",\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v;}).join(","));});
+    var blob=new Blob(["﻿"+lines.join("\n")],{type:"text/csv;charset=utf-8"});var a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="lens-expenses.csv";a.click();setTimeout(function(){URL.revokeObjectURL(a.href);},1000);
+  }
+
+  /* ---- admin: grants, budgets, editors ---- */
+  function renderAdmin(){
+    $("grantadmin").hidden=!FUND.isAdmin;$("editadmin").hidden=!FUND.isAdmin;
+    if(!FUND.isAdmin)return;
+    $("grantlist").innerHTML=FUND.grants.map(function(g){var t=grantTotals(g.id);
+      return '<div class="grow"><span class="gn">'+esc(g.name)+'</span><span class="gm">'+esc(g.agency||"")+(g.agency?' · ':'')+esc(fmt(t.bud,g.currency||"¥"))+' budget</span>'
+        +'<a onclick="openBudget(\''+g.id+'\')">budget</a><a onclick="renameGrant(\''+g.id+'\')">rename</a><a class="del" onclick="delGrant(\''+g.id+'\')">delete</a></div>';
+    }).join("")||'<div class="empty">No grants yet.</div>';
+    renderEditors();
+  }
+  function addGrant(){var name=$("g_name").value.trim();if(!name){$("g_err").textContent="Enter a grant name.";return;}$("g_err").textContent="Saving…";
+    cloudFetch("/api/grant",{method:"POST",body:JSON.stringify({name:name,agency:$("g_agency").value.trim(),currency:$("g_cur").value.trim()||"¥"})}).then(function(r){return r.json();}).then(function(j){
+      if(j&&j.ok){$("g_name").value="";$("g_agency").value="";$("g_err").textContent="";selGrant=j.id;loadFunding();tool("Grant added.");}else{$("g_err").textContent=(j&&j.error)||"Could not save.";}
+    }).catch(function(){$("g_err").textContent="Could not reach the server.";});}
+  function renameGrant(id){var g=grantById(id);if(!g)return;var name=window.prompt("Grant name:",g.name);if(name==null)return;name=name.trim();if(!name)return;
+    var agency=window.prompt("Agency / number (optional):",g.agency||"");if(agency==null)agency=g.agency||"";
+    cloudFetch("/api/grant",{method:"POST",body:JSON.stringify({id:id,name:name,agency:agency.trim(),currency:g.currency||"¥"})}).then(function(r){return r.json();}).then(function(){loadFunding();tool("Saved.");});}
+  function delGrant(id){var g=grantById(id);if(!g)return;if(!confirm("Delete grant “"+g.name+"” and ALL its budgets and expenses? This cannot be undone."))return;
+    cloudFetch("/api/grant?id="+encodeURIComponent(id),{method:"DELETE"}).then(function(r){return r.json();}).then(function(){if(selGrant===id)selGrant="";loadFunding();tool("Grant deleted.");});}
+
+  function openBudget(gid){
+    var g=grantById(gid);if(!g)return;var cur=g.currency||"¥";
+    var ys=yearsOf(gid);if(!ys.length)ys=[new Date().getFullYear()];
+    var box=$("budgetedit");box.hidden=false;box.setAttribute("data-g",gid);
+    var h='<h3 style="margin:0 0 4px;font-size:15px">Budget for '+esc(g.name)+' <span style="font-weight:400;color:var(--muted);font-size:12px">('+esc(cur)+')</span></h3>'
+      +'<p style="margin:0 0 8px;font-size:12.5px;color:var(--muted)">Enter the budget for each category in each year. Leave blank for none.</p>';
+    h+='<table class="bgrid"><tr><th>Year</th>';CATS.forEach(function(c){h+='<th>'+esc(CATLAB[c].split(" ")[0])+'</th>';});h+='</tr>';
+    ys.forEach(function(yr){h+='<tr><td class="rowh">'+yr+'</td>';CATS.forEach(function(c){var v=budgetCell(gid,yr,c);h+='<td><input type="number" step="0.01" min="0" inputmode="decimal" data-y="'+yr+'" data-c="'+c+'" value="'+(v||"")+'"></td>';});h+='</tr>';});
+    h+='</table>';
+    h+='<div class="mbtns"><input id="by_new" type="number" placeholder="add year e.g. '+(new Date().getFullYear()+1)+'" style="width:160px"><button onclick="addBudgetYear(\''+gid+'\')">Add year</button><button class="btn-primary" onclick="saveBudget(\''+gid+'\')">Save budget</button><button onclick="document.getElementById(\'budgetedit\').hidden=true">Close</button></div>';
+    box.innerHTML=h;
+    try{box.scrollIntoView({behavior:"smooth",block:"center"});}catch(_){}
+  }
+  function addBudgetYear(gid){var y=parseInt($("by_new").value,10);if(!y){return;}
+    // collect current entries, then re-render with the new year added
+    var cells=collectBudget();if(!cells.some(function(c){return c.year==y;})){cells.push({year:y,category:"materials",amount:0});}
+    _pendingBudget[gid]=cells;openBudgetWith(gid);}
+  var _pendingBudget={};
+  function collectBudget(){var box=$("budgetedit");var out=[];[].forEach.call(box.querySelectorAll("input[data-y]"),function(inp){var v=Number(inp.value)||0;if(v>0)out.push({year:parseInt(inp.getAttribute("data-y"),10),category:inp.getAttribute("data-c"),amount:v});});return out;}
+  function openBudgetWith(gid){ // like openBudget but include pending years
+    var g=grantById(gid);if(!g)return;var cur=g.currency||"¥";
+    var yset={};yearsOf(gid).forEach(function(y){yset[y]=1;});(_pendingBudget[gid]||[]).forEach(function(c){yset[c.year]=1;});
+    var ys=Object.keys(yset).map(Number).sort(function(a,b){return a-b;});if(!ys.length)ys=[new Date().getFullYear()];
+    var pend={};(_pendingBudget[gid]||[]).forEach(function(c){pend[c.year+"|"+c.category]=c.amount;});
+    var box=$("budgetedit");box.hidden=false;
+    var h='<h3 style="margin:0 0 4px;font-size:15px">Budget for '+esc(g.name)+' <span style="font-weight:400;color:var(--muted);font-size:12px">('+esc(cur)+')</span></h3>'
+      +'<p style="margin:0 0 8px;font-size:12.5px;color:var(--muted)">Enter the budget for each category in each year. Leave blank for none.</p>';
+    h+='<table class="bgrid"><tr><th>Year</th>';CATS.forEach(function(c){h+='<th>'+esc(CATLAB[c].split(" ")[0])+'</th>';});h+='</tr>';
+    ys.forEach(function(yr){h+='<tr><td class="rowh">'+yr+'</td>';CATS.forEach(function(c){var v=pend.hasOwnProperty(yr+"|"+c)?pend[yr+"|"+c]:budgetCell(gid,yr,c);h+='<td><input type="number" step="0.01" min="0" inputmode="decimal" data-y="'+yr+'" data-c="'+c+'" value="'+(v||"")+'"></td>';});h+='</tr>';});
+    h+='</table>';
+    h+='<div class="mbtns"><input id="by_new" type="number" placeholder="add year" style="width:160px"><button onclick="addBudgetYear(\''+gid+'\')">Add year</button><button class="btn-primary" onclick="saveBudget(\''+gid+'\')">Save budget</button><button onclick="document.getElementById(\'budgetedit\').hidden=true">Close</button></div>';
+    box.innerHTML=h;
+  }
+  function saveBudget(gid){var cells=collectBudget();_pendingBudget[gid]=null;
+    cloudFetch("/api/grant-budget",{method:"POST",body:JSON.stringify({grant_id:gid,budgets:cells})}).then(function(r){return r.json();}).then(function(j){
+      if(j&&j.ok){$("budgetedit").hidden=true;loadFunding();tool("Budget saved.");}else{tool((j&&j.error)||"Could not save budget.");}
+    }).catch(function(){tool("Could not reach the server.");});}
+
+  function renderEditors(){
+    var sel=FUND.editors||[];
+    $("edlist").innerHTML=FUND.members.filter(function(m){return m.role!=="admin";}).map(function(m){var on=sel.indexOf(m.username)>=0;return '<span class="edchip'+(on?' on':'')+'" data-u="'+esc(m.username)+'" onclick="this.classList.toggle(\'on\')">'+esc(m.name)+'</span>';}).join("")||'<span style="color:var(--muted);font-size:13px">No non-admin members yet. Add accounts in the inventory or calendar page.</span>';
+  }
+  function saveEditors(){var list=[];[].forEach.call($("edlist").querySelectorAll(".edchip.on"),function(c){list.push(c.getAttribute("data-u"));});
+    $("ed_msg").textContent="Saving…";cloudFetch("/api/funding-editors",{method:"POST",body:JSON.stringify({editors:list})}).then(function(r){return r.json();}).then(function(j){if(j&&j.ok){$("ed_msg").textContent="Saved.";loadFunding();setTimeout(function(){$("ed_msg").textContent="";},1500);}else{$("ed_msg").textContent=(j&&j.error)||"Could not save.";}}).catch(function(){$("ed_msg").textContent="Could not reach the server.";});}
+
+  /* ===================== start ===================== */
+  function start(){hideLogin();setChip(undefined);loadFunding();if(_poll)clearInterval(_poll);_poll=setInterval(poll,25000);try{window.addEventListener("focus",poll);}catch(e){}}
+  (function(){
+    var root=document.documentElement,saved;try{saved=LS.getItem("lens-theme");}catch(e){}
+    if(saved==="dark"||saved==="light")root.setAttribute("data-theme",saved);
+    var SUN='<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2M12 19.5v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M2.5 12h2M19.5 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4"/></svg>';
+    var MOON='<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a6.5 6.5 0 1 0 10.5 10.5z"/></svg>';
+    function eff(){return root.getAttribute("data-theme")||(matchMedia("(prefers-color-scheme:dark)").matches?"dark":"light");}
+    function paint(){$("tgl").innerHTML=eff()==="dark"?SUN:MOON;}
+    paint();$("tgl").addEventListener("click",function(){var n=eff()==="dark"?"light":"dark";root.setAttribute("data-theme",n);try{LS.setItem("lens-theme",n);}catch(e){}paint();});
+    loadUser();
+    pickApiBase(function(){ if(apiToken()){start();} else { showLogin(); setChip(); } });
+  })();
+</script>
