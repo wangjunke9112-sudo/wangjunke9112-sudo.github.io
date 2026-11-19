@@ -223,7 +223,7 @@
       <div class="formgrid" style="margin-top:14px">
         <div class="f-wide"><label for="g_name">New grant name *</label><input id="g_name" placeholder="e.g. 海外优青启动经费 / NSFC General"></div>
         <div><label for="g_agency">Agency / number</label><input id="g_agency" placeholder="optional"></div>
-        <div><label for="g_cur">Currency symbol <span class="muted" style="font-weight:400">— e.g. ¥</span></label><input id="g_cur" value="¥" maxlength="6"></div>
+        <div><label for="g_cur">Currency</label><select id="g_cur"><option value="¥">¥ (CNY)</option><option value="US$">US$</option><option value="€">€</option><option value="£">£</option></select></div>
         <div style="display:flex;align-items:flex-end"><button class="btn-primary" onclick="addGrant()" style="width:100%">Add grant</button></div>
       </div>
       <div id="g_err" class="msg" style="font-size:13px;color:var(--muted);margin-top:8px"></div>
@@ -287,7 +287,8 @@
   function grp(n){n=Number(n)||0;return n?n.toLocaleString("en-US",{maximumFractionDigits:2}):"";} // 2000000 -> "2,000,000"
   function reGroup(inp){var v=num(inp.value);inp.value=v?grp(v):"";}
   function grantById(id){for(var i=0;i<FUND.grants.length;i++)if(FUND.grants[i].id===id)return FUND.grants[i];return null;}
-  function curOf(id){var g=grantById(id);return g?(g.currency||"¥"):"¥";}
+  function saneCur(c){c=String(c==null?"":c).trim();return (!c||/[0-9]/.test(c)||c.length>4)?"¥":c;} // a number got stored as "currency" on an old grant → show ¥
+  function curOf(id){var g=grantById(id);return g?saneCur(g.currency):"¥";}
   function yearsOf(gid){var s={};FUND.budgets.forEach(function(b){if(b.grant_id===gid)s[b.year]=1;});FUND.expenses.forEach(function(e){if(e.grant_id===gid)s[e.year]=1;});var ys=Object.keys(s).map(Number).sort(function(a,b){return a-b;});return ys;}
   function budgetCell(gid,yr,cat){var t=0;FUND.budgets.forEach(function(b){if(b.grant_id===gid&&b.year==yr&&b.category===cat)t+=Number(b.amount)||0;});return t;}
   function spentCell(gid,yr,cat){var t=0;FUND.expenses.forEach(function(e){if(e.grant_id===gid&&e.year==yr&&e.category===cat)t+=Number(e.amount)||0;});return t;}
@@ -324,7 +325,7 @@
   function renderOverview(){
     var g=grantById(selGrant);var o=$("ov");
     if(!g){o.innerHTML="";return;}
-    var t=grantTotals(g.id),rem=t.bud-t.sp,cur=g.currency||"¥";
+    var t=grantTotals(g.id),rem=t.bud-t.sp,cur=saneCur(g.currency);
     o.innerHTML=''
       +'<div class="stat"><div class="n">'+esc(fmt(t.bud,cur))+'</div><div class="l">TOTAL BUDGET</div></div>'
       +'<div class="stat"><div class="n">'+esc(fmt(t.sp,cur))+'</div><div class="l">SPENT</div></div>'
@@ -335,7 +336,7 @@
   function renderMatrix(){
     var g=grantById(selGrant);var box=$("matrix");$("mxgrant").textContent=g?g.name:"";
     if(!g){box.innerHTML="";return;}
-    var cur=g.currency||"¥",years=yearsOf(g.id);
+    var cur=saneCur(g.currency),years=yearsOf(g.id);
     if(!years.length){box.innerHTML='<div class="empty">No budget or expenses yet for this grant.'+(FUND.isAdmin?' Set a budget under “Grants &amp; budgets” below.':'')+'</div>';return;}
     var h='<table class="mx"><tr><th class="rowh">Year</th>';
     CATS.forEach(function(c){h+='<th>'+esc(CATLAB[c])+'</th>';});
@@ -455,23 +456,23 @@
     $("grantadmin").hidden=!FUND.isAdmin;$("editadmin").hidden=!FUND.isAdmin;
     if(!FUND.isAdmin)return;
     $("grantlist").innerHTML=FUND.grants.map(function(g){var t=grantTotals(g.id);
-      return '<div class="grow"><span class="gn">'+esc(g.name)+'</span><span class="gm">'+esc(g.agency||"")+(g.agency?' · ':'')+esc(fmt(t.bud,g.currency||"¥"))+' budget</span>'
+      return '<div class="grow"><span class="gn">'+esc(g.name)+'</span><span class="gm">'+esc(g.agency||"")+(g.agency?' · ':'')+esc(fmt(t.bud,saneCur(g.currency)))+' budget</span>'
         +'<a onclick="openBudget(\''+g.id+'\')">budget</a><a onclick="renameGrant(\''+g.id+'\')">rename</a><a class="del" onclick="delGrant(\''+g.id+'\')">delete</a></div>';
     }).join("")||'<div class="empty">No grants yet.</div>';
     renderEditors();
   }
   function addGrant(){var name=$("g_name").value.trim();if(!name){$("g_err").textContent="Enter a grant name.";return;}$("g_err").textContent="Saving…";
     cloudFetch("/api/grant",{method:"POST",body:JSON.stringify({name:name,agency:$("g_agency").value.trim(),currency:$("g_cur").value.trim()||"¥"})}).then(function(r){return r.json();}).then(function(j){
-      if(j&&j.ok){$("g_name").value="";$("g_agency").value="";$("g_err").textContent="";selGrant=j.id;loadFunding();tool("Grant added.");}else{$("g_err").textContent=(j&&j.error)||"Could not save.";}
+      if(j&&j.ok){$("g_name").value="";$("g_agency").value="";$("g_err").textContent="";selGrant=j.id;loadFunding(function(){openBudget(j.id);});tool("Grant added — now enter its budget below.");}else{$("g_err").textContent=(j&&j.error)||"Could not save.";}
     }).catch(function(){$("g_err").textContent="Could not reach the server.";});}
   function renameGrant(id){var g=grantById(id);if(!g)return;var name=window.prompt("Grant name:",g.name);if(name==null)return;name=name.trim();if(!name)return;
     var agency=window.prompt("Agency / number (optional):",g.agency||"");if(agency==null)agency=g.agency||"";
-    cloudFetch("/api/grant",{method:"POST",body:JSON.stringify({id:id,name:name,agency:agency.trim(),currency:g.currency||"¥"})}).then(function(r){return r.json();}).then(function(){loadFunding();tool("Saved.");});}
+    cloudFetch("/api/grant",{method:"POST",body:JSON.stringify({id:id,name:name,agency:agency.trim(),currency:saneCur(g.currency)})}).then(function(r){return r.json();}).then(function(){loadFunding();tool("Saved.");});}
   function delGrant(id){var g=grantById(id);if(!g)return;if(!confirm("Delete grant “"+g.name+"” and ALL its budgets and expenses? This cannot be undone."))return;
     cloudFetch("/api/grant?id="+encodeURIComponent(id),{method:"DELETE"}).then(function(r){return r.json();}).then(function(){if(selGrant===id)selGrant="";loadFunding();tool("Grant deleted.");});}
 
   function openBudget(gid){
-    var g=grantById(gid);if(!g)return;var cur=g.currency||"¥";
+    var g=grantById(gid);if(!g)return;var cur=saneCur(g.currency);
     var ys=yearsOf(gid);if(!ys.length)ys=[new Date().getFullYear()];
     var box=$("budgetedit");box.hidden=false;box.setAttribute("data-g",gid);
     var h='<h3 style="margin:0 0 4px;font-size:15px">Budget for '+esc(g.name)+' <span style="font-weight:400;color:var(--muted);font-size:12px">('+esc(cur)+')</span></h3>'
@@ -490,7 +491,7 @@
   var _pendingBudget={};
   function collectBudget(){var box=$("budgetedit");var out=[];[].forEach.call(box.querySelectorAll("input[data-y]"),function(inp){var v=num(inp.value);if(v>0)out.push({year:parseInt(inp.getAttribute("data-y"),10),category:inp.getAttribute("data-c"),amount:v});});return out;}
   function openBudgetWith(gid){ // like openBudget but include pending years
-    var g=grantById(gid);if(!g)return;var cur=g.currency||"¥";
+    var g=grantById(gid);if(!g)return;var cur=saneCur(g.currency);
     var yset={};yearsOf(gid).forEach(function(y){yset[y]=1;});(_pendingBudget[gid]||[]).forEach(function(c){yset[c.year]=1;});
     var ys=Object.keys(yset).map(Number).sort(function(a,b){return a-b;});if(!ys.length)ys=[new Date().getFullYear()];
     var pend={};(_pendingBudget[gid]||[]).forEach(function(c){pend[c.year+"|"+c.category]=c.amount;});
